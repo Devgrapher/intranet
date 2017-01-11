@@ -46,7 +46,10 @@ class MenuService
                     new Link('전사 주간 업무 요약', '/weekly', new ExceptTaAuth(), '_blank'),
                     new Link('회의실', '/Rooms', new PublicAuth()),
                     new Link('포커스룸', '/Rooms?type=focus'),
-                    new Link('휴가신청', '/holidays', new PublicAuth()),
+                    '근태관리' => [
+                    	new Link('휴가신청', '/holidays', new PublicAuth()),
+						new Link('단축근로제도', '/flextime', new PublicAuth()),
+					],
                     '지원요청' => [
                         new Link('업무환경 불편사항 문의', '/Support/' . SupportPolicy::TYPE_DEVICE),
                         new Link('경조 지원', '/Support/' . SupportPolicy::TYPE_FAMILY_EVENT),

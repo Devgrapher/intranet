@@ -1,0 +1,171 @@
+{% extends 'ridi.twig' %}
+
+{% block head %}
+  {{ parent() }}
+  {% include 'flextime/js.twig' %}
+  {% include 'flextime/css.twig' %}
+{% endblock %}
+
+{% block body %}
+  <form
+    attrajax
+    data-aa-url='/flextime/uid/{{ uid }}'
+    data-aa-method='post'
+    data-aa-datatype="text"
+    data-aa-success-if-result-is="1"
+    data-aa-onsuccess-msg="추가되었습니다"
+    data-aa-onsuccess="refresh"
+    data-aa-onfail-alert="true"
+    onsubmit="$('[name=scope]').removeAttr('disabled');"
+  >
+
+    <div style="width:1000px;">
+      <h2>
+        {{ name }}
+      </h2>
+      <h4>
+        <a href='/flextime/uid/{{ uid }}/year/{{ year-1 }}'>{{ year-1 }}</a>
+        / {{ year }} /
+        <a href='/flextime/uid/{{ uid }}/year/{{ year+1 }}'>{{ year+1 }}</a>
+      </h4>
+
+      <table class="table table-striped table-hover table-condensed">
+        <thead>
+        <tr>
+          <th></th>
+          <th>신청날짜</th>
+          <th>신청자</th>
+          <th>결재자</th>
+          <th>시작</th>
+          <th>종료</th>
+          <th>출근시간</th>
+          <th>업무인수인계자</th>
+          <th>비상시연락처</th>
+          <th></th>
+        </tr>
+
+        </thead>
+        <tbody>
+
+        {% for index, flextime in flextimes %}
+          <tr class='flextime' data-flextimeid="{{ flextime.id }}">
+            <td>{{ index + 1 }}</td>
+            <td>{{ flextime.created_at [:10] }}</td>
+            <td>{{ name }}</td>
+            <td>{{ flextime.manager_uid_name }}</td>
+            <td>{{ flextime.start_date }}</td>
+            <td>{{ flextime.end_date }}</td>
+            <td>{{ flextime.start_time }}</td>
+            <td>{{ flextime.keeper_uid_name }}</td>
+            <td data-key="phone_emergency">{{ flextime.phone_emergency }}</td>
+            <td>
+              {% if editable %}
+                <input type='button' value='삭제'
+                       attrajax
+                       data-aa-url="/flextime/uid/{{ uid }}/{{ flextime.id }}"
+                       data-aa-method='DELETE'
+                       data-aa-confirm='정말 삭제하시겠습니까?'
+                       data-aa-datatype="text"
+                       data-aa-success-if-result-is="1"
+                       data-aa-onsuccess-msg="삭제되었습니다"
+                       data-aa-onsuccess="refresh"
+                       data-aa-onfail-alert="true"
+                />
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        <tr class='add'>
+          <td></td>
+          <td></td>
+          <td>{{ name }}</td>
+          <td>
+            <label>
+              <select name='manager_uid' js_cookie_save js_data_chosen>
+                {% for managerUser in managerUsers %}
+                  <option value='{{ managerUser.uid }}'>{{ managerUser.name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </td>
+          <td><input
+              type='text'
+              name='start_date'
+              style='width:80px'
+              placeholder='0000-00-00'
+            /></td>
+          <td><input
+                type='text'
+                name='end_date'
+                style='width:80px'
+                placeholder='0000-00-00'
+            /></td>
+          <td><input
+                type='text'
+                name='start_time'
+                style='width:80px'
+                placeholder='00:00'
+            /></td>
+          <td>
+            <label>
+              <select name='keeper_uid' js_cookie_save js_data_chosen>
+                {% for availableUser in availableUsers %}
+                  <option value='{{ availableUser.uid }}'>{{ availableUser.name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </td>
+          <td><input type='text' name='phone_emergency' style='width:100px' placeholder='010-0000-0000'
+                     js_cookie_save/></td>
+          <td><input type="submit" value="추가"/></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+
+  <div style="width:1000px;">
+  <pre>
+    no explain
+  </pre>
+  </div>
+
+  {% if editable %}
+    <div style="width: 300px;">
+      <table class="table table-condensed">
+        <thead>
+        <tr>
+          <th>관리자 메뉴</th>
+          <th></th>
+        <tr>
+        </thead>
+        <tr>
+          <td>
+            다른 사람 편집하기
+          </td>
+          <td>
+            <label>
+              <select class='js_superedit' js_data_chosen>
+                {% for availableUser in availableUsers %}
+                  <option value='{{ availableUser.uid }}'>{{ availableUser.name }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            금년 사용내역 다운받기
+          </td>
+          <td>
+            <label>
+              <a href="/flextime/download/{{ year }}">
+                <button>다운받기</button>
+              </a>
+            </label>
+          </td>
+        </tr>
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}
