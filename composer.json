@@ -11,6 +11,9 @@
     "silex/silex": "^2.0",
     "twig/twig": "^1.28"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
   "config": {
     "preferred-install": "dist"
   }
