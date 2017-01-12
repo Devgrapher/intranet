@@ -8,6 +8,10 @@ Author: Jaemin Bae
 @import "mixins.less";
 @import "variables.less";
 
+body {
+	padding: 80px 20px;
+}
+
 a:hover {
 	text-decoration: none;
 }
@@ -21,7 +25,7 @@ nav.navbar-default {
 	.navbar-brand {
 		color: #fff;
 		font-weight: bold;
-		font-size: 18px;
+		font-size: 20px;
 		padding: 18px 26px;
 		height: auto;
 		line-height: 1;
@@ -39,7 +43,6 @@ nav.navbar-default {
 	.navbar-brand:focus,
 	.navbar-brand:hover {
 		color: #fff;
-		transform: translate3d(0,-1px,0);
 		background: #369be9;
 	}
 	
@@ -50,11 +53,27 @@ nav.navbar-default {
 		.transition();
 		&:focus, &:hover {
 			color: #fff;
-			transform: translate3d(0,-1px,0);
 			background: #369be9;
 		}
 		@media @queries_sm {
 			padding: 10px 16px;
+		}
+	}
+	.navbar-nav>.open>a,
+	.navbar-nav>.open>a:focus,
+	.navbar-nav>.open>a:hover {
+		background: #0f75c5;
+		color: #fff;
+	}
+
+	@media @queries_sm {
+		.navbar-nav .open .dropdown-menu>li>a {
+			color: #cbf0ff;
+			line-height: 26px;
+		}
+		.navbar-nav .open .dropdown-menu>li>a:hover {
+			color: #cbf0ff;
+			background: #369be9;
 		}
 	}
 
