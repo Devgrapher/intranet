@@ -1,12 +1,12 @@
 <?php
 namespace Intra\Service\Holiday;
 
-use Intra\Lib\DateUtil;
 use Intra\Model\HolidayModel;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserJoinService;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
+use Ridibooks\Platform\Common\DateUtil;
 
 class UserHoliday
 {

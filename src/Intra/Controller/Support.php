@@ -3,7 +3,6 @@
 namespace Intra\Controller;
 
 use Intra\Core\MsgException;
-use Intra\Lib\Response\CsvResponse;
 use Intra\Service\Support\Column\SupportColumnCategory;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnWorker;
@@ -16,6 +15,7 @@ use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
+use Ridibooks\Platform\Common\CsvResponse;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Silex\ControllerCollection;

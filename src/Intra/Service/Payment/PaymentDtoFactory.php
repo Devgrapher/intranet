@@ -1,9 +1,9 @@
 <?php
 namespace Intra\Service\Payment;
 
-use Intra\Lib\DictsUtils;
 use Intra\Model\PaymentAcceptModel;
 use Intra\Model\PaymentModel;
+use Ridibooks\Platform\Common\DictsUtils;
 
 class PaymentDtoFactory
 {

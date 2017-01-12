@@ -2,8 +2,8 @@
 
 namespace Intra\Service\Receipt;
 
-use Intra\Lib\Response\CsvResponse;
 use Intra\Service\IntraDb;
+use Ridibooks\Platform\Common\CsvResponse;
 
 class UserReceiptsStat
 {
