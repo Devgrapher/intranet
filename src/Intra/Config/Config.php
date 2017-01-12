@@ -45,7 +45,8 @@ class Config
         'user_manager' => [],
         'post_admin' => [],
         'payment_admin' => [],
-        'receipts_admin' => []
+        'receipts_admin' => [],
+		'support_admin' => [],
     ];
 
     public static $supports = [
