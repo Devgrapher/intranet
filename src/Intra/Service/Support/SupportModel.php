@@ -63,6 +63,43 @@ class SupportModel extends BaseModel
         );
     }
 
+    /**
+     * @param SupportColumn[] $columns
+     * @param string          $target
+     * @param string          $date
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public static function getDictsAll($columns, $target, $date)
+    {
+        $order_column = null;
+        foreach ($columns as $column) {
+            if ($column instanceof SupportColumnDate) {
+                if ($column->is_ordering_column) {
+                    $order_column = $column->key;
+                }
+            }
+        }
+        if ($order_column == null) {
+            throw new \Exception('정렬 컬럼지정이 되어있지 않습니다.');
+        }
+
+        $table = self::getTableName($target);
+        $next_date = date('Y-m-1', strtotime('+1 month', strtotime($date)));
+
+        $where = [
+            $order_column => sqlRange($date, $next_date),
+            'is_deleted' => 0,
+        ];
+        return self::getDb()->sqlDicts(
+            'select * from ? where ? order by ? asc',
+            sqlTable($table),
+            sqlWhere($where),
+            sqlColumn($order_column)
+        );
+    }
+
     public static function getDictsRemainAll($columns, $target)
     {
         $order_column = null;

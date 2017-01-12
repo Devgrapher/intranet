@@ -16,7 +16,11 @@ class SupportViewDtoFactory
                 $row_dicts = SupportModel::getDictsRemainByAccept($columns, $target, $self->uid);
             }
         } else {
-            $row_dicts = SupportModel::getDicts($columns, $target, $uid, $date);
+            if (UserPolicy::isSupportAdmin($self)) {
+                $row_dicts = SupportModel::getDictsAll($columns, $target, $date);
+            } else {
+                $row_dicts = SupportModel::getDicts($columns, $target, $uid, $date);
+            }
         }
 
         $support_view_dtos = [];
