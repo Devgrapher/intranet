@@ -10,13 +10,13 @@ class SupportViewDtoFactory
     {
         $self = UserSession::getSelfDto();
         if ($type == 'remain') {
-            if (UserPolicy::isSupportAdmin($self)) {
+            if (UserPolicy::isSupportAdmin($self, $target)) {
                 $row_dicts = SupportModel::getDictsRemainAll($columns, $target);
             } else {
                 $row_dicts = SupportModel::getDictsRemainByAccept($columns, $target, $self->uid);
             }
         } else {
-            if (UserPolicy::isSupportAdmin($self)) {
+            if (UserPolicy::isSupportAdmin($self, $target)) {
                 $row_dicts = SupportModel::getDictsAll($columns, $target, $date);
             } else {
                 $row_dicts = SupportModel::getDicts($columns, $target, $uid, $date);

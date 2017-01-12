@@ -65,7 +65,7 @@ class Support implements ControllerProviderInterface
             $yearmonth = date('Y-m');
         }
         $date = $yearmonth . '-01';
-        if (!intval($uid) || !UserPolicy::isSupportAdmin($self)) {
+        if (!intval($uid) || !UserPolicy::isSupportAdmin($self, $target)) {
             $uid = $self->uid;
         }
 
@@ -93,7 +93,7 @@ class Support implements ControllerProviderInterface
             'columns' => $columns,
             'support_view_dtos' => $support_view_dtos,
             'const' => $const,
-            'is_admin' => UserPolicy::isSupportAdmin($self),
+            'is_admin' => UserPolicy::isSupportAdmin($self, $target),
             'all_users' => UserDtoFactory::createAllUserDtos(),
             'explain' => $explain,
         ]);
@@ -107,7 +107,7 @@ class Support implements ControllerProviderInterface
 
         $columns = SupportPolicy::getColumnFields($target);
         $uid = $request->get('uid');
-        if (!intval($uid) || !UserPolicy::isSupportAdmin($self)) {
+        if (!intval($uid) || !UserPolicy::isSupportAdmin($self, $target)) {
             $uid = $self->uid;
         }
 

@@ -29,7 +29,7 @@ class SupportFileService
         $self = UserSession::getSelfDto();
         $columns = SupportPolicy::getColumnFields($target);
         $support_dto = SupportDtoFactory::get($target, $id);
-        self::assertAccessFiles($support_dto, $self, $columns);
+        self::assertAccessFiles($support_dto, $self, $target, $columns);
 
         $file_upload_service = new FileUploadService('support.' . $target . '.' . $column_key);
         return $file_upload_service->upload($self->uid, $id, $file);
@@ -42,9 +42,9 @@ class SupportFileService
      *
      * @throws MsgException
      */
-    private static function assertAccessFiles($support_dto, $self, $columns)
+    private static function assertAccessFiles($support_dto, $self, $target, $columns)
     {
-        if (UserPolicy::isSupportAdmin($self)) {
+        if (UserPolicy::isSupportAdmin($self, $target)) {
             return;
         }
         $has_auth = false;
@@ -77,7 +77,7 @@ class SupportFileService
         $file_upload_dto = FileUploadDtoFactory::importDtoByPk($fileid);
         $support_dto = SupportDtoFactory::get($target, $file_upload_dto->key);
         $columns = SupportPolicy::getColumnFields($target);
-        self::assertAccessFiles($support_dto, $self, $columns);
+        self::assertAccessFiles($support_dto, $self, $target, $columns);
 
         $file_upload_service = new FileUploadService($file_upload_dto->group);
         return $file_upload_service->getBinaryFileResponseWithDto($file_upload_dto);
@@ -88,16 +88,16 @@ class SupportFileService
         $file_upload_dto = FileUploadDtoFactory::importDtoByPk($fileid);
         $support_dto = SupportDtoFactory::get($target, $file_upload_dto->key);
         $columns = SupportPolicy::getColumnFields($target);
-        self::assertAccessFiles($support_dto, $self, $columns);
-        self::assertDeleteFile($support_dto, $self, $columns);
+        self::assertAccessFiles($support_dto, $self, $target, $columns);
+        self::assertDeleteFile($support_dto, $self, $target, $columns);
 
         $file_upload_service = new FileUploadService('payment_files');
         return $file_upload_service->remove($file_upload_dto);
     }
 
-    private static function assertDeleteFile($support_dto, $self, $columns)
+    private static function assertDeleteFile($support_dto, $self, $target, $columns)
     {
-        if (UserPolicy::isSupportAdmin($self)) {
+        if (UserPolicy::isSupportAdmin($self, $target)) {
             return;
         }
         $is_not_done = false;

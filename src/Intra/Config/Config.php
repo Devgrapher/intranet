@@ -46,17 +46,13 @@ class Config
         'post_admin' => [],
         'payment_admin' => [],
         'receipts_admin' => [],
-        'support_admin' => [],
-    ];
-
-    public static $supports = [
-        'mails' => [
+        'support_admin' => [
             'all' => [],
             'device' => [],
-            'family_event' => [],
-            'business_card' => [],
+            'familyevent' => [],
+            'businesscard' => [],
             'depot' => [],
-            'gift_card' => [],
+            'giftcard' => [],
         ],
     ];
 

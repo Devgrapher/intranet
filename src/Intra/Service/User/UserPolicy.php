@@ -56,11 +56,17 @@ class UserPolicy
         return false;
     }
 
-    public static function isSupportAdmin(UserDto $self)
+    public static function isSupportAdmin(UserDto $self, $target = 'all')
     {
-        if (in_array($self->email, Config::$user_policy['support_admin'])) {
+        if (in_array($self->email, Config::$user_policy['support_admin']['all'])) {
             return true;
         }
+
+        $target = strtolower($target);
+        if ($target != 'all' && in_array($self->email, Config::$user_policy['support_admin'][$target])) {
+            return true;
+        }
+
         return false;
     }
 
