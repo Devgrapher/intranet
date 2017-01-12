@@ -2,20 +2,25 @@
 namespace Intra\Service\Press;
 
 use Intra\Core\JsonDto;
-use Intra\Model\Press as PressModel;
+use Intra\Repository\PressRepository as PressRepository;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserSession;
 
 class Press
 {
     private $user;
+    private $press;
 
     /**
      * @param $user UserDto
      */
-    public function __construct($user)
+    public function __construct($user, $press = null)
     {
+        if ($press == null) {
+            $press = new PressRepository();
+        }
         $this->user = $user;
+        $this->press = $press;
     }
 
     public function index()
@@ -28,15 +33,15 @@ class Press
     public function add($date, $media, $title, $link_url, $note)
     {
         try {
-            $press = new PressModel();
+            $data = [
+                'date' => $date,
+                'media' => $media,
+                'title' => $title,
+                'link_url' => $link_url,
+                'note' => $note
+            ];
 
-            $press->date = $date;
-            $press->media = $media;
-            $press->title = $title;
-            $press->link_url = $link_url;
-            $press->note = $note;
-
-            $press->save();
+            $this->press->create($data);
         } catch (\Exception $e) {
             return '자료를 추가할 수 없습니다. 다시 확인해 주세요';
         }
@@ -44,10 +49,10 @@ class Press
         return true;
     }
 
-    public function del($press_id)
+    public function del($id)
     {
         try {
-            PressModel::destroy($press_id);
+            $this->press->delete($id);
         } catch (\Exception $e) {
             return '삭제가 실패했습니다!';
         }
@@ -55,19 +60,20 @@ class Press
         return true;
     }
 
-    public function edit($press_id, $key, $value)
+    public function edit($id, $key, $value)
     {
         try {
-            PressModel::where('id', $press_id)->update([$key => $value]);
+            $this->press->update([$key => $value], $id);
             return $value;
         } catch (\Exception $e) {
             return '수정을 실패했습니다!';
         }
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         try {
-            return PressModel::orderBy('date', 'desc')->get();
+            return $this->press->all();
         } catch (\Exception $e) {
             return '데이터 불러오기를 실패했습니다!';
         }
@@ -80,20 +86,19 @@ class Press
         return $this->makeJsonResponse($press);
     }
 
-    public function getPressByPage($page, $ITEMS_PER_PAGE)
+    public function getPressByPage($page, $take)
     {
-        $press = PressModel::orderBy('date', 'desc')->skip(($page - 1) * $ITEMS_PER_PAGE)->take($ITEMS_PER_PAGE)->get();
-        $count = $this->getPressCount();
+        $skip = ($page - 1) * $take;
+
+        $press = $this->press->paginate($take, $skip);
+
+        $count = $this->press->count();
 
         return $this->makeJsonResponse($press, $count);
     }
 
-    private function getPressCount()
+    private function makeJsonResponse($press, $count = null)
     {
-        return PressModel::count();
-    }
-
-    private function makeJsonResponse($press, $count = null) {
         $json_dto = new JsonDto();
 
         $json_dto->data = [

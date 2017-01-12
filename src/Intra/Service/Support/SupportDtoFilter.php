@@ -11,7 +11,7 @@ class SupportDtoFilter
 {
     /**
      * @param UserDto $target_user_dto
-	 * @param SupportDto $support_dto
+     * @param SupportDto $support_dto
      *
      * @return SupportDto
      * @throws MsgException
@@ -42,9 +42,9 @@ class SupportDtoFilter
                 continue;
             }
 
-			if (!$column->isVisible($target_user_dto)) {
-				continue;
-			}
+            if (!$column->isVisible($target_user_dto)) {
+                continue;
+            }
 
             if ($column->required) {
                 $column_value = $support_dto->dict[$column->key];

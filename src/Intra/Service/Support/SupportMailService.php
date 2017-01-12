@@ -9,7 +9,6 @@ use Intra\Service\Mail\MailSendService;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
 use Intra\Service\Support\Column\SupportColumnDate;
-use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserJoinService;
 
 class SupportMailService
@@ -64,12 +63,12 @@ class SupportMailService
         foreach ($uids as $uid) {
             $receivers[] = UserJoinService::getEmailByUidSafe($uid);
         }
-		foreach (Config::$supports['mails']['all'] as $mail) {
-			$receivers[] = $mail;
-		}
-		foreach (Config::$supports['mails'][$target] as $mail) {
-			$receivers[] = $mail;
-		}
+        foreach (Config::$supports['mails']['all'] as $mail) {
+            $receivers[] = $mail;
+        }
+        foreach (Config::$supports['mails'][$target] as $mail) {
+            $receivers[] = $mail;
+        }
         $receivers = array_unique($receivers);
 
         $mailing_dto = new MailingDto();

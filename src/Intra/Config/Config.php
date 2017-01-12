@@ -49,15 +49,15 @@ class Config
     ];
 
     public static $supports = [
-		'mails' => [
-			'all' => [],
-			'device' => [],
-			'family_event' => [],
-			'business_card' => [],
-			'depot' => [],
-			'gift_card' => [],
-		],
-	];
+        'mails' => [
+            'all' => [],
+            'device' => [],
+            'family_event' => [],
+            'business_card' => [],
+            'depot' => [],
+            'gift_card' => [],
+        ],
+    ];
 
     public static $ridi_ips = [];
 
