@@ -50,6 +50,10 @@ task('git_fetch', [
 ]);
 after('git_fetch', 'success');
 
+desc('Installing bower components');
+task('deploy:bower', function () {
+    run('cd {{release_path}}/assets && bower update');
+});
 
 desc('Deploy your project');
 task('deploy', [
@@ -60,6 +64,7 @@ task('deploy', [
 	'deploy:shared',
 	'deploy:writable',
 	'deploy:vendors',
+    'deploy:bower',
 	//'deploy:clear_paths',
 	'deploy:symlink',
 	'deploy:unlock',
