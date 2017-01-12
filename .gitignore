@@ -3,6 +3,7 @@
 /docs/deployer/stage/*
 /docs/deployer/upload/*
 /js/node_modules
+/assets/bower_components
 /upload/*
 /vendor
 composer.lock
