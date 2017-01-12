@@ -58,9 +58,9 @@ class UserPolicy
 
     public static function isSupportAdmin(UserDto $self)
     {
-		if (in_array($self->email, Config::$user_policy['support_admin'])) {
-			return true;
-		}
+        if (in_array($self->email, Config::$user_policy['support_admin'])) {
+            return true;
+        }
         return false;
     }
 
