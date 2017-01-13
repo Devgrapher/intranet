@@ -1,7 +1,42 @@
 <script>
   var uid = {{ uid }};
 
-  require(["jquery", "jquery.jeditable", "bootstrap"], function ($) {
+  require(["jquery", "jquery.jeditable", "jquery-ui", "jquery-timepicker", "bootstrap"], function ($) {
+
+      var dateFormat = "yy/mm/dd",
+          from = $( 'input[name="start_date"]' )
+              .datepicker()
+              .on( "change", function() {
+                  to.datepicker( "option", "minDate", getDate( this ) );
+              }),
+          to = $( 'input[name="end_date"]' )
+              .datepicker()
+              .on( "change", function() {
+                  from.datepicker( "option", "maxDate", getDate( this ) );
+              });
+      from.datepicker( "option", "dateFormat", dateFormat );
+      from.datepicker( "option", "minDate", new Date() );
+      to.datepicker( "option", "dateFormat", dateFormat );
+      to.datepicker( "option", "minDate", new Date() );
+
+      function getDate( element ) {
+          var date;
+          try {
+              date = $.datepicker.parseDate( dateFormat, element.value );
+          } catch( error ) {
+              date = null;
+          }
+
+          return date;
+      }
+
+//    $('.datepicker').datepicker();
+//    $('.datepicker').datepicker('option', 'dateFormat', 'yy/mm/dd');
+    $('.timepicker').timepicker({
+        timeFormat: 'H:i',
+        step: 60
+    });
+
     $('select.js_superedit')
       .val({{ uid }})
       .trigger("change")
@@ -13,41 +48,12 @@
     });
     $('[data-toggle="popover"]').popover({'trigger': 'focus'});
 
-    $('#js_memo').on('change', function () {
-      var memo_str = $(this).val();
-      if (memo_str.substr(0, 2) == '기타') {
-        var memo = prompt('간략하게 사유를 입력해주세요~');
-        if (!memo) {
-          $(this).val('개인용무');
-          return;
-        }
-        $('option:selected', this)
-          .text('기타(' + memo + ')')
-          .val('기타(' + memo + ')');
-      }
-    }).trigger('change');
-
-    $('#js_type').on('change', function () {
-      var type_str = $(this).val();
-      if (type_str != '오전반차' && type_str != '오후반차' && type_str != 'PWT')
-        $('#js_cost').show();
-      else
-        $('#js_cost').hide();
-    }).trigger('change');
-
     {% if editable %}
     $('.flextime td[data-key]').each(function () {
       var flextimeid = $(this).parent().data('flextimeid');
       var key = $(this).data('key');
       var submitdata = {flextimeid: flextimeid, key: key};
       var args = {submitdata: submitdata, method: 'PUT'};
-
-      var isSelectInput = ($(this).data('keyselect') != undefined);
-      if (isSelectInput) {
-        args['type'] = 'select';
-        args['loadurl'] = '/flextime/const/key/' + key;
-        args['submit'] = "OK";
-      }
 
       $(this).editable('/flextime/uid/' + uid, args);
     });

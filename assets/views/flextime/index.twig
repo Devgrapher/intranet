@@ -16,7 +16,6 @@
     data-aa-onsuccess-msg="추가되었습니다"
     data-aa-onsuccess="refresh"
     data-aa-onfail-alert="true"
-    onsubmit="$('[name=scope]').removeAttr('disabled');"
   >
 
     <div style="width:1000px;">
@@ -38,9 +37,9 @@
           <th>결재자</th>
           <th>시작</th>
           <th>종료</th>
+          <th>요일</th>
           <th>출근시간</th>
           <th>업무인수인계자</th>
-          <th>비상시연락처</th>
           <th></th>
         </tr>
 
@@ -55,9 +54,9 @@
             <td>{{ flextime.manager_uid_name }}</td>
             <td>{{ flextime.start_date }}</td>
             <td>{{ flextime.end_date }}</td>
+            <td>{{ flextime.weekdays }}</td>
             <td>{{ flextime.start_time }}</td>
             <td>{{ flextime.keeper_uid_name }}</td>
-            <td data-key="phone_emergency">{{ flextime.phone_emergency }}</td>
             <td>
               {% if editable %}
                 <input type='button' value='삭제'
@@ -88,23 +87,31 @@
               </select>
             </label>
           </td>
-          <td><input
-              type='text'
-              name='start_date'
-              style='width:80px'
-              placeholder='0000-00-00'
+          <td>
+            <input type='text' name='start_date'
+                   style='width:80px' placeholder='0000-00-00' required
             /></td>
+          <td>
+            <input type='text' name='end_date'
+                   style='width:80px' placeholder='0000-00-00' required
+            />
+          </td>
+          <td>
+            <fieldset>
+              <input type="checkbox" name="weekdays[]" value="월" checked />월
+              <input type="checkbox" name="weekdays[]" value="화" checked />화
+              <input type="checkbox" name="weekdays[]" value="수" checked />수
+              <input type="checkbox" name="weekdays[]" value="목" checked />목
+              <input type="checkbox" name="weekdays[]" value="금" checked />금
+            </fieldset>
+          </td>
           <td><input
-                type='text'
-                name='end_date'
-                style='width:80px'
-                placeholder='0000-00-00'
-            /></td>
-          <td><input
+                class='timepicker'
                 type='text'
                 name='start_time'
                 style='width:80px'
                 placeholder='00:00'
+                required
             /></td>
           <td>
             <label>
@@ -115,8 +122,6 @@
               </select>
             </label>
           </td>
-          <td><input type='text' name='phone_emergency' style='width:100px' placeholder='010-0000-0000'
-                     js_cookie_save/></td>
           <td><input type="submit" value="추가"/></td>
         </tr>
         </tbody>
@@ -126,7 +131,9 @@
 
   <div style="width:1000px;">
   <pre>
-    no explain
+<b>[얼리파마]</b>
+  - 미취학 아동이 있는 임직원들이 '근무시간을 조정' 하여 출퇴근 할 수 있게 하는 제도.
+  - 근무 시간은 8시간 입니다.
   </pre>
   </div>
 

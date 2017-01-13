@@ -18,6 +18,7 @@
     "jquery-form": "3.46.0",
     "jquery-number": "2.1.6",
     "jquery-ui": "1.12.1",
+    "jquery-timepicker-jt": "1.4.13",
     "jquery.attrajax": "^0.1",
     "jquery.cookie": "1.4.1",
     "jquery.jeditable": "https://github.com/tuupola/jquery_jeditable.git",
