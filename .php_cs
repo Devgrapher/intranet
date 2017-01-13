@@ -1,13 +1,14 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__ . '/src');
+//$finder = PhpCsFixer\Finder::create()
+//    ->in(__DIR__ . '/src')
+//;
 
 return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
 
-        // ignored rules from @Symfony
+        // 1. ignored rules from @Symfony
         'blank_line_after_opening_tag' => false,
         'blank_line_before_return' => false,
         'cast_spaces' => false,
@@ -20,9 +21,10 @@ return PhpCsFixer\Config::create()
         'single_quote' => false,
         'trailing_comma_in_multiline_array' => false,
 
-        // additional rules
+        // 2. additional rules
         'array_syntax' => ['syntax' => 'short'],
         'ordered_imports' => true,
     ])
-    //->setIndent("\t")
-    ->setFinder($finder);
+    //->setIndent("\t")     // 레거시 코드일 경우에는 탭 사용
+    //->setFinder($finder)
+;
