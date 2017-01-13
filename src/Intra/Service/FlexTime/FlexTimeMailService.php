@@ -1,0 +1,52 @@
+<?php
+
+namespace Intra\Service\FlexTime;
+
+use Intra\Config\Config;
+use Intra\Service\User\UserDtoFactory;
+use Intra\Model\FlexTimeModel;
+use Intra\Core\Application;
+use Intra\Service\User\UserJoinService;
+use Intra\Service\Mail\MailingDto;
+use Intra\Service\Mail\MailSendService;
+
+class FlexTimeMailService
+{
+	private function getMailReceivers(FlexTimeModel $flextime)
+	{
+        $uids = [$flextime->uid, $flextime->manager_uid, $flextime->keeper_uid];
+        $uids = array_filter(array_unique($uids));
+
+        $users = UserDtoFactory::createDtosByUid($uids);
+
+        $emails = [];
+        foreach ($users as $user) {
+            $emails[] = $user->id . '@' . Config::$domain;
+        }
+        $emails = array_merge($emails, Config::$recipients['holiday']);
+
+        return array_unique(array_filter($emails));
+	}
+
+    public function sendMail(FlexTimeModel $flextime, $type)
+    {
+        $today = date('Y-m-d');
+        $title = "[얼리파마][{$type}][{$today}] {$flextime->name}님의 요청";
+        $receivers = $this->getMailReceivers($flextime);
+
+
+        $flextime->uid_name = UserJoinService::getNameByUidSafe($flextime->uid);
+        $flextime->manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);
+        $flextime->keeper_uid_name = UserJoinService::getNameByUidSafe($flextime->keeper_uid);
+        $html = Application::$view->render('flextime/template/mail', [
+            'flextime' => $flextime,
+        ]);
+
+        $mailing_dto = new MailingDto();
+        $mailing_dto->receiver = $receivers;
+        $mailing_dto->title = $title;
+        $mailing_dto->body_header = $html;
+
+        return MailSendService::sends([$mailing_dto]);
+    }
+}

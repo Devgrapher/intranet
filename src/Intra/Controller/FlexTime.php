@@ -2,13 +2,13 @@
 
 namespace Intra\Controller;
 
-use Intra\Service\FlexTime\FlexTimeService;
-use Intra\Service\Holiday\UserHolidayPolicy;
+use Intra\Service\FlexTime\FlexTimeMailService;
+use Intra\Service\User\UserJoinService;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserDtoHandler;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
-use Intra\Lib\Response\CsvResponse;
+use Ridibooks\Platform\Common\CsvResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
@@ -58,13 +58,8 @@ class FlexTime implements ControllerProviderInterface
 
 		$user_flextime = FlexTimeModel::where('uid', $uid)->get();
 		foreach ($user_flextime as $flextime) {
-			$manager_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($flextime->manager_uid));
-			$manager_dto = $manager_dto_object->exportDto();
-			$flextime->manager_uid_name = $manager_dto->name;
-
-			$keeper_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($flextime->keeper_uid));
-			$keeper_dto = $keeper_dto_object->exportDto();
-			$flextime->keeper_uid_name = $keeper_dto->name;
+			$flextime->manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);
+			$flextime->keeper_uid_name = UserJoinService::getNameByUidSafe($flextime->keeper_uid);
 		}
 
 		return $app['twig']->render('flextime/index.twig', [
@@ -81,6 +76,13 @@ class FlexTime implements ControllerProviderInterface
 	public function add(Request $request)
 	{
 		try {
+            $weekdays = $request->get('weekdays');
+            if ($weekdays){
+                $weekdays = implode(',', $request->get('weekdays'));
+            } else {
+                $weekdays = '월,화,수,목,금';
+            }
+
 			$flextime = FlexTimeModel::create(array(
 				'uid' => $request->get('uid'),
 				'manager_uid' => $request->get('manager_uid'),
@@ -88,18 +90,17 @@ class FlexTime implements ControllerProviderInterface
 				'start_date' => $request->get('start_date'),
 				'end_date' => $request->get('end_date'),
 				'start_time' => $request->get('start_time'),
-				'weekdays' => $request->get('weekdays'),
-				'phone_emergency' => $request->get('phone_emergency'),
+				'weekdays' => $weekdays,
 			));
 
-			$flextimeService = new FlexTimeService();
-			$flextimeService->sendAddMail($flextime);
+			$flextimeService = new FlexTimeMailService();
+			$flextimeService->sendMail($flextime, '추가');
 		} catch (\Exception $e) {
 			$ret = $e->getMessage();
 			return new Response($ret);
 		}
 
-		return 0;
+        return 1;
 	}
 
 	public function edit(Request $request)
@@ -116,8 +117,8 @@ class FlexTime implements ControllerProviderInterface
 				$flextime->$key = $value;
 				if ($flextime->save()) {
 					$ret = $value;
-					$flextimeService = new FlexTimeService();
-					$flextimeService->sendEditMail($flextime);
+					$flextimeService = new FlexTimeMailService();
+                    $flextimeService->sendMail($flextime, '변경');
 				}
 
 			}
@@ -137,8 +138,8 @@ class FlexTime implements ControllerProviderInterface
 			$flextime = FlexTimeModel::find($flextimeid);
 			if ($flextime) {
 				if ($flextime->delete()) {
-					$flextimeService = new FlexTimeService();
-					$flextimeService->sendDelMail($flextime);
+					$flextimeService = new FlexTimeMailService();
+                    $flextimeService->sendMail($flextime, '삭제');
 				}
 			}
 
@@ -164,27 +165,23 @@ class FlexTime implements ControllerProviderInterface
 
 		$flextimes = FlexTimeModel::whereBetween('start_date', [date($year . '/1/1'), date($year . '/12/31')])->get();
 		$rows = [];
-		$rows[] = ['신청날짜', '사원번호', '신청자', '결재자', '시작', '종료', '출근시간', '업무인수인계자', '비상시연락처'];
+		$rows[] = ['신청날짜', '사원번호', '신청자', '결재자', '시작', '종료', '요일', '출근시간', '업무인수인계자'];
 		foreach ($flextimes as $flextime) {
-			$target_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($flextime->uid));
-			$target_dto = $target_dto_object->exportDto();
-
-			$manager_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($flextime->manager_uid));
-			$manager_dto = $manager_dto_object->exportDto();
-
-			$keeper_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($flextime->keeper_uid));
-			$keeper_dto = $keeper_dto_object->exportDto();
+		    $personcode = UserJoinService::getPersonCodeByUidSafe($flextime->uid);
+			$name = UserJoinService::getNameByUidSafe($flextime->uid);
+            $manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);
+            $keeper_uid_name = UserJoinService::getNameByUidSafe($flextime->keeper_uid);
 
 			$rows[] = [
 				$flextime->start_date,
-				$target_dto->personcode,
-				$target_dto->name,
-				$manager_dto->name,
+				$personcode,
+				$name,
+                $manager_uid_name,
 				$flextime->start_date,
 				$flextime->end_date,
+                $flextime->weekdays,
 				$flextime->start_time,
-				$keeper_dto->name,
-				$flextime->phone_emergency,
+                $keeper_uid_name,
 			];
 		}
 
