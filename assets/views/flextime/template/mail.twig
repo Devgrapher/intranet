@@ -2,34 +2,34 @@
 item : FlextimeModel
 -->
 <style>
-    table { border-collapse:collapse; }
-    th, td { border:1px solid #ddd; }
-    th { background-color: #f1f1f1 }
+  table { border-collapse:collapse; }
+  th, td { border:1px solid #ddd; }
+  th { background-color: #f1f1f1 }
 
 </style>
 <table>
-    <tr>
-        <th>신청날짜</th><td>{{ flextime.created_at }}</td>
-    </tr>
-    <tr>
-        <th>신청자</th><td>{{ flextime.uid_name }}</td>
-    </tr>
-    <tr>
-        <th>결제자</th><td>{{ flextime.manager_uid_name }}</td>
-    </tr>
-    <tr>
-        <th>시작</th><td>{{ flextime.start_date }}</td>
-    </tr>
-    <tr>
-        <th>종료</th><td>{{ flextime.end_date }}</td>
-    </tr>
-    <tr>
-        <th>요일</th><td>{{ flextime.weekdays }}</td>
-    </tr>
-    <tr>
-        <th>출근시간</th><td>{{ flextime.start_time }}</td>
-    </tr>
-    <tr>
-        <th>업무인수인계자</th><td>{{ flextime.keeper_uid_name }}</td>
-    </tr>
+  <tr>
+    <th>신청날짜</th><td>{{ flextime.created_at }}</td>
+  </tr>
+  <tr>
+    <th>신청자</th><td>{{ flextime.uid_name }}</td>
+  </tr>
+  <tr>
+    <th>결제자</th><td>{{ flextime.manager_uid_name }}</td>
+  </tr>
+  <tr>
+    <th>시작</th><td>{{ flextime.start_date }}</td>
+  </tr>
+  <tr>
+    <th>종료</th><td>{{ flextime.end_date }}</td>
+  </tr>
+  <tr>
+    <th>요일</th><td>{{ flextime.weekdays }}</td>
+  </tr>
+  <tr>
+    <th>출근시간</th><td>{{ flextime.start_time }}</td>
+  </tr>
+  <tr>
+    <th>업무인수인계자</th><td>{{ flextime.keeper_uid_name }}</td>
+  </tr>
 </table>
