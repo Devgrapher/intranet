@@ -48,7 +48,7 @@ class MenuService
                     new Link('포커스룸', '/Rooms?type=focus'),
                     '근태관리' => [
                     	new Link('휴가신청', '/holidays', new PublicAuth()),
-						new Link('단축근로제도', '/flextime', new PublicAuth()),
+						new Link('얼리파마', '/flextime', new PublicAuth()),
 					],
                     '지원요청' => [
                         new Link('업무환경 불편사항 문의', '/Support/' . SupportPolicy::TYPE_DEVICE),
