@@ -32,7 +32,7 @@ class FlexTimeMailService
     {
         $today = date('Y-m-d');
         $title = "[얼리파마][{$type}][{$today}] {$flextime->name}님의 요청";
-        $receivers = FlexTimeMailService::getMailReceivers($flextime);
+        $receivers = self::getMailReceivers($flextime);
 
         $flextime->uid_name = UserJoinService::getNameByUidSafe($flextime->uid);
         $flextime->manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);

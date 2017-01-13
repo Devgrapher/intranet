@@ -12,7 +12,7 @@
     data-aa-url='/flextime/uid/{{ uid }}'
     data-aa-method='post'
     data-aa-datatype="text"
-    data-aa-success-if-result-is="1"
+    data-aa-success-if-result-is="success"
     data-aa-onsuccess-msg="추가되었습니다"
     data-aa-onsuccess="refresh"
     data-aa-onfail-alert="true"
@@ -52,10 +52,10 @@
             <td>{{ flextime.created_at [:10] }}</td>
             <td>{{ name }}</td>
             <td>{{ flextime.manager_uid_name }}</td>
-            <td>{{ flextime.start_date }}</td>
-            <td>{{ flextime.end_date }}</td>
-            <td>{{ flextime.weekdays }}</td>
-            <td>{{ flextime.start_time }}</td>
+            <td data-key="start_date">{{ flextime.start_date }}</td>
+            <td data-key="end_date">{{ flextime.end_date }}</td>
+            <td data-key="weekdays">{{ flextime.weekdays }}</td>
+            <td data-key="start_time">{{ flextime.start_time }}</td>
             <td>{{ flextime.keeper_uid_name }}</td>
             <td>
               {% if editable %}
@@ -65,7 +65,7 @@
                        data-aa-method='DELETE'
                        data-aa-confirm='정말 삭제하시겠습니까?'
                        data-aa-datatype="text"
-                       data-aa-success-if-result-is="1"
+                       data-aa-success-if-result-is="success"
                        data-aa-onsuccess-msg="삭제되었습니다"
                        data-aa-onsuccess="refresh"
                        data-aa-onfail-alert="true"

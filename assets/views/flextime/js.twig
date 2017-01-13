@@ -3,7 +3,7 @@
 
   require(["jquery", "jquery.jeditable", "jquery-ui", "jquery-timepicker", "bootstrap"], function ($) {
 
-      var dateFormat = "yy/mm/dd",
+      var dateFormat = "yy-mm-dd",
           from = $( 'input[name="start_date"]' )
               .datepicker()
               .on( "change", function() {
@@ -30,8 +30,6 @@
           return date;
       }
 
-//    $('.datepicker').datepicker();
-//    $('.datepicker').datepicker('option', 'dateFormat', 'yy/mm/dd');
     $('.timepicker').timepicker({
         timeFormat: 'H:i',
         step: 60

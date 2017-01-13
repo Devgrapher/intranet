@@ -95,18 +95,15 @@ class FlexTime implements ControllerProviderInterface
 
             FlexTimeMailService::sendMail($flextime, '추가');
         } catch (\Exception $e) {
-            $ret = $e->getMessage();
-            return new Response($ret);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return 1;
+        return Response::create('success', Response::HTTP_OK);
     }
 
     public function edit(Request $request)
     {
         try {
-            $ret = 'error';
-
             $flextimeid = $request->get('flextimeid');
             $key = $request->get('key');
             $value = $request->get('value');
@@ -115,15 +112,13 @@ class FlexTime implements ControllerProviderInterface
             if ($flextime) {
                 $flextime->$key = $value;
                 if ($flextime->save()) {
-                    $ret = $value;
                     FlexTimeMailService::sendMail($flextime, '변경');
                 }
             }
+            return Response::create($value, Response::HTTP_OK);
 
-            return $ret;
         } catch (\Exception $e) {
-            $ret = $e->getMessage();
-            return new Response($ret);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -138,17 +133,16 @@ class FlexTime implements ControllerProviderInterface
                 }
             }
         } catch (\Exception $e) {
-            $ret = $e->getMessage();
-            return new Response($ret);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return 1;
+        return Response::create('success', Response::HTTP_OK);
     }
 
     public function download(Request $request)
     {
         if (!UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
-            return new Response("권한이 없습니다", 403);
+            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED)
         }
 
         $year = $request->get('year');
@@ -157,6 +151,6 @@ class FlexTime implements ControllerProviderInterface
         }
 
         $csvRows = FlexTimeCsvService::getAllYearly($year);
-        return new CsvResponse($csvRows);
+        return CsvResponse::create($csvRows);
     }
 }
