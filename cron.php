@@ -1,6 +1,5 @@
 <?php
 use Intra\Config\Config;
-use Intra\Model\SessionModel;
 use Intra\Service\Cron\CronMaster;
 use Intra\Service\IntraDb;
 use Intra\Service\Ridi;

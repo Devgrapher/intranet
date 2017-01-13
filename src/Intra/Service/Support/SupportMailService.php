@@ -63,10 +63,10 @@ class SupportMailService
         foreach ($uids as $uid) {
             $receivers[] = UserJoinService::getEmailByUidSafe($uid);
         }
-        foreach (Config::$supports['mails']['all'] as $mail) {
+        foreach (Config::$user_policy['support_admin']['all'] as $mail) {
             $receivers[] = $mail;
         }
-        foreach (Config::$supports['mails'][$target] as $mail) {
+        foreach (Config::$user_policy['support_admin'][$target] as $mail) {
             $receivers[] = $mail;
         }
         $receivers = array_unique($receivers);

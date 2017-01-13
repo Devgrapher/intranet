@@ -52,7 +52,7 @@ class SupportRowService
 
         $columns = SupportPolicy::getColumnFields($target);
         $user = UserSession::getSelfDto();
-        if (!(self::isEditable($user, $columns, $key, $support_dto))) {
+        if (!(self::isEditable($user, $target, $columns, $key, $support_dto))) {
             return $support_dto->dict[$key];
         }
         SupportModel::edit($target, $id, $key, $value);
@@ -71,9 +71,9 @@ class SupportRowService
      *
      * @return bool
      */
-    private static function isEditable($user, $columns, $key, $support_dto)
+    private static function isEditable($user, $target, $columns, $key, $support_dto)
     {
-        if (UserPolicy::isSupportAdmin($user)) {
+        if (UserPolicy::isSupportAdmin($user, $target)) {
             return true;
         }
         foreach ($columns as $column) {
@@ -97,7 +97,7 @@ class SupportRowService
         return JsonDtoWrapper::create(function () use ($target, $id) {
             $support_dto = SupportDtoFactory::get($target, $id);
             $user = UserSession::getSelfDto();
-            self::assertDelete($user, $support_dto);
+            self::assertDelete($user, $target, $support_dto);
             $count = SupportModel::del($target, $support_dto->id);
             if (!$count) {
                 throw new MsgException('삭제되지 않았습니다.');
@@ -107,9 +107,9 @@ class SupportRowService
         });
     }
 
-    private static function assertDelete($user, $support_dto)
+    private static function assertDelete($user, $target, $support_dto)
     {
-        if (UserPolicy::isSupportAdmin($user)) {
+        if (UserPolicy::isSupportAdmin($user, $target)) {
             return;
         }
         if ($support_dto->uid == $user->uid) {
@@ -132,7 +132,7 @@ class SupportRowService
                     if ($column instanceof SupportColumnAcceptUser) {
                         $target_uid = $support_dto->dict[$key];
                         $has_auth = ($target_uid == $self->uid);
-                        $is_admin = UserPolicy::isSupportAdmin($self);
+                        $is_admin = UserPolicy::isSupportAdmin($self, $target);
                         if (!($has_auth || $is_admin)) {
                             throw new MsgException('권한이 없습니다.');
                         }
@@ -140,7 +140,7 @@ class SupportRowService
                     }
                     if ($column instanceof SupportColumnComplete) {
                         $has_auth = ($column->callback_has_user_auth)($self);
-                        $is_admin = UserPolicy::isSupportAdmin($self);
+                        $is_admin = UserPolicy::isSupportAdmin($self, $target);
                         if (!($has_auth || $is_admin)) {
                             throw new MsgException('권한이 없습니다.');
                         }

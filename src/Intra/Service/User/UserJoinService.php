@@ -4,8 +4,8 @@ namespace Intra\Service\User;
 use Intra\Config\Config;
 use Intra\Core\MsgException;
 use Intra\Lib\Azure\Settings;
-use Intra\Lib\DictsUtils;
 use Intra\Model\UserModel;
+use Ridibooks\Platform\Common\DictsUtils;
 
 class UserJoinService
 {

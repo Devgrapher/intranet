@@ -23,14 +23,14 @@ IntraDb::bootDB();
 SessionModel::init();
 
 if (Application::run(__DIR__ . "/assets/controls", __DIR__ . "/assets/views")) {
-	exit;
+    exit;
 }
 
 $app = new Silex\Application;
 $app->register(new NamespaceRouteServiceProvider(RootController::class, '/'));
 $app->register(new TwigServiceProvider());
 $app->before(function (Request $request) {
-	return UserPolicy::assertRestrictedPath($request);
+    return UserPolicy::assertRestrictedPath($request);
 });
 $app['debug'] = Config::$is_dev;
 $app['twig.path'] = [__DIR__ . '/assets/views'];

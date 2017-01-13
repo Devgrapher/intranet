@@ -3,8 +3,8 @@ namespace Intra\Service\Payment;
 
 use Intra\Core\BaseDto;
 use Intra\Core\MsgException;
-use Intra\Lib\DateUtil;
 use Intra\Service\User\UserJoinService;
+use Ridibooks\Platform\Common\DateUtil;
 use Symfony\Component\HttpFoundation\Request;
 
 class PaymentDto extends BaseDto

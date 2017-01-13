@@ -4,8 +4,8 @@ namespace Intra\Service\Mail;
 
 use Intra\Config\Config;
 use Intra\Core\MsgException;
-use Intra\Lib\DictsUtils;
 use Mailgun\Mailgun;
+use Ridibooks\Platform\Common\DictsUtils;
 
 class MailSendService
 {

@@ -3,12 +3,12 @@
 namespace Intra\Service\Cron\Job;
 
 use Intra\Config\Config;
-use Intra\Lib\ObjectsUtils;
 use Intra\Model\PaymentModel;
 use Intra\Service\Cron\Interfacer\CronMailingInterface;
 use Intra\Service\Mail\MailingDto;
 use Intra\Service\Payment\PaymentDtoFactory;
 use Intra\Service\User\UserJoinService;
+use Ridibooks\Platform\Common\ObjectsUtils;
 
 class PaymentRemainCronMailing extends CronMailingInterface
 {
