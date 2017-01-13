@@ -12,7 +12,7 @@ use Intra\Service\User\UserJoinService;
 
 class FlexTimeMailService
 {
-    private function getMailReceivers(FlexTimeModel $flextime)
+    private static function getMailReceivers(FlexTimeModel $flextime)
     {
         $uids = [$flextime->uid, $flextime->manager_uid, $flextime->keeper_uid];
         $uids = array_filter(array_unique($uids));
@@ -28,11 +28,11 @@ class FlexTimeMailService
         return array_unique(array_filter($emails));
     }
 
-    public function sendMail(FlexTimeModel $flextime, $type)
+    public static function sendMail(FlexTimeModel $flextime, $type)
     {
         $today = date('Y-m-d');
         $title = "[얼리파마][{$type}][{$today}] {$flextime->name}님의 요청";
-        $receivers = $this->getMailReceivers($flextime);
+        $receivers = FlexTimeMailService::getMailReceivers($flextime);
 
         $flextime->uid_name = UserJoinService::getNameByUidSafe($flextime->uid);
         $flextime->manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);

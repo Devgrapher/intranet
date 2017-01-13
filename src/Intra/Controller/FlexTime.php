@@ -92,8 +92,7 @@ class FlexTime implements ControllerProviderInterface
                 'weekdays' => $weekdays,
             ]);
 
-            $flextimeService = new FlexTimeMailService();
-            $flextimeService->sendMail($flextime, '추가');
+            FlexTimeMailService::sendMail($flextime, '추가');
         } catch (\Exception $e) {
             $ret = $e->getMessage();
             return new Response($ret);
@@ -116,8 +115,7 @@ class FlexTime implements ControllerProviderInterface
                 $flextime->$key = $value;
                 if ($flextime->save()) {
                     $ret = $value;
-                    $flextimeService = new FlexTimeMailService();
-                    $flextimeService->sendMail($flextime, '변경');
+                    FlexTimeMailService::sendMail($flextime, '변경');
                 }
             }
 
@@ -135,8 +133,7 @@ class FlexTime implements ControllerProviderInterface
             $flextime = FlexTimeModel::find($flextimeid);
             if ($flextime) {
                 if ($flextime->delete()) {
-                    $flextimeService = new FlexTimeMailService();
-                    $flextimeService->sendMail($flextime, '삭제');
+                    FlexTimeMailService::sendMail($flextime, '삭제');
                 }
             }
         } catch (\Exception $e) {
