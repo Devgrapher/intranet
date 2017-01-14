@@ -4,19 +4,12 @@
 ## Development Settings
 1. Run `make` command from project's root directory.
 
-2. Modify `ConfigDevelop.php` file.
-
-    - Fill DB information.
+2. Fill DB information at `ConfigDevelop.php`.
     ```
     public static $mysql_host = '';
     public static $mysql_user = '';
     public static $mysql_password = '';
     public static $mysql_db = '';
-    ```
-    
-    - Set `$is_dev` to `false`.
-    ```
-    public static $is_dev = false;
     ```
 
 ## 실행법
