@@ -1,15 +1,12 @@
 <?php
 
 namespace Intra\Service\FlexTime;
-
-use Intra\Model\FlexTimeModel;
 use Intra\Service\User\UserJoinService;
 
-class FlexTimeCsvService
+class FlexTimeDownloadService
 {
-    public static function getAllYearly($year)
+    public static function createCsvResponse($flextimes)
     {
-        $flextimes = FlexTimeModel::whereBetween('start_date', [date($year . '/1/1'), date($year . '/12/31')])->get();
         $rows = [];
         $rows[] = ['신청날짜', '사원번호', '신청자', '결재자', '시작', '종료', '요일', '출근시간', '업무인수인계자'];
         foreach ($flextimes as $flextime) {

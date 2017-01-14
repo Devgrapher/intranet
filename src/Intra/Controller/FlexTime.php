@@ -3,14 +3,13 @@
 namespace Intra\Controller;
 
 use Intra\Model\FlexTimeModel;
-use Intra\Service\FlexTime\FlexTimeCsvService;
+use Intra\Service\FlexTime\FlexTimeDownloadService;
 use Intra\Service\FlexTime\FlexTimeMailService;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserDtoHandler;
 use Intra\Service\User\UserJoinService;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
-use Ridibooks\Platform\Common\CsvResponse;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,8 +27,7 @@ class FlexTime implements ControllerProviderInterface
         $controller_collection->post('uid/{uid}', [$this, 'add']);
         $controller_collection->put('uid/{uid}', [$this, 'edit']);
         $controller_collection->delete('uid/{uid}/{flextimeid}', [$this, 'del']);
-        $controller_collection->get('/download/{year}', [$this, 'download']);
-        $controller_collection->get('/downloadRemain/{year}', [$this, 'downloadRemain']);
+        $controller_collection->get('/download/{year}', [$this, 'downloadYearly']);
         return $controller_collection;
     }
 
@@ -139,7 +137,7 @@ class FlexTime implements ControllerProviderInterface
         return Response::create('success', Response::HTTP_OK);
     }
 
-    public function download(Request $request)
+    public function downloadYearly(Request $request)
     {
         if (!UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
@@ -149,8 +147,7 @@ class FlexTime implements ControllerProviderInterface
         if (!intval($year)) {
             $year = date('Y');
         }
-
-        $csvRows = FlexTimeCsvService::getAllYearly($year);
-        return CsvResponse::create($csvRows);
+        $flextimes = FlexTimeModel::whereBetween('start_date', [date($year . '/1/1'), date($year . '/12/31')])->get();
+        return FlexTimeDownloadService::createCsvResponse($flextimes);
     }
 }
