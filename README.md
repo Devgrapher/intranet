@@ -2,11 +2,22 @@
 [![Join the chat at https://gitter.im/ridibooks/intranet](https://badges.gitter.im/ridibooks/intranet.svg)](https://gitter.im/ridibooks/intranet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Development Settings
-### Composer
-Run command below in root directory.
-```
-composer install
-```
+1. Run `make` command from project's root directory.
+
+2. Modify `ConfigDevelop.php` file.
+
+    - Fill DB information.
+    ```
+    public static $mysql_host = '';
+    public static $mysql_user = '';
+    public static $mysql_password = '';
+    public static $mysql_db = '';
+    ```
+    
+    - Set `$is_dev` to `false`.
+    ```
+    public static $is_dev = false;
+    ```
 
 ## 실행법
 
