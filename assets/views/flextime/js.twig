@@ -1,39 +1,34 @@
 <script>
   var uid = {{ uid }};
 
-  require(["jquery", "jquery.jeditable", "jquery-ui", "jquery-timepicker", "bootstrap"], function ($) {
+  require(["jquery", "jquery.jeditable", "jquery-ui", "bootstrap"], function ($) {
 
-      var dateFormat = "yy-mm-dd",
-          from = $( 'input[name="start_date"]' )
-              .datepicker()
-              .on( "change", function() {
-                  to.datepicker( "option", "minDate", getDate( this ) );
-              }),
-          to = $( 'input[name="end_date"]' )
-              .datepicker()
-              .on( "change", function() {
-                  from.datepicker( "option", "maxDate", getDate( this ) );
-              });
-      from.datepicker( "option", "dateFormat", dateFormat );
-      from.datepicker( "option", "minDate", new Date() );
-      to.datepicker( "option", "dateFormat", dateFormat );
-      to.datepicker( "option", "minDate", new Date() );
+    var dateFormat = "yy-mm-dd",
+        from = $( 'input[name="start_date"]' )
+            .datepicker()
+            .on( "change", function() {
+                to.datepicker( "option", "minDate", getDate( this ) );
+            }),
+        to = $( 'input[name="end_date"]' )
+            .datepicker()
+            .on( "change", function() {
+                from.datepicker( "option", "maxDate", getDate( this ) );
+            });
+    from.datepicker( "option", "dateFormat", dateFormat );
+    from.datepicker( "option", "minDate", new Date() );
+    to.datepicker( "option", "dateFormat", dateFormat );
+    to.datepicker( "option", "minDate", new Date() );
 
-      function getDate( element ) {
-          var date;
-          try {
-              date = $.datepicker.parseDate( dateFormat, element.value );
-          } catch( error ) {
-              date = null;
-          }
+    function getDate( element ) {
+        var date;
+        try {
+            date = $.datepicker.parseDate( dateFormat, element.value );
+        } catch( error ) {
+            date = null;
+        }
 
-          return date;
-      }
-
-    $('.timepicker').timepicker({
-        timeFormat: 'H:i',
-        step: 60
-    });
+        return date;
+    }
 
     $('select.js_superedit')
       .val({{ uid }})

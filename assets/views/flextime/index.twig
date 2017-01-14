@@ -105,14 +105,13 @@
               <input type="checkbox" name="weekdays[]" value="금" checked />금
             </fieldset>
           </td>
-          <td><input
-                class='timepicker'
-                type='text'
-                name='start_time'
-                style='width:80px'
-                placeholder='00:00'
-                required
-            /></td>
+          <td>
+            <select name="start_time">
+              <option>08:00</option>
+              <option>08:30</option>
+              <option>09:00</option>
+              <option>09:30</option>
+            </select>
           <td>
             <label>
               <select name='keeper_uid' js_cookie_save js_data_chosen>
@@ -132,8 +131,22 @@
   <div style="width:1000px;">
   <pre>
 <b>[얼리파마]</b>
-  - 미취학 아동이 있는 임직원들이 '근무시간을 조정' 하여 출퇴근 할 수 있게 하는 제도.
-  - 근무 시간은 8시간 입니다.
+1. 내용
+  아이 돌봄 혹은 출산 직후의 배우자 돌봄을 사유로,
+  아래의 시간 대 중 선택 출근하여, 8시간 근무 후 자유로이 퇴근하는 제도
+  - 오전 8:00
+  - 오전 8:30
+  - 오전 9:00
+  - 오전 9:30
+
+2. 조건
+  미취학 아동 (만 6세 이하)의 자녀가 있는 직원
+
+3. 절차
+  1) 사전에 부서장님과의 상의
+  2) 최초/분기별 인사팀에 메일 신고
+  - 사유, 적용받을 시간대, 주기/횟수 명시
+  - 분기마다 (1월, 4월, 7월, 10월 첫째 주 월요일) 갱신
   </pre>
   </div>
 
