@@ -95,7 +95,7 @@ class FlexTime implements ControllerProviderInterface
 
             FlexTimeMailService::sendMail($flextime, '추가');
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
 
         return Response::create('success', Response::HTTP_OK);
@@ -116,9 +116,8 @@ class FlexTime implements ControllerProviderInterface
                 }
             }
             return Response::create($value, Response::HTTP_OK);
-
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
     }
 
@@ -133,7 +132,7 @@ class FlexTime implements ControllerProviderInterface
                 }
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
 
         return Response::create('success', Response::HTTP_OK);
@@ -142,7 +141,7 @@ class FlexTime implements ControllerProviderInterface
     public function download(Request $request)
     {
         if (!UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
-            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED)
+            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 
         $year = $request->get('year');
