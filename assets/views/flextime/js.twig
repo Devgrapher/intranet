@@ -34,7 +34,7 @@
       .val({{ uid }})
       .trigger("change")
       .change(function () {
-        location.href = '/flextime/uid/' + $(this).val();
+        location.href = '/FlexTime/uid/' + $(this).val();
       });
     $("input").on("keypress", function (e) {
       return e.which != 13;
@@ -48,7 +48,7 @@
       var submitdata = {flextimeid: flextimeid, key: key};
       var args = {submitdata: submitdata, method: 'PUT'};
 
-      $(this).editable('/flextime/uid/' + uid, args);
+      $(this).editable('/FlexTime/uid/' + uid, args);
     });
     {% endif %}
   });
