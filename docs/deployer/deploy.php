@@ -18,13 +18,11 @@ set('writable_dirs', []);
 set('use_relative_symlink', false);
 set('default_stage', 'dev');
 
-
 // Servers
 
 foreach (glob(__DIR__ . '/stage/*.yml') as $filename) {
     serverList($filename);
 }
-
 
 // Tasks
 
@@ -34,21 +32,27 @@ task('test', function () {
     writeln(run("cd {{current_path}} && {{bin/git}} show -s")->toString());
 });
 
-task('deploy:git_fetch', function () {
-    run("cd {{current_path}} && {{bin/git}} reset --hard origin/master");
-    run("cd {{current_path}} && {{bin/git}} fetch --all");
+task('deploy:set_slack', function () {
+    if (!has('host')) {
+        set('host', 'host');
+    }
+    if (!has('stages')) {
+        set('stages', ['stage']);
+    }
+    if (!has('release_path')) {
+        set('release_path', 'release_path');
+    }
+
+    $git_last_log = run("cd {{current_path}} && {{bin/git}} log --oneline -1")->toString();
+    $server_name = get('server')['name'];
+    if (has('slack')) {
+        $slack = get('slack');
+    } else {
+        $slack = [];
+    }
+    $slack['message'] = "`{{host}}`에  *{{stage}}* 배포가 완료되었습니다. (서버 이름: $server_name)\n*Release path*: _{{release_path}}_\n*Latest commit*: _" . $git_last_log . "_";
+    set('slack', $slack);
 });
-
-
-desc('Update');
-task('git_fetch', [
-    'deploy:prepare',
-    'deploy:lock',
-    'deploy:git_fetch',
-    'deploy:unlock',
-    'cleanup'
-]);
-after('git_fetch', 'success');
 
 desc('Installing bower components');
 task('deploy:bower', function () {
@@ -67,6 +71,7 @@ task('deploy', [
     'deploy:bower',
     //'deploy:clear_paths',
     'deploy:symlink',
+    'deploy:set_slack',
     'deploy:unlock',
     'cleanup'
 ]);
