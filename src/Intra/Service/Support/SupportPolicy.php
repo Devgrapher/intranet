@@ -286,6 +286,7 @@ class SupportPolicy
                         'MAC (맥북, 아이맥)',
                         '노트북',
                         '데스크탑',
+                        '서버 및 네트워크 장비',
                     ]
                 ),
                 '품목/수량' => new SupportColumnText('detail'),
