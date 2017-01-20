@@ -26,10 +26,8 @@ require(["jquery", "jquery.attrajax", 'jquery-ui', "jquery-number", "jquery.cook
       var key = $this[0].tagName + '#' + $this.attr('name') + '#' + $this.attr('id');
 
       var cookied_value = $.cookie(key);
-      console.log('cookief_val', cookied_value, key);
       if (cookied_value == undefined) {
         var defaultVal = $this.attr('js_default_save');
-        console.log('Default_val', defaultVal, key);
         if (defaultVal !== undefined) {
             if ($this.is('[type=checkbox]')) {
                 if (defaultVal == 'true') {
