@@ -516,6 +516,15 @@
           </label>
         </td>
         <td></td>
+        <td>
+          <label>
+            <select name='is_account_book_registered' js_cookie_save>
+              {% for tax in const.is_account_book_registered %}
+                <option value='{{ tax }}'>{{ tax }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </td>
         <td></td>
         <td class="alert alert-info">
           <input type='text' name='month' maxlength='7' style='width:60px;' value="{{ todayMonth }}"
@@ -588,15 +597,6 @@
           </label>
         </td>
         <td><input type='date' name='tax_date' style='width:60px' placeholder='일자'/></td>
-        <td>
-          <label>
-            <select name='is_account_book_registered' js_cookie_save>
-              {% for tax in const.is_account_book_registered %}
-                <option value='{{ tax }}'>{{ tax }}</option>
-              {% endfor %}
-            </select>
-          </label>
-        </td>
         <td class="alert alert-info"><input type='text' name='bank' style='width:60px' placeholder='우리'/></td>
         <td class="alert alert-info"><input type='text' name='bank_account' placeholder='xxx-xxxxxxx-xx-xxx'/></td>
         <td class="alert alert-info"><input type='text' name='bank_account_owner' placeholder='홍길동'/></td>
@@ -649,13 +649,13 @@
             </select>
           {% endif %}
         </td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
         <td></td>
+        <td class="alert alert-info"></td>
+        <td class="alert alert-info"></td>
+        <td class="alert alert-info"></td>
+        <td class="alert alert-info"></td>
+        <td class="alert alert-info"></td>
+        <td class="alert alert-info"></td>
         <td></td>
         <td></td>
         <td></td>
