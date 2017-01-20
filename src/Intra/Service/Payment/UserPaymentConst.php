@@ -37,7 +37,7 @@ class UserPaymentConst
     {
         $const = [];
         $const['team'] = UserConstant::$jeditable_key_list['team'];
-        $const['product'] = ['리디북스', '페이퍼샵', '공통'];
+        $const['product'] = ['리디북스', '리디스토리', '페이퍼샵', '공통'];
         $const['tax'] = ['Y', 'N', 'N/A'];
         $const['tax_export'] = ['Y', 'N', 'N/A'];
         $const['is_account_book_registered'] = ['N', 'Y'];
