@@ -51,10 +51,28 @@
         "paging": false,
         "ordering": false
       });
+
+      function setColumnVisible(index, isVisible) {
+          var column = datatable.column(index);
+          column.visible(isVisible, false);
+      }
+
       $('input.toggle-vis').on('change', function (e) {
-          var column = datatable.column($(this).attr('data-column'));
-          column.visible($(this).is(":checked"), false);
+          setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
+          var isAllChecked = true;
+          $('input.toggle-vis').each(function () {
+              isAllChecked = isAllChecked && $(this).is(":checked");
+          });
+          $('#col-toggle-add').prop('checked', isAllChecked);
       }).trigger('change');
+
+      $('#col-toggle-add').on('change', function (e) {
+          var isChecked = $(this).is(":checked");
+          $('input.toggle-vis').each(function () {
+              $(this).prop('checked', isChecked);
+              $(this).trigger('change');
+          });
+      });
 
         $('table').css('table-layout', 'fixed');
       $('th').on('click', function () {
@@ -261,7 +279,11 @@
 
   </h4>
 
-  <div>
+  <button class="btn btn-sm" type="button" data-toggle="collapse" data-target="#col-setting" aria-expanded="false" aria-controls="col-setting">
+    열 숨김/보이기
+  </button>
+  <div class="collapse" id="col-setting">
+    <input type="checkbox" id="col-toggle-add" />전체보기 -
     <input type="checkbox" name="col-toggle1" class="toggle-vis" data-column="1" js_cookie_save js_default_save="true" />UUID -
     <input type="checkbox" name="col-toggle2" class="toggle-vis" data-column="2" js_cookie_save js_default_save="true" />요청일 -
     <input type="checkbox" name="col-toggle3" class="toggle-vis" data-column="3" js_cookie_save js_default_save="true" />요청자 -
