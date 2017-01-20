@@ -47,12 +47,16 @@
   </style>
   <script>
     require(["jquery", "jquery.jeditable", "jquery.fileupload", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
-      var datatable = $('table[datatable]').DataTable(
-        {
-          "paging": false,
-          "ordering": false
-        });
-      $('table').css('table-layout', 'fixed');
+      var datatable = $('table[datatable]').DataTable({
+        "paging": false,
+        "ordering": false
+      });
+      $('input.toggle-vis').on('change', function (e) {
+          var column = datatable.column($(this).attr('data-column'));
+          column.visible($(this).is(":checked"), false);
+      }).trigger('change');
+
+        $('table').css('table-layout', 'fixed');
       $('th').on('click', function () {
         var column = datatable.column(this);
         column.nodes().to$().toggleClass('js_column_fold');
@@ -256,6 +260,35 @@
     {% endif %}
 
   </h4>
+
+  <div>
+    <input type="checkbox" name="col-toggle1" class="toggle-vis" data-column="1" js_cookie_save js_default_save="true" />UUID -
+    <input type="checkbox" name="col-toggle2" class="toggle-vis" data-column="2" js_cookie_save js_default_save="true" />요청일 -
+    <input type="checkbox" name="col-toggle3" class="toggle-vis" data-column="3" js_cookie_save js_default_save="true" />요청자 -
+    <input type="checkbox" name="col-toggle4" class="toggle-vis" data-column="4" js_cookie_save js_default_save="true" />승인자 -
+    <input type="checkbox" name="col-toggle5" class="toggle-vis" data-column="5" js_cookie_save js_default_save="true" />승인자 확인 -
+    <input type="checkbox" name="col-toggle6" class="toggle-vis" data-column="6" js_cookie_save js_default_save="true" />장부반영여부 -
+    <input type="checkbox" name="col-toggle7" class="toggle-vis" data-column="7" js_cookie_save js_default_save="true" />재무팀 확인 -
+    <input type="checkbox" name="col-toggle8" class="toggle-vis" data-column="8" js_cookie_save js_default_save="true" />귀속월 -
+    <input type="checkbox" name="col-toggle9" class="toggle-vis" data-column="9" js_cookie_save js_default_save="true" />귀속부서 -
+    <input type="checkbox" name="col-toggle10" class="toggle-vis" data-column="10" js_cookie_save js_default_save="true" />프로덕트 -
+    <input type="checkbox" name="col-toggle11" class="toggle-vis" data-column="11" js_cookie_save js_default_save="true" />분류 -
+    <input type="checkbox" name="col-toggle12" class="toggle-vis" data-column="12" js_cookie_save js_default_save="true" />상세내역 -
+    <input type="checkbox" name="col-toggle13" class="toggle-vis" data-column="13" js_cookie_save js_default_save="true" />파일 -
+    <input type="checkbox" name="col-toggle14" class="toggle-vis" data-column="14" js_cookie_save js_default_save="true" />업체명 -
+    <input type="checkbox" name="col-toggle15" class="toggle-vis" data-column="15" js_cookie_save js_default_save="true" />입금금액 -
+    <input type="checkbox" name="col-toggle16" class="toggle-vis" data-column="16" js_cookie_save js_default_save="true" />결제(예정)일 -
+    <input type="checkbox" name="col-toggle17" class="toggle-vis" data-column="17" js_cookie_save js_default_save="true" />세금계산서수취여부 -
+    <input type="checkbox" name="col-toggle18" class="toggle-vis" data-column="18" js_cookie_save js_default_save="true" />세금계산서발행여부 -
+    <input type="checkbox" name="col-toggle19" class="toggle-vis" data-column="19" js_cookie_save js_default_save="true" />세금계산서일자 -
+    <input type="checkbox" name="col-toggle20" class="toggle-vis" data-column="20" js_cookie_save js_default_save="true" />입금은행 -
+    <input type="checkbox" name="col-toggle21" class="toggle-vis" data-column="21" js_cookie_save js_default_save="true" />입금계좌번호 -
+    <input type="checkbox" name="col-toggle22" class="toggle-vis" data-column="22" js_cookie_save js_default_save="true" />예금주 -
+    <input type="checkbox" name="col-toggle23" class="toggle-vis" data-column="23" js_cookie_save js_default_save="true" />비고 -
+    <input type="checkbox" name="col-toggle24" class="toggle-vis" data-column="24" js_cookie_save js_default_save="true" />결제수단 -
+    <input type="checkbox" name="col-toggle25" class="toggle-vis" data-column="25" js_cookie_save js_default_save="true" />상태
+  </div>
+
   <form
     attrajax
     data-aa-url='/payments/uid/{{ currentUid }}'
@@ -266,7 +299,6 @@
     data-aa-onsuccess="refresh"
     data-aa-onfail-alert="true"
   >
-
     <table class="table table-striped table-hover table-bordered table-condensed" datatable>
       <thead>
       <tr>
@@ -278,6 +310,7 @@
         <th>요청자</th>
         <th>승인자</th>
         <th>승인자 확인</th>
+        <th>장부반영여부</th>
         <th>재무팀 확인</th>
         <th class="alert alert-info">귀속월</th>
         <th class="alert alert-info">귀속부서</th>
@@ -291,7 +324,6 @@
         <th>세금계산서수취여부</th>
         <th>세금계산서발행여부</th>
         <th>세금계산서일자</th>
-        <th>장부반영여부</th>
         <th class="alert alert-info">입금은행</th>
         <th class="alert alert-info">입금계좌번호</th>
         <th class="alert alert-info">예금주</th>
@@ -340,6 +372,7 @@
               {{ payment.manger_accept.created_datetime | date('Y-m-d') }}
             {% endif %}
           </td>
+          <td data-key='is_account_book_registered' data-keyselect>{{ payment.is_account_book_registered }}</td>
           <td>
             {% if payment.is_co_accepted == 0 %}
               {% if isSuperAdmin %}
@@ -413,7 +446,6 @@
           <td data-key='tax' data-keyselect>{{ payment.tax }}</td>
           <td data-key='tax_export' data-keyselect>{{ payment.tax_export }}</td>
           <td data-key='tax_date'>{{ payment.tax_date }}</td>
-          <td data-key='is_account_book_registered' data-keyselect>{{ payment.is_account_book_registered }}</td>
           <td data-key='bank'>{{ payment.bank }}</td>
           <td data-key='bank_account'>{{ payment.bank_account }}</td>
           <td data-key='bank_account_owner'>{{ payment.bank_account_owner }}</td>
