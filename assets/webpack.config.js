@@ -7,7 +7,7 @@ module.exports = {
     holiday_admin: './js/holiday_admin',
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(__dirname, '../static/js'),
     filename: '[name].js',
   },
   resolve: {
@@ -17,27 +17,14 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.jsx$/,
-        loader: 'babel',
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader',
         query: {
           presets: ['es2015', 'react', 'stage-2'],
           plugins: ['transform-class-properties'],
         },
-        exclude: [/elm-stuff/, /node_modules/],
+        exclude: [/node_modules/],
       },
-      {
-        test: /\.elm$/,
-        exclude: [/elm-stuff/, /node_modules/],
-        loader: 'elm-webpack',
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|svg)$/,
-        loader: 'url',
-      }
     ],
 
     noParse: /\.elm$/,
