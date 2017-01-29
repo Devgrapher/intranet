@@ -22,11 +22,6 @@ class Weekly
 
     public function assertPermission()
     {
-        // free pass
-        if (isset($_GET['pw']) && $_GET['pw'] == 'mu57u53') {
-            return;
-        }
-
         if (!Ridi::isRidiIP() || UserSession::isTa()) {
             throw new Exception('권한이 없습니다.');
         }
