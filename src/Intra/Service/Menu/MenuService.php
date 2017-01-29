@@ -4,6 +4,7 @@ namespace Intra\Service\Menu;
 
 use Intra\Config\Config;
 use Intra\Service\Auth\ExceptTaAuth;
+use Intra\Service\Auth\OnlyHolidayEditable;
 use Intra\Service\Auth\OnlyPressManager;
 use Intra\Service\Auth\OnlyUserManager;
 use Intra\Service\Auth\PublicAuth;
@@ -48,6 +49,7 @@ class MenuService
                     new Link('포커스룸', '/Rooms?type=focus'),
                     '근태관리' => [
                         new Link('휴가신청', '/holidays', new PublicAuth()),
+                        new Link('휴가조정(관리자)', '/HolidayAdmin', new OnlyHolidayEditable()),
                         new Link('얼리파마', '/FlexTime', new PublicAuth()),
                     ],
                     '지원요청' => [

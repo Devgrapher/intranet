@@ -6,13 +6,15 @@ class InitialSchema extends AbstractMigration
 {
     public function change()
     {
+        $this->createUsers();
+
         $this->createCronHistory();
         $this->createFiles();
         $this->createFlextimes();
         $this->createFonts();
         $this->createHolidays();
-        $this->createPaymentAccept();
         $this->createPayments();
+        $this->createPaymentAccept();
         $this->createPosts();
         $this->createPress();
         $this->createPrograms();
@@ -25,26 +27,26 @@ class InitialSchema extends AbstractMigration
         $this->createSupportFamilyEvent();
         $this->createSupportGiftCard();
         $this->createUserPrograms();
-        $this->createUsers();
     }
 
     private function createCronHistory()
     {
         $this->table('cron_history')
-            ->addColumn('reg_date', 'datetime', ['default' => 'current_timestamp'])
+            ->addColumn('reg_date', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('signature', 'string', ['length' => 255])
+            ->addIndex(['signature', 'reg_date'])
             ->create();
     }
 
     private function createFiles()
     {
-        $this->table('cron_history')
+        $this->table('files')
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('group', 'string', ['length' => 32])
             ->addColumn('key', 'string', ['length' => 32])
             ->addColumn('original_filename', 'string', ['length' => 255])
             ->addColumn('location', 'string', ['length' => 255])
-            ->addColumn('reg_date', 'timestamp', ['default' => 'current_timestamp'])
+            ->addColumn('reg_date', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('is_delete', 'boolean')
             ->addForeignKey('uid', 'users', 'uid')
             ->create();
@@ -60,12 +62,11 @@ class InitialSchema extends AbstractMigration
             ->addColumn('end_date', 'date')
             ->addColumn('start_time', 'time')
             ->addColumn('weekdays', 'string', ['length' => 20])
-            ->addColumn('created_at', 'timestamp', ['default' => 'current_timestamp'])
-            ->addColumn('updated_at', 'timestamp', ['default' => 'current_timestamp'])
+            ->addTimestamps()
             ->addColumn('deleted_at', 'timestamp', ['null' => true])
             ->addForeignKey('uid', 'users', 'uid')
-            ->addForeignKey('manager_uid', 'users', 'manager_uid')
-            ->addForeignKey('keeper_uid', 'users', 'keeper_uid')
+            ->addForeignKey('manager_uid', 'users', 'uid')
+            ->addForeignKey('keeper_uid', 'users', 'uid')
             ->create();
     }
 
@@ -80,28 +81,28 @@ class InitialSchema extends AbstractMigration
     private function createHolidays()
     {
         $this->table('holidays', ['id' => false, 'primary_key' => ['holidayid']])
-            ->addColumn('holidayid', 'int', ['identity' => true, 'signed' => false])
+            ->addColumn('holidayid', 'integer', ['identity' => true, 'signed' => false])
             ->addColumn('request_date', 'timestamp')
-            ->addColumn('uid', 'int', ['signed' => false])
-            ->addColumn('manager_uid', 'int', ['signed' => false])
-            ->addColumn('yearly', 'int', ['signed' => false])
+            ->addColumn('uid', 'integer', ['signed' => false])
+            ->addColumn('manager_uid', 'integer', ['signed' => false])
+            ->addColumn('yearly', 'integer', ['signed' => false])
             ->addColumn('type', 'string', ['length' => 20])
             ->addColumn('date', 'date')
             ->addColumn('cost', 'float')
-            ->addColumn('keeper_uid', 'int', ['signed' => false])
+            ->addColumn('keeper_uid', 'integer', ['signed' => false])
             ->addColumn('phone_emergency', 'string', ['length' => 20])
             ->addColumn('memo', 'text')
             ->addColumn('hidden', 'boolean')
-            ->addForeignKey('manager_uid', 'users', 'manager_uid')
-            ->addForeignKey('keeper_uid', 'users', 'keeper_uid')
+            ->addForeignKey('manager_uid', 'users', 'uid')
+            ->addForeignKey('keeper_uid', 'users', 'uid')
             ->create();
     }
 
     private function createPaymentAccept()
     {
         $this->table('payment_accept')
-            ->addColumn('paymentid', 'int', ['signed' => false])
-            ->addColumn('uid', 'int', ['signed' => false])
+            ->addColumn('paymentid', 'integer', ['signed' => false])
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('user_type', 'string')
             ->addColumn('created_datetime', 'timestamp')
             ->addForeignKey('paymentid', 'payments', 'paymentid')
@@ -112,10 +113,10 @@ class InitialSchema extends AbstractMigration
     private function createPayments()
     {
         $this->table('payments', ['id' => false, 'primary_key' => ['paymentid']])
-            ->addColumn('paymentid', 'int', ['identity' => true, 'signed' => false])
-            ->addColumn('uuid', 'int', ['signed' => false])
-            ->addColumn('uid', 'int', ['signed' => false])
-            ->addColumn('manager_uid', 'int', ['signed' => false])
+            ->addColumn('paymentid', 'integer', ['identity' => true, 'signed' => false])
+            ->addColumn('uuid', 'integer', ['signed' => false])
+            ->addColumn('uid', 'integer', ['signed' => false])
+            ->addColumn('manager_uid', 'integer', ['signed' => false])
             ->addColumn('request_date', 'datetime')
             ->addColumn('month', 'string', ['length' => 7])
             ->addColumn('team', 'string', ['length' => 255])
@@ -126,7 +127,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('bank', 'string', ['length' => 255])
             ->addColumn('bank_account', 'string', ['length' => 255])
             ->addColumn('bank_account_owner', 'string', ['length' => 255])
-            ->addColumn('price', 'int', ['signed' => false])
+            ->addColumn('price', 'integer', ['signed' => false])
             ->addColumn('pay_date', 'datetime')
             ->addColumn('tax', 'string', ['length' => 255])
             ->addColumn('tax_export', 'string', ['length' => 3])
@@ -135,8 +136,10 @@ class InitialSchema extends AbstractMigration
             ->addColumn('note', 'string', ['length' => 255])
             ->addColumn('paytype', 'string', ['length' => 255])
             ->addColumn('status', 'string')
-            ->addForeignKey('paymentid', 'payments', 'paymentid')
             ->addForeignKey('uid', 'users', 'uid')
+            ->addForeignKey('manager_uid', 'users', 'uid')
+            ->addIndex('request_date')
+            ->addIndex('tax_date')
             ->create();
     }
 
@@ -163,8 +166,8 @@ class InitialSchema extends AbstractMigration
     private function createReceipts()
     {
         $this->table('receipts', ['id' => false, 'primary_key' => ['receiptid']])
-            ->addColumn('receiptid', 'int')
-            ->addColumn('uid', 'int')
+            ->addColumn('receiptid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('date', 'date')
             ->addColumn('title', 'string', ['length' => 100])
             ->addColumn('scope', 'string', ['length' => 20])
@@ -173,19 +176,21 @@ class InitialSchema extends AbstractMigration
             ->addColumn('node', 'string', ['length' => 100])
             ->addColumn('payment', 'string', ['length' => 20])
             ->addForeignKey('uid', 'users', 'uid')
+            ->addIndex(['uid', 'date'])
             ->create();
     }
 
     private function createRoomEvents()
     {
         $this->table('room_events')
-            ->addColumn('uid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('room_id', 'integer')
             ->addColumn('desc', 'string', ['length' => 255])
             ->addColumn('from', 'datetime')
             ->addColumn('to', 'datetime')
             ->addColumn('deleted', 'boolean')
             ->addForeignKey('uid', 'users', 'uid')
+            ->addIndex('room_id', ['name' => 'rid'])
             ->create();
     }
 
@@ -203,15 +208,15 @@ class InitialSchema extends AbstractMigration
         $this->table('support_business_card')
             ->addColumn('uuid', 'string', ['length' => 32])
             ->addColumn('reg_date', 'datetime')
-            ->addColumn('uid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
-            ->addColumn('accept_uid', 'integer')
+            ->addColumn('accept_uid', 'integer', ['signed' => false])
             ->addColumn('accepted_datetime', 'datetime')
             ->addColumn('is_completed', 'boolean')
-            ->addColumn('completed_uid', 'integer')
+            ->addColumn('completed_uid', 'integer', ['signed' => false])
             ->addColumn('completed_datetime', 'datetime')
             ->addColumn('receiver_area', 'string', ['length' => 10])
-            ->addColumn('receiver_uid', 'integer')
+            ->addColumn('receiver_uid', 'integer', ['signed' => false])
             ->addColumn('name', 'string', ['length' => 255])
             ->addColumn('name_in_english', 'string', ['length' => 255])
             ->addColumn('team', 'string', ['length' => 255])
@@ -227,6 +232,10 @@ class InitialSchema extends AbstractMigration
             ->addColumn('count_detail', 'integer')
             ->addColumn('date', 'date')
             ->addColumn('is_deleted', 'boolean')
+            ->addForeignKey('uid', 'users', 'uid')
+            ->addForeignKey('accept_uid', 'users', 'uid')
+            ->addForeignKey('completed_uid', 'users', 'uid')
+            ->addForeignKey('receiver_uid', 'users', 'uid')
             ->create();
     }
 
@@ -235,7 +244,7 @@ class InitialSchema extends AbstractMigration
         $this->table('support_depot')
             ->addColumn('uuid', 'string', ['length' => 32])
             ->addColumn('reg_date', 'datetime')
-            ->addColumn('uid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
             ->addColumn('accept_uid', 'integer')
             ->addColumn('accepted_datetime', 'datetime')
@@ -252,6 +261,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('is_exist', 'string', ['length' => 4])
             ->addColumn('label', 'string', ['length' => 255])
             ->addColumn('is_deleted', 'boolean')
+            ->addForeignKey('uid', 'users', 'uid')
             ->create();
     }
 
@@ -260,7 +270,7 @@ class InitialSchema extends AbstractMigration
         $this->table('support_device')
             ->addColumn('uuid', 'string', ['length' => 32])
             ->addColumn('reg_date', 'datetime')
-            ->addColumn('uid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_completed', 'boolean')
             ->addColumn('completed_uid', 'integer')
             ->addColumn('completed_datetime', 'datetime')
@@ -270,6 +280,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('request_date', 'date')
             ->addColumn('note', 'string', ['length' => 255])
             ->addColumn('is_deleted', 'boolean')
+            ->addForeignKey('uid', 'users', 'uid')
             ->create();
     }
 
@@ -278,19 +289,19 @@ class InitialSchema extends AbstractMigration
         $this->table('support_family_event')
             ->addColumn('uuid', 'string', ['length' => 32])
             ->addColumn('reg_date', 'datetime')
-            ->addColumn('uid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
-            ->addColumn('accept_uid', 'integer')
+            ->addColumn('accept_uid', 'integer', ['signed' => false])
             ->addColumn('accepted_datetime', 'datetime')
             ->addColumn('is_completed', 'boolean')
-            ->addColumn('completed_uid', 'integer')
+            ->addColumn('completed_uid', 'integer', ['signed' => false])
             ->addColumn('completed_datetime', 'datetime')
             ->addColumn('receiver_area', 'string', ['length' => 10])
             ->addColumn('outer_receiver_business', 'string', ['length' => 255])
             ->addColumn('outer_receiver_name', 'string', ['length' => 255])
             ->addColumn('outer_receiver_detail', 'string', ['length' => 255])
             ->addColumn('team', 'string', ['length' => 50])
-            ->addColumn('receiver_worker_uid', 'integer')
+            ->addColumn('receiver_worker_uid', 'integer', ['signed' => false])
             ->addColumn('category', 'string', ['length' => 50])
             ->addColumn('category_detail', 'string', ['length' => 255])
             ->addColumn('request_date', 'date')
@@ -303,6 +314,10 @@ class InitialSchema extends AbstractMigration
             ->addColumn('flower_datetime', 'datetime')
             ->addColumn('note', 'string', ['length' => 255])
             ->addColumn('is_deleted', 'boolean')
+            ->addForeignKey('uid', 'users', 'uid')
+            ->addForeignKey('accept_uid', 'users', 'uid')
+            ->addForeignKey('completed_uid', 'users', 'uid')
+            ->addForeignKey('receiver_worker_uid', 'users', 'uid')
             ->create();
     }
 
@@ -311,12 +326,12 @@ class InitialSchema extends AbstractMigration
         $this->table('support_gift_card')
             ->addColumn('uuid', 'string', ['length' => 32])
             ->addColumn('reg_date', 'datetime')
-            ->addColumn('uid', 'integer')
+            ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
-            ->addColumn('accept_uid', 'integer')
+            ->addColumn('accept_uid', 'integer', ['signed' => false])
             ->addColumn('accepted_datetime', 'datetime')
             ->addColumn('is_completed', 'boolean')
-            ->addColumn('completed_uid', 'integer')
+            ->addColumn('completed_uid', 'integer', ['signed' => false])
             ->addColumn('completed_datetime', 'datetime')
             ->addColumn('category', 'string', ['length' => 50])
             ->addColumn('cash', 'integer')
@@ -327,6 +342,9 @@ class InitialSchema extends AbstractMigration
             ->addColumn('note', 'string', ['length' => 255])
             ->addColumn('image_file', 'string', ['length' => 255])
             ->addColumn('is_deleted', 'boolean')
+            ->addForeignKey('uid', 'users', 'uid')
+            ->addForeignKey('accept_uid', 'users', 'uid')
+            ->addForeignKey('completed_uid', 'users', 'uid')
             ->create();
     }
 
@@ -366,7 +384,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('ridibooks_id', 'string', ['length' => 32])
             ->addColumn('is_admin', 'boolean')
             ->addColumn('comment', 'string', ['null' => true])
-            ->addIndex('id', ['unique' => true])
+            ->addIndex('id', ['unique' => true, 'name' => 'login'])
             ->create();
     }
 

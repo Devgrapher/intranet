@@ -1,0 +1,11 @@
+{% extends 'ridi.twig' %}
+
+{% block head %}
+  {{ parent() }}
+  <link rel="stylesheet" href="https://npmcdn.com/react-select@1.0.0-beta13/dist/react-select.css">
+{% endblock %}
+
+{% block body %}
+  <div id="content"></div>
+  <script type="text/javascript" src="/assets/dist/holiday_admin.js"></script>
+{% endblock %}

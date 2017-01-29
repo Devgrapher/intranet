@@ -103,7 +103,12 @@ class UserPolicy
         ];
 
         $is_free_to_login = in_array($request->getPathInfo(), $free_to_login_path);
-        if (!$is_free_to_login && !UserSession::isLogined()) {
+        $uid = UserSession::isLogined();
+        if (!$uid && Config::$is_dev) {
+            UserSession::loginByAzure('test');
+            $uid = UserSession::isLogined();
+        }
+        if (!$is_free_to_login && !$uid) {
             if ($request->isXmlHttpRequest()) {
                 return new Response('login error');
             } else {

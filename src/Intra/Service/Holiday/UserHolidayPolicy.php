@@ -3,6 +3,7 @@ namespace Intra\Service\Holiday;
 
 use DateTime;
 use Intra\Model\HolidayModel;
+use Intra\Model\HolidayAdjustModel;
 use Intra\Service\IntraDb;
 use Intra\Service\User\UserDto;
 
@@ -144,6 +145,19 @@ class UserHolidayPolicy
         $begin = date('Y/m/d', $this->getYearlyBeginTimestamp($yearly));
         $end = date('Y/m/d', $this->getYearlyEndTimestamp($yearly));
         return $this->user_holiday_model->getUsedCost($this->user, $begin, $end);
+    }
+
+    /**
+     * @param $yearly
+     *
+     * @return int
+     */
+    public function getModCost($year)
+    {
+        return HolidayAdjustModel::where([
+            'uid' => $this->user->uid,
+            'diff_year' => $year
+        ])->sum('diff');
     }
 
     /**

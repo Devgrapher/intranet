@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Model\HolidayModel;
 use Intra\Service\Holiday\UserHoliday;
 use Intra\Service\Holiday\UserHolidayPolicy;
@@ -34,7 +33,6 @@ $target_user_dto = $user_dto_object->exportDto();
 $user_holiday = new UserHoliday($target_user_dto);
 $user_holiday_policy = new UserHolidayPolicy($target_user_dto);
 
-
 $joinYear = $user_holiday->getYearByYearly(0);
 $yearly = $year - $joinYear;
 
@@ -49,6 +47,7 @@ $yearly = $year - $joinYear;
 
     $fullCost = $user_holiday_policy->getAvailableCost($yearly);
     $usedCost = $user_holiday_policy->getUsedCost($yearly);
+    $modCost = $user_holiday_policy->getModCost($year);
     $remainCost = $user_holiday_policy->getRemainCost($yearly);
     $holidays = $user_holiday->getUserHolidays($yearly);
     $holidayInfo = $user_holiday_policy->getDetailInfomationByYearly($yearly);
@@ -68,6 +67,7 @@ return [
     'yearlyFrom' => $yearlyFrom,
     'yearlyTo' => $yearlyTo,
     'fullCost' => $fullCost,
+    'modCost' => $modCost,
     'remainCost' => $remainCost,
     'editable' => $editable,
     'self' => $self,
