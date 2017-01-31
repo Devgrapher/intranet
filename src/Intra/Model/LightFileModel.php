@@ -1,15 +1,13 @@
 <?php
 namespace Intra\Model;
 
-use ConfigDevelop;
-
 class LightFileModel
 {
     private $dir;
 
     public function __construct($group)
     {
-        $upload_dir = ConfigDevelop::$upload_dir;
+        $upload_dir = $_ENV['upload_dir'];
         if (!is_writable($upload_dir)) {
             throw new \Exception('!is_writable($upload_dir)');
         }

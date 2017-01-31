@@ -2,7 +2,6 @@
 namespace Intra\Service\Post;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Intra\Config\Config;
 use Intra\Core\MsgException;
 use Intra\Model\PostModel;
 use Intra\Service\User\UserPolicy;
@@ -62,14 +61,14 @@ class Post
                 $mail_bodys = implode("", $mail_bodys);
 
                 $receivers = [];
-                $receivers[] = 'everyone@' . Config::$domain;
+                $receivers[] = 'everyone@' . $_ENV['domain'];
 
-                $mg = new Mailgun(Config::$mailgun_api_key);
+                $mg = new Mailgun($_ENV['mailgun_api_key']);
                 $domain = "ridi.com";
                 $result = $mg->sendMessage(
                     $domain,
                     [
-                        'from' => Config::$mailgun_from,
+                        'from' => $_ENV['mailgun_from'],
                         'to' => implode(', ', $receivers),
                         'subject' => $mail_title,
                         'text' => strip_tags($mail_bodys),

@@ -1,7 +1,6 @@
 <?php
 namespace Intra\Service;
 
-use Intra\Config\Config;
 use Raven_Autoloader;
 use Raven_Client;
 use Raven_ErrorHandler;
@@ -15,10 +14,8 @@ class Ridi
 
     public static function isRidiIP()
     {
-        foreach (Config::$ridi_ips as $pattern) {
-            if (preg_match($pattern, $_SERVER['REMOTE_ADDR'])) {
-                return true;
-            }
+        if (preg_match($_ENV['ridi_ips'], $_SERVER['REMOTE_ADDR'])) {
+            return true;
         }
 
         return false;
@@ -26,7 +23,7 @@ class Ridi
 
     public static function enableSentry()
     {
-        $sentry_key = strval(Config::$sentry_key);
+        $sentry_key = strval($_ENV['sentry_key']);
         if (strlen($sentry_key) <= 0) {
             return;
         }

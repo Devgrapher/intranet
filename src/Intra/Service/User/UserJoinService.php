@@ -1,7 +1,6 @@
 <?php
 namespace Intra\Service\User;
 
-use Intra\Config\Config;
 use Intra\Core\MsgException;
 use Intra\Lib\Azure\Settings;
 use Intra\Model\UserModel;
@@ -110,7 +109,7 @@ class UserJoinService
         $ids = DictsUtils::extractValuesByKey($dicts, 'id');
         return array_map(
             function ($id) {
-                return $id . '@' . Config::$domain;
+                return $id . '@' . $_ENV['domain'];
             },
             $ids
         );

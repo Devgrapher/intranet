@@ -10,7 +10,8 @@
     "ridibooks/platform-gnfdb": "^0.1.0",
     "sentry/sentry": "^1.5",
     "silex/silex": "^2.0",
-    "twig/twig": "^1.28"
+    "twig/twig": "^1.28",
+    "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7",

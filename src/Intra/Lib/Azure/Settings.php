@@ -2,14 +2,12 @@
 
 namespace Intra\Lib\Azure;
 
-use Intra\Config\Config;
-
 class Settings
 {
     public static function getClientId()
     {
         $domain = self::getDomain();
-        return Config::$azure['clientId'][$domain];
+        return $_ENV["azure.$domain.clientId"];
     }
 
     /**
@@ -17,37 +15,41 @@ class Settings
      */
     private static function getDomain()
     {
-        $domain = Config::$domain;
-        return $domain;
+        $domain = $_ENV['domain'];
+        if ($domain == 'ridi.com') {
+            return 'ridi';
+        } else {
+            return 'studiod';
+        }
     }
 
     public static function getPassword()
     {
         $domain = self::getDomain();
-        return Config::$azure['password'][$domain];
+        return $_ENV["azure.$domain.password"];
     }
 
     public static function getRediectURI()
     {
         $domain = self::getDomain();
-        return Config::$azure['redirectURI'][$domain];
+        return $_ENV["azure.$domain.redirectURI"];
     }
 
     public static function getResourceURI()
     {
         $domain = self::getDomain();
-        return Config::$azure['resourceURI'][$domain];
+        return $_ENV["azure.$domain.resourceURI"];
     }
 
     public static function getAppTenantDomainName()
     {
         $domain = self::getDomain();
-        return Config::$azure['appTenantDomainName'][$domain];
+        return $_ENV["azure.$domain.appTenantDomainName"];
     }
 
     public static function getApiVersion()
     {
         $domain = self::getDomain();
-        return Config::$azure['apiVersion'][$domain];
+        return $_ENV["azure.$domain.apiVersion"];
     }
 }

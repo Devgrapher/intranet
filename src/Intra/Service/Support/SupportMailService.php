@@ -2,7 +2,6 @@
 
 namespace Intra\Service\Support;
 
-use Intra\Config\Config;
 use Intra\Core\Application;
 use Intra\Service\Mail\MailingDto;
 use Intra\Service\Mail\MailSendService;
@@ -47,7 +46,7 @@ class SupportMailService
         $register_name = UserJoinService::getEmailByUidSafe($support_dto->uid);
 
         $title = "[{$title}][{$type}][{$working_date}] {$register_name}님의 요청";
-        $link = 'http://intra.' . Config::$domain . '/Support/' . $target;
+        $link = 'http://intra.' . $_ENV['domain'] . '/Support/' . $target;
         $html = Application::$view->render(
             'support/template/mail',
             [
@@ -63,11 +62,13 @@ class SupportMailService
         foreach ($uids as $uid) {
             $receivers[] = UserJoinService::getEmailByUidSafe($uid);
         }
-        foreach (Config::$user_policy['support_admin']['all'] as $mail) {
-            $receivers[] = $mail;
+        $support_all = $_ENV['user_policy.support_admin.all'];
+        if ($support_all) {
+            $receivers[] = explode(',', $support_all);
         }
-        foreach (Config::$user_policy['support_admin'][$target] as $mail) {
-            $receivers[] = $mail;
+        $support_target = $_ENV["user_policy.support_admin.$target"];
+        if ($support_target) {
+            $receivers[] = explode(',', $support_target);
         }
         $receivers = array_unique($receivers);
 

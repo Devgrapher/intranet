@@ -4,7 +4,6 @@ namespace Intra\Service;
 use Gnf\db\base;
 use Gnf\db\PDO;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Intra\Config\Config;
 
 class IntraDb
 {
@@ -26,10 +25,10 @@ class IntraDb
             $capsule->addConnection(
                 [
                     'driver' => 'mysql',
-                    'host' => Config::$mysql_host,
-                    'database' => Config::$mysql_db,
-                    'username' => Config::$mysql_user,
-                    'password' => Config::$mysql_password,
+                    'host' => $_ENV['mysql_host'],
+                    'database' => $_ENV['mysql_db'],
+                    'username' => $_ENV['mysql_user'],
+                    'password' => $_ENV['mysql_password'],
                     'charset' => 'utf8',
                     'collation' => 'utf8_unicode_ci',
                     'prefix' => '',

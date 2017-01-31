@@ -1,11 +1,10 @@
 <?php
 /** @var $this Intra\Core\Control */
-use Intra\Config\Config;
 use Intra\Lib\Azure\AuthorizationHelperForAADGraphService;
 
 $azure_login = AuthorizationHelperForAADGraphService::getAuthorizatonURL();
 
-if (Config::$is_dev) {
+if ($_ENV['is_dev']) {
     $azure_login = '/';
 }
 

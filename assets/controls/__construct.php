@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-use Intra\Config\Config;
 use Intra\Service\Menu\MenuService;
 use Intra\Service\User\UserPolicy;
 
@@ -16,9 +15,9 @@ list($left_menu_list, $right_menu_list) = MenuService::getMenuLinkList();
 $response = $this->getResponse();
 $response->add(
     [
-        'globalDomain' => Config::$domain,
+        'globalDomain' => $_ENV['domain'],
         'leftMenuList' => $left_menu_list,
         'rightMenuList' => $right_menu_list,
-        'sentryPublicKey' => Config::$sentry_public_key,
+        'sentryPublicKey' => $_ENV['sentry_public_key'],
     ]
 );

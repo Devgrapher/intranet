@@ -1,7 +1,6 @@
 <?php
 namespace Intra\Service\Payment;
 
-use Intra\Config\Config;
 use Intra\Core\Application;
 use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserJoinService;
@@ -50,17 +49,18 @@ class UserPaymentMailService
      */
     private static function sendMailRaw($receivers, $title, $html)
     {
-        $receivers = array_merge($receivers, Config::$recipients['payment']);
+        $receivers = array_merge($receivers, $_ENV['recipients.payment']);
 
-        if (Config::$is_dev) {
-            if (count(Config::$test_mails)) {
-                $receivers = Config::$test_mails;
-            } else {
-                return;
+        if ($_ENV['is_dev']) {
+            $test_mails = $_ENV['test_mails'];
+            if (!$test_mails) {
+                return true;
             }
+
+            $receivers = explode(',', $test_mails);
         }
 
-        $mg = new Mailgun(Config::$mailgun_api_key);
+        $mg = new Mailgun($_ENV['mailgun_api_key']);
         $domain = "ridibooks.com";
         $mg->sendMessage(
             $domain,

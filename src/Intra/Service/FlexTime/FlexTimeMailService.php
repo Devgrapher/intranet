@@ -2,7 +2,6 @@
 
 namespace Intra\Service\FlexTime;
 
-use Intra\Config\Config;
 use Intra\Core\Application;
 use Intra\Model\FlexTimeModel;
 use Intra\Service\Mail\MailingDto;
@@ -21,9 +20,9 @@ class FlexTimeMailService
 
         $emails = [];
         foreach ($users as $user) {
-            $emails[] = $user->id . '@' . Config::$domain;
+            $emails[] = $user->id . '@' . $_ENV['domain'];
         }
-        $emails = array_merge($emails, Config::$recipients['holiday']);
+        $emails = array_merge($emails, $_ENV['recipients.holiday']);
 
         return array_unique(array_filter($emails));
     }

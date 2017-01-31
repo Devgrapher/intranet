@@ -2,7 +2,6 @@
 
 namespace Intra\Service\Mail;
 
-use Intra\Config\Config;
 use Intra\Core\MsgException;
 use Mailgun\Mailgun;
 use Ridibooks\Platform\Common\DictsUtils;
@@ -19,12 +18,13 @@ class MailSendService
     public static function sends($dtos)
     {
         foreach ($dtos as $dto) {
-            if (Config::$is_dev) {
-                if (count(Config::$test_mails)) {
-                    $dto->receiver = Config::$test_mails;
-                } else {
+            if ($_ENV['is_dev']) {
+                $test_mails = $_ENV['test_mails'];
+                if (!$test_mails) {
                     return true;
                 }
+
+                $dto->receiver = explode(',', $test_mails);
             }
             self::send($dto);
         }
@@ -39,7 +39,7 @@ class MailSendService
      */
     public static function send($dto)
     {
-        $mg = new Mailgun(Config::$mailgun_api_key);
+        $mg = new Mailgun($_ENV['mailgun_api_key']);
         $domain = "ridibooks.com";
 
         $html = $dto->body_header . DictsUtils::convertDictsToHtmlTable($dto->dicts) . $dto->body_footer;

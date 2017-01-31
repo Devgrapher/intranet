@@ -2,7 +2,6 @@
 
 namespace Intra\Service\Menu;
 
-use Intra\Config\Config;
 use Intra\Service\Auth\ExceptTaAuth;
 use Intra\Service\Auth\OnlyHolidayEditable;
 use Intra\Service\Auth\OnlyPressManager;
@@ -35,7 +34,7 @@ class MenuService
     public static function getMenuLinkList(): array
     {
         if (UserSession::isLogined()) {
-            if (Config::$domain == 'ridi.com') {
+            if ($_ENV['domain'] == 'ridi.com') {
                 $left_menu_list = [
                     new Link('직원찾기', '/users', new PublicAuth()),
                     new Link(
