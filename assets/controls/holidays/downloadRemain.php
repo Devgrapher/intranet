@@ -20,7 +20,7 @@ if (!intval($year)) {
 }
 
 $rows = [
-    ['연도', '사원번호', '이름', '입사일자', '퇴사일자', '연차부여', '사용일수', '잔여일수']
+    ['연도', '사원번호', '이름', '입사일자', '퇴사일자', '연차부여', '사용일수', '보정일수', '잔여일수']
 ];
 
 $users = UserDtoFactory::createAllUserDtos();
@@ -34,7 +34,8 @@ foreach ($users as $user) {
 
     $fullCost = $user_holiday_policy->getAvailableCost($yearly);
     $usedCost = $user_holiday_policy->getUsedCost($yearly);
-    $remainCost = $fullCost - $usedCost;
+    $modCost = $user_holiday_policy->getModCost($year);
+    $remainCost = $fullCost - $usedCost + $modCost;
 
     $rows[] = [
         $year,
@@ -44,6 +45,7 @@ foreach ($users as $user) {
         $user->off_date,
         $fullCost,
         $usedCost,
+        $modCost,
         $remainCost
     ];
 }
