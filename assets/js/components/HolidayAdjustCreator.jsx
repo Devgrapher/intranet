@@ -37,7 +37,7 @@ class HolidayAdjustCreator extends React.Component {
             />
           </Col>
           <Col xs={2}>
-            <ControlLabel>변동</ControlLabel>
+            <ControlLabel>변동(일)</ControlLabel>
             <FormControl
               type="text" value={diff} disabled={disabled} placeholder="(+/-)숫자"
               onChange={e => onDiffChange(e.target.value)}

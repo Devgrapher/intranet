@@ -64,12 +64,11 @@ class HolidayAdmin extends React.Component {
     }
 
     const uid = selected.value;
-    const year = new Date().getFullYear();
 
     this.setState(Object.assign({}, this.state, {
       loading: true
     }));
-    axios.get(`/HolidayAdmin/uid/${uid}/year/${year}`)
+    axios.get(`/HolidayAdmin/uid/${uid}`)
       .then(res => {
         if (res.status == 200) {
           const rows = res.data.map(row => {
@@ -109,10 +108,15 @@ class HolidayAdmin extends React.Component {
     axios.post(`/HolidayAdmin/uid/${uid}`, data)
       .then(res => {
         if (res.status == 201) {
+          const newRow = res.data;
+          const uidUser = this.userList.filter(user => user.uid === newRow.uid)[0];
+          newRow.name = uidUser? uidUser.name : `UID: ${newRow.uid}`;
+          const managerUidUser = this.userList.filter(user => user.uid === newRow.manager_uid)[0];
+          newRow.managerName = managerUidUser? managerUidUser.name : `UID: ${newRow.uid}`;
           this.setState(Object.assign({}, this.state, {
             uid: uid,
             loading: false,
-            rows: this.state.rows.concat([res.data]),
+            rows: this.state.rows.concat([newRow]),
           }));
         }
       });
@@ -213,6 +217,7 @@ class HolidayAdmin extends React.Component {
           <Row>
             <Col md={12}>
               <HolidayAdjustTable
+                initial={!uid}
                 loading={loading} rows={rows}
                 onDelete={this.onDelete}
               />

@@ -46,12 +46,8 @@ class HolidayAdmin implements ControllerProviderInterface
         if (!intval($uid)) {
             $uid = $self->uid;
         }
-        $year = $request->get('year');
-        if (!intval($year)) {
-            $year = date('Y');
-        }
 
-        $mods = HolidayAdjustModel::where('uid', $uid)->where('diff_year', $year)->get();
+        $mods = HolidayAdjustModel::where('uid', $uid)->get();
         return JsonResponse::create($mods, Response::HTTP_OK);
     }
 

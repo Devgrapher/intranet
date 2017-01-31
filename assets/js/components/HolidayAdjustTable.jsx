@@ -3,7 +3,10 @@ import { Table, Button } from 'react-bootstrap';
 
 class HolidayAdjustTable extends React.Component {
   renderRows() {
-    const { loading, rows, onDelete } = this.props;
+    const { initial, loading, rows, onDelete } = this.props;
+    if (initial) {
+      return <tr><td colSpan="7">직원을 선택해주세요.</td></tr>;
+    }
     if (rows.length === 0) {
       return <tr><td colSpan="7">데이터가 없습니다.</td></tr>;
     }
@@ -20,13 +23,13 @@ class HolidayAdjustTable extends React.Component {
           <td>{`${createdAt.getFullYear()}-${month}-${date}`}</td>
           <td>{row.name}</td>
           <td>{row.managerName}</td>
-          <td>{row.diff > 0? `+${row.diff}` : row.diff}</td>
+          <td>{row.diff > 0 ? `+${row.diff}` : row.diff}</td>
           <td>{row.reason}</td>
           <td>
             <Button disabled={loading} onClick={() => onDelete(row.id)}>삭제</Button>
           </td>
         </tr>
-      )
+      );
     });
   }
 
@@ -53,6 +56,7 @@ class HolidayAdjustTable extends React.Component {
 }
 
 HolidayAdjustTable.propTypes = {
+  initial: React.PropTypes.bool,
   loading: React.PropTypes.bool,
   rows: React.PropTypes.array,
   onDelete: React.PropTypes.func,
