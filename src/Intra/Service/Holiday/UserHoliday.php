@@ -330,6 +330,9 @@ class UserHoliday
             }
             return $return;
         } else {
+            if (in_array($holiday_raw->type, $this->COST_ZERO_DAY_VARIABLE_TYPE)) {
+                $holiday_raw->cost = 0;
+            }
             return [$holiday_raw];
         }
     }
