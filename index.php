@@ -1,6 +1,5 @@
 <?php
 use Gnf\NamespaceRouter\NamespaceRouteServiceProvider;
-use Intra\Config\Config;
 use Intra\Controller\RootController;
 use Intra\Core\Application;
 use Intra\Model\SessionModel;
@@ -13,12 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 $autoloader = require_once __DIR__ . "/vendor/autoload.php";
 $autoloader->add('Intra', __DIR__ . '/src');
 
-$dotenv = new Dotenv\Dotenv(__DIR__, 'ConfigDevelop.env');
+$dotenv = new Dotenv\Dotenv(__DIR__, 'config.env');
 $dotenv->overload();
 $dotenv->required(['mysql_host', 'mysql_user', 'mysql_password', 'mysql_db']);
-
-Config::loadIfExist(__DIR__ . '/ConfigDevelop.php');
-Config::loadIfExist(__DIR__ . '/ConfigRelease.php');
 
 date_default_timezone_set('Asia/Seoul');
 

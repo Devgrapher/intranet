@@ -10,3 +10,4 @@
 composer.lock
 ConfigDevelop.php
 ConfigRelease.php
+*.env

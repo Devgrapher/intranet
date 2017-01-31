@@ -7,8 +7,7 @@ require 'vendor/deployer/recipes/slack.php';
 // Configuration
 
 set('shared_files', [
-    'ConfigDevelop.php',
-    'ConfigRelease.php'
+    'config.env'
 ]);
 set('shared_dirs', [
     'upload'
