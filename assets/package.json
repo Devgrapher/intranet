@@ -6,7 +6,9 @@
   "license": "Apache-2.0",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "webpack -d --progress --watch",
+    "build": "webpack -p --define process.env.NODE_ENV=\"'production'\""
   },
   "devDependencies": {
     "babel-core": "^6.14.0",

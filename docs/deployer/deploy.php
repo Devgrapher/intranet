@@ -54,10 +54,8 @@ task('deploy:set_slack', function () {
     set('slack', $slack);
 });
 
-desc('Installing bower components');
-task('deploy:bower', function () {
-    run('cd {{release_path}}/assets && bower update');
-});
+desc('Build web-font');
+task('deploy:build', 'make -C {{release_path}} build');
 
 desc('Deploy your project');
 task('deploy', [
@@ -68,7 +66,7 @@ task('deploy', [
     'deploy:shared',
     'deploy:writable',
     'deploy:vendors',
-    'deploy:bower',
+    'deploy:build',
     //'deploy:clear_paths',
     'deploy:symlink',
     'deploy:set_slack',
