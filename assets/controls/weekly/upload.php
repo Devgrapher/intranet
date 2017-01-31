@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Model\LightFileModel;
 use Intra\Service\Weekly\Weekly;
 

@@ -244,7 +244,12 @@
     작년사용에의한 차감연차 : {{ holidayInfo.preused_cost_prev_year }}개 (작년에 생긴 연차 : {{ holidayInfo.last_year_remain_cost }}개, 올해 전 사용한 연차 : {{ holidayInfo.last_year_usable_holiday_count }}개)
   {% else %}
     연차 : 회계기준 입사 {{ yearly - 1 }}년차 = {{ fullCost }}개
-  {% endif %}</span></pre>
+  {% endif %}
+
+  {% if modCost != 0 %}
+  연차조정 : {{ modCost }}개<ul>{% for mod in modList %}<li>{{ mod.diff_year }}년에 [{{ mod.reason }}]로 {{ mod.diff>0 ? "+#{mod.diff}" : mod.diff }}</li>{% endfor %}</ul>
+  {% endif %}
+</span></pre>
   </div>
 
   {% if editable %}

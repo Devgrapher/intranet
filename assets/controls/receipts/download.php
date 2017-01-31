@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\Payment\UserPaymentRequestFilter;
 use Intra\Service\Receipt\UserReceiptsStat;
 use Intra\Service\User\UserPolicy;

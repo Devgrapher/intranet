@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Intra\Model\PostModel;
 use Intra\Service\User\UserPolicy;

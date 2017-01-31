@@ -1,9 +1,8 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\Weekly\Weekly;
 
-$weekly = new Weekly;
+$weekly = new Weekly();
 
 try {
     $weekly->assertPermission();

@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Model\PostModel;
 use Intra\Service\Post\PostDetailDto;
 

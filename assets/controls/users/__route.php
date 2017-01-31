@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Route */
-
 $this->matchIf('/{userid}/updateExtra/{key}/{value}')
     ->query('updateExtra.ajax');
 

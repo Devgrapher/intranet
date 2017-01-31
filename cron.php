@@ -4,7 +4,7 @@ use Intra\Service\Cron\CronMaster;
 use Intra\Service\IntraDb;
 use Intra\Service\Ridi;
 
-$autoloader = require_once(__DIR__ . "/vendor/autoload.php");
+$autoloader = require_once __DIR__ . "/vendor/autoload.php";
 $autoloader->add('Intra', __DIR__ . '/src');
 
 Config::loadIfExist(__DIR__ . '/ConfigDevelop.php');

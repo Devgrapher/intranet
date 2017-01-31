@@ -48,6 +48,7 @@ $yearly = $year - $joinYear;
     $fullCost = $user_holiday_policy->getAvailableCost($yearly);
     $usedCost = $user_holiday_policy->getUsedCost($yearly);
     $modCost = $user_holiday_policy->getModCost($year);
+    $modList = $user_holiday_policy->getModList($year);
     $remainCost = $user_holiday_policy->getRemainCost($yearly);
     $holidays = $user_holiday->getUserHolidays($yearly);
     $holidayInfo = $user_holiday_policy->getDetailInfomationByYearly($yearly);
@@ -68,6 +69,7 @@ return [
     'yearlyTo' => $yearlyTo,
     'fullCost' => $fullCost,
     'modCost' => $modCost,
+    'modList' => $modList,
     'remainCost' => $remainCost,
     'editable' => $editable,
     'self' => $self,

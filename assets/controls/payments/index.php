@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\Payment\UserPaymentRequestFilter;
 use Intra\Service\Payment\UserPaymentService;
 use Intra\Service\User\UserDtoFactory;

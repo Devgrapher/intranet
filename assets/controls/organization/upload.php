@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Model\LightFileModel;
 
 if ($_FILES && $_FILES["fileToUpload"]) {

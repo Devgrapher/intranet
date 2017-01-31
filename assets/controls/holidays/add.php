@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\Holiday\UserHoliday;
 use Intra\Service\Holiday\UserHolidayDto;
 use Intra\Service\IntraDb;

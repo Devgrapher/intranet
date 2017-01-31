@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Route */
-
 $this->matchIf('/{group}')
     ->query('index');
 

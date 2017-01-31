@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\Holiday\UserHolidayStat;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;

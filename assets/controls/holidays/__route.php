@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Route */
-
 $this->matchIf('/uid/{uid}')
     ->assertAsInt('uid')
     ->isMethod('get')

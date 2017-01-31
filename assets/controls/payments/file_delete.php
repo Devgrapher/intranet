@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Core\MsgException;
 use Intra\Service\Payment\UserPaymentService;
 use Intra\Service\User\UserSession;

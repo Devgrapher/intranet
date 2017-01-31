@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;

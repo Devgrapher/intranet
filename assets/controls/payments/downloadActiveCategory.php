@@ -1,10 +1,8 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Model\PaymentModel;
 use Intra\Service\Payment\PaymentDto;
 use Intra\Service\Payment\PaymentDtoFactory;
-use Intra\Service\Payment\UserPaymentRequestFilter;
 use Intra\Service\Payment\UserPaymentStatService;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
@@ -15,9 +13,8 @@ if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
 }
 
 /**
- * @var $payments PaymentDto[]
+ * @var PaymentDto[]
  */
-
 $request = $this->getRequest();
 $category = $request->get('category_condition');
 

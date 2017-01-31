@@ -2,8 +2,8 @@
 namespace Intra\Service\Holiday;
 
 use DateTime;
-use Intra\Model\HolidayModel;
 use Intra\Model\HolidayAdjustModel;
+use Intra\Model\HolidayModel;
 use Intra\Service\IntraDb;
 use Intra\Service\User\UserDto;
 
@@ -148,7 +148,7 @@ class UserHolidayPolicy
     }
 
     /**
-     * @param $yearly
+     * @param $year
      *
      * @return int
      */
@@ -157,6 +157,13 @@ class UserHolidayPolicy
         return HolidayAdjustModel::where('uid', $this->user->uid)
             ->where('diff_year', '<=', $year)
             ->sum('diff');
+    }
+
+    public function getModList($year)
+    {
+        return HolidayAdjustModel::where('uid', $this->user->uid)
+            ->where('diff_year', '<=', $year)
+            ->get();
     }
 
     /**

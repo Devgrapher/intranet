@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Core\MsgException;
 use Intra\Service\Payment\UserPaymentService;
 use Intra\Service\User\UserSession;
@@ -15,7 +14,7 @@ if (!intval($paymentid)) {
     throw new MsgException("invalid paymentid");
 }
 /**
- * @var $file UploadedFile
+ * @var UploadedFile
  */
 $file = $request->files->get('files')[0];
 

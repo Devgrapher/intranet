@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\User\UserEditService;
 use Intra\Service\User\UserSession;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +17,7 @@ $savedFile = UserEditService::saveImage($uid, $uploadedFile);
 if ($savedFile != null) {
     $thumbFile = UserEditService::createThumb($uid, 180, 180);
     if ($thumbFile != null) {
-        if (UserEditService::updateInfo($uid, 'image', '/users/'.$uid.'/image') != null) {
+        if (UserEditService::updateInfo($uid, 'image', '/users/' . $uid . '/image') != null) {
             return JsonResponse::create('success');
         }
     }

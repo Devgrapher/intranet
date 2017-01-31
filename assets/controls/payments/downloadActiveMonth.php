@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Model\PaymentModel;
 use Intra\Service\Payment\PaymentDto;
 use Intra\Service\Payment\PaymentDtoFactory;
@@ -15,9 +14,8 @@ if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
 }
 
 /**
- * @var $payments PaymentDto[]
+ * @var PaymentDto[]
  */
-
 $request = $this->getRequest();
 $month = $request->get('month');
 $month = UserPaymentRequestFilter::parseMonth($month);

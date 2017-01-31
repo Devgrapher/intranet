@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\IntraDb;
 
 $request = $this->getRequest();

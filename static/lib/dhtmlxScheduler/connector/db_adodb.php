@@ -1,72 +1,87 @@
 <?php
 /*
-	@author dhtmlx.com
-	@license GPL, see license.txt
+    @author dhtmlx.com
+    @license GPL, see license.txt
 */
-require_once("db_common.php");
+require_once "db_common.php";
 /*! Implementation of DataWrapper for PostgreSQL
 **/
-class AdoDBDataWrapper extends DBDataWrapper{
-	protected $last_result;
-	public function query($sql){
-		LogMaster::log($sql);
-		if (is_array($sql)) {
-			$res = $this->connection->SelectLimit($sql['sql'], $sql['numrows'], $sql['offset']);
-		} else {
-			$res = $this->connection->Execute($sql);
-		}
+class AdoDBDataWrapper extends DBDataWrapper
+{
+    protected $last_result;
 
-		if ($res===false) throw new Exception("ADODB operation failed\n".$this->connection->ErrorMsg());
-		$this->last_result = $res;
-		return $res;
-	}
+    public function query($sql)
+    {
+        LogMaster::log($sql);
+        if (is_array($sql)) {
+            $res = $this->connection->SelectLimit($sql['sql'], $sql['numrows'], $sql['offset']);
+        } else {
+            $res = $this->connection->Execute($sql);
+        }
 
-	public function get_next($res){
-		if (!$res)
-			$res = $this->last_result;
+        if ($res === false) {
+            throw new Exception("ADODB operation failed\n" . $this->connection->ErrorMsg());
+        }
+        $this->last_result = $res;
+        return $res;
+    }
 
-		if ($res->EOF)
-			return false;
+    public function get_next($res)
+    {
+        if (!$res) {
+            $res = $this->last_result;
+        }
 
-		$row = $res->GetRowAssoc(false);
-		$res->MoveNext();
-		return $row;
-	}
+        if ($res->EOF) {
+            return false;
+        }
 
-	protected function get_new_id(){
-		return $this->connection->Insert_ID();
-	}
+        $row = $res->GetRowAssoc(false);
+        $res->MoveNext();
+        return $row;
+    }
 
-	public function escape($data){
-		return $this->connection->addq($data);
-	}
+    protected function get_new_id()
+    {
+        return $this->connection->Insert_ID();
+    }
 
-	/*! escape field name to prevent sql reserved words conflict
-		@param data 
-			unescaped data
-		@return 
-			escaped data
-	*/
-	public function escape_name($data){
-		if ((strpos($data,"`")!==false || is_int($data)) || (strpos($data,".")!==false))
-			return $data;
-		return '`'.$data.'`';
-	}
+    public function escape($data)
+    {
+        return $this->connection->addq($data);
+    }
 
+    /*! escape field name to prevent sql reserved words conflict
+        @param data
+            unescaped data
+        @return
+            escaped data
+    */
+    public function escape_name($data)
+    {
+        if ((strpos($data, "`") !== false || is_int($data)) || (strpos($data, ".") !== false)) {
+            return $data;
+        }
+        return '`' . $data . '`';
+    }
 
-	protected function select_query($select,$from,$where,$sort,$start,$count){
-		if (!$from)
-			return $select;
+    protected function select_query($select, $from, $where, $sort, $start, $count)
+    {
+        if (!$from) {
+            return $select;
+        }
 
-		$sql="SELECT ".$select." FROM ".$from;
-		if ($where) $sql.=" WHERE ".$where;
-		if ($sort) $sql.=" ORDER BY ".$sort;
+        $sql = "SELECT " . $select . " FROM " . $from;
+        if ($where) {
+            $sql .= " WHERE " . $where;
+        }
+        if ($sort) {
+            $sql .= " ORDER BY " . $sort;
+        }
 
-		if ($start || $count) {
-			$sql=array("sql"=>$sql,'numrows'=>$count, 'offset'=>$start);
-		}
-		return $sql;
-	}
-
+        if ($start || $count) {
+            $sql = ["sql" => $sql, 'numrows' => $count, 'offset' => $start];
+        }
+        return $sql;
+    }
 }
-?>

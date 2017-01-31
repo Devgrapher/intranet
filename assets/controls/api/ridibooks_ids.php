@@ -1,7 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
-
 use Intra\Service\IntraDb;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

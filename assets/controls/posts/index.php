@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\Post\PostListDto;
 
 $request = $this->getRequest();

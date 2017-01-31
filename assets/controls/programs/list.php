@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 $db = \Intra\Service\IntraDb::getGnfDb();
 
 $able_programs = $db->sqlDatas('select program from programs');

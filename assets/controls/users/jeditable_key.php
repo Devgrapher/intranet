@@ -1,6 +1,5 @@
 <?php
 /** @var $this Intra\Core\Control */
-
 use Intra\Service\User\UserConstant;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

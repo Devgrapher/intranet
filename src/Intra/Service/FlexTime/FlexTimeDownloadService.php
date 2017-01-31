@@ -1,6 +1,7 @@
 <?php
 
 namespace Intra\Service\FlexTime;
+
 use Intra\Service\User\UserJoinService;
 
 class FlexTimeDownloadService
