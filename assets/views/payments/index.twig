@@ -301,14 +301,13 @@
     <input type="checkbox" name="col-toggle15" class="toggle-vis" data-column="15" js_cookie_save js_default_save="true" />입금금액 -
     <input type="checkbox" name="col-toggle16" class="toggle-vis" data-column="16" js_cookie_save js_default_save="true" />결제(예정)일 -
     <input type="checkbox" name="col-toggle17" class="toggle-vis" data-column="17" js_cookie_save js_default_save="true" />세금계산서수취여부 -
-    <input type="checkbox" name="col-toggle18" class="toggle-vis" data-column="18" js_cookie_save js_default_save="true" />세금계산서발행여부 -
-    <input type="checkbox" name="col-toggle19" class="toggle-vis" data-column="19" js_cookie_save js_default_save="true" />세금계산서일자 -
-    <input type="checkbox" name="col-toggle20" class="toggle-vis" data-column="20" js_cookie_save js_default_save="true" />입금은행 -
-    <input type="checkbox" name="col-toggle21" class="toggle-vis" data-column="21" js_cookie_save js_default_save="true" />입금계좌번호 -
-    <input type="checkbox" name="col-toggle22" class="toggle-vis" data-column="22" js_cookie_save js_default_save="true" />예금주 -
-    <input type="checkbox" name="col-toggle23" class="toggle-vis" data-column="23" js_cookie_save js_default_save="true" />비고 -
-    <input type="checkbox" name="col-toggle24" class="toggle-vis" data-column="24" js_cookie_save js_default_save="true" />결제수단 -
-    <input type="checkbox" name="col-toggle25" class="toggle-vis" data-column="25" js_cookie_save js_default_save="true" />상태
+    <input type="checkbox" name="col-toggle19" class="toggle-vis" data-column="18" js_cookie_save js_default_save="true" />세금계산서일자 -
+    <input type="checkbox" name="col-toggle20" class="toggle-vis" data-column="19" js_cookie_save js_default_save="true" />입금은행 -
+    <input type="checkbox" name="col-toggle21" class="toggle-vis" data-column="20" js_cookie_save js_default_save="true" />입금계좌번호 -
+    <input type="checkbox" name="col-toggle22" class="toggle-vis" data-column="21" js_cookie_save js_default_save="true" />예금주 -
+    <input type="checkbox" name="col-toggle23" class="toggle-vis" data-column="22" js_cookie_save js_default_save="true" />비고 -
+    <input type="checkbox" name="col-toggle24" class="toggle-vis" data-column="23" js_cookie_save js_default_save="true" />결제수단 -
+    <input type="checkbox" name="col-toggle25" class="toggle-vis" data-column="24" js_cookie_save js_default_save="true" />상태
   </div>
 
   <form
@@ -344,7 +343,6 @@
         <th>입금금액</th>
         <th>결제(예정)일</th>
         <th>세금계산서수취여부</th>
-        <th>세금계산서발행여부</th>
         <th>세금계산서일자</th>
         <th class="alert alert-info">입금은행</th>
         <th class="alert alert-info">입금계좌번호</th>
@@ -470,7 +468,6 @@
           <td data-key='price'>{{ payment.price | number_format }}</td>
           <td data-key='pay_date'>{{ payment.pay_date | slice(0, 10) }}</td>
           <td data-key='tax' data-keyselect>{{ payment.tax }}</td>
-          <td data-key='tax_export' data-keyselect>{{ payment.tax_export }}</td>
           <td data-key='tax_date'>{{ payment.tax_date }}</td>
           <td data-key='bank'>{{ payment.bank }}</td>
           <td data-key='bank_account'>{{ payment.bank_account }}</td>
@@ -590,16 +587,6 @@
             </select>
           </label>
         </td>
-        <td>
-          <label>
-            <select name='tax_export' js_cookie_save>
-              <option value='N/A'>N/A</option>
-              {% for tax in const.tax_export %}
-                <option value='{{ tax }}'>{{ tax }}</option>
-              {% endfor %}
-            </select>
-          </label>
-        </td>
         <td><input type='date' name='tax_date' style='width:60px' placeholder='일자'/></td>
         <td class="alert alert-info"><input type='text' name='bank' style='width:60px' placeholder='우리'/></td>
         <td class="alert alert-info"><input type='text' name='bank_account' placeholder='xxx-xxxxxxx-xx-xxx'/></td>
@@ -634,7 +621,6 @@
         </td>
       </tr>
       <tr>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>
