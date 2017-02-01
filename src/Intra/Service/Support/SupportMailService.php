@@ -46,7 +46,7 @@ class SupportMailService
         $register_name = UserJoinService::getEmailByUidSafe($support_dto->uid);
 
         $title = "[{$title}][{$type}][{$working_date}] {$register_name}님의 요청";
-        $link = 'http://intra.' . $_ENV['domain'] . '/Support/' . $target;
+        $link = 'http://intra.' . $_ENV['domain'] . '/Support/' . $target . '/remain';
         $html = Application::$view->render(
             'support/template/mail',
             [
