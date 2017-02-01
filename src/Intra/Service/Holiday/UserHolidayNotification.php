@@ -100,7 +100,9 @@ class UserHolidayNotification
         foreach ($users as $user) {
             $emails[] = $user->id . '@' . $_ENV['domain'];
         }
-        $emails = array_merge($emails, $_ENV['recipients.holiday']);
+        if ($_ENV['recipients.holiday']) {
+            $emails = array_merge($emails, explode(',', $_ENV['recipients.holiday']));
+        }
 
         return array_unique(array_filter($emails));
     }
