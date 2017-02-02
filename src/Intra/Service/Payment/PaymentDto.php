@@ -4,6 +4,7 @@ namespace Intra\Service\Payment;
 use Intra\Core\BaseDto;
 use Intra\Core\MsgException;
 use Intra\Service\User\UserJoinService;
+use Intra\Service\Payment\UserPaymentConst;
 use Ridibooks\Platform\Common\DateUtil;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -155,6 +156,9 @@ class PaymentDto extends BaseDto
         }
         if (!strtotime($return->pay_date)) {
             throw new MsgException('결제(예정)일을 다시 입력해주세요');
+        }
+        if (!isset(UserPaymentConst::getConstValueByKey('tax')[$return->tax])) {
+            throw new MsgException('세금수취여부를 다시 입력해주세요');
         }
         if (DateUtil::isWeekend($return->pay_date)) {
             throw new MsgException('결제(예정)일을 주말로 설정할 수 없습니다');
