@@ -8,7 +8,6 @@
       table-layout: fixed;
       border: 1px solid #ddd;
       border-collapse: collapse;
-      width: 2665px;
     }
 
     .highlight {
@@ -86,6 +85,7 @@
 
       function setAllColumnWidth() {
         var index = 0;
+        var allWidth = 0;
         columnWidths.forEach(function (width, i) {
           if (columnVisible[i] === false) {
             return;
@@ -93,10 +93,12 @@
 
           $('.tbody-scroll th:nth-of-type('+(index+1)+'), .tbody-scroll td:nth-of-type('+(index+1)+')').css('width', width+'px');
           ++index;
+          allWidth += width;
         });
 
+        $('.tbody-scroll').css('width', (allWidth+(2*index))+'px');
         {% if payments.length == 0 %}
-          $('.tbody-scroll tbody td').css('width', '2665px');
+          $('.tbody-scroll tbody td').css('width', (allWidth+(2*index-2))+'px');
           $('.tbody-scroll tbody td').css('background-color', '#ddd');
         {% endif %}
       }
