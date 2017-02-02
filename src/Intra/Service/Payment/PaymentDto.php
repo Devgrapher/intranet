@@ -157,7 +157,7 @@ class PaymentDto extends BaseDto
         if (!strtotime($return->pay_date)) {
             throw new MsgException('결제(예정)일을 다시 입력해주세요');
         }
-        if (!isset(UserPaymentConst::getConstValueByKey('tax')[$return->tax])) {
+        if (!in_array($return->tax, UserPaymentConst::getByKey('tax'))) {
             throw new MsgException('세금수취여부를 다시 입력해주세요');
         }
         if (DateUtil::isWeekend($return->pay_date)) {
