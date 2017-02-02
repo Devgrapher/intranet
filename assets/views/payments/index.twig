@@ -3,24 +3,45 @@
 {% block head %}
   {{ parent() }}
   <style>
-    th {
-      font-size: 12px;
-      white-space: nowrap;
+    .tbody-scroll {
+      display: block;
+      table-layout: fixed;
+      border: 1px solid #ddd;
+      border-collapse: collapse;
+      width: 2665px;
     }
 
-    td {
-      white-space: nowrap;
+    .highlight {
+      color: #31708f;
+      background-color: #d9edf7;
+      border-color: #bce8f1;
+    }
+
+    .tbody-scroll th { border: 1px solid #ddd; font-size: 12px; }
+    .tbody-scroll td { border: 1px solid #ddd; }
+
+    .tbody-scroll tbody {
+      display: block;
+      max-height: 400px;
+      overflow: auto;
+    }
+
+    input.sm {
+      width: 80px
+    }
+
+    input.md {
+      width: 100px
+    }
+
+    input.lg {
+      width: 140px
     }
 
     .js_column_fold {
       width: 20px !important;
       overflow: hidden;
       box-shadow: -10px 0 10px #f0f0f0 inset;
-    }
-
-    tr.add td {
-      margin: 0;
-      padding: 0;
     }
 
     tr.payment_done td {
@@ -44,27 +65,58 @@
       filter: alpha(opacity=0);
     }
 
+
+
   </style>
   <script>
     require(["jquery", "jquery.jeditable", "jquery.fileupload", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
       var datatable = $('table[datatable]').DataTable({
         "paging": false,
-        "ordering": false
+        "ordering": false,
+        "autoWidth": false,
       });
+
+      $('table[datatable]').css('table-layout', 'fixed');
+
+      var columnVisible = {};
+      var columnWidths = [20, 100, 80, 100, 80, 120, 100, 80, 100, 130, 80, 240, 100, 60, 100, 100, 100, 60, 140, 100, 140, 100, 140, 100, 100, 40];
+
+      function setAllColumnWidth() {
+        var index = 0;
+        columnWidths.forEach(function (width, i) {
+          if (columnVisible[i] === false) {
+            return;
+          }
+
+          $('.tbody-scroll th:nth-of-type('+(index+1)+'), .tbody-scroll td:nth-of-type('+(index+1)+')').css('width', width+'px');
+          ++index;
+        });
+      }
 
       function setColumnVisible(index, isVisible) {
           var column = datatable.column(index);
           column.visible(isVisible, false);
+          columnVisible[index] = isVisible;
       }
 
+      var isAllChecked = true;
+      $('input.toggle-vis').each(function () {
+        setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
+        isAllChecked = isAllChecked && $(this).is(":checked");
+      });
+      $('#col-toggle-add').prop('checked', isAllChecked);
+      setAllColumnWidth();
+
       $('input.toggle-vis').on('change', function (e) {
-          setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
-          var isAllChecked = true;
-          $('input.toggle-vis').each(function () {
-              isAllChecked = isAllChecked && $(this).is(":checked");
-          });
-          $('#col-toggle-add').prop('checked', isAllChecked);
-      }).trigger('change');
+        setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
+        var isAllChecked = true;
+        $('input.toggle-vis').each(function () {
+            isAllChecked = isAllChecked && $(this).is(":checked");
+        });
+        $('#col-toggle-add').prop('checked', isAllChecked);
+
+        setAllColumnWidth();
+      });
 
       $('#col-toggle-add').on('change', function (e) {
           var isChecked = $(this).is(":checked");
@@ -74,7 +126,6 @@
           });
       });
 
-        $('table').css('table-layout', 'fixed');
       $('th').on('click', function () {
         var column = datatable.column(this);
         column.nodes().to$().toggleClass('js_column_fold');
@@ -320,7 +371,7 @@
     data-aa-onsuccess="refresh"
     data-aa-onfail-alert="true"
   >
-    <table class="table table-striped table-hover table-bordered table-condensed" datatable>
+    <table class="tbody-scroll" datatable>
       <thead>
       <tr>
         <th>
@@ -333,21 +384,21 @@
         <th>승인자 확인</th>
         <th>장부반영여부</th>
         <th>재무팀 확인</th>
-        <th class="alert alert-info">귀속월</th>
-        <th class="alert alert-info">귀속부서</th>
-        <th class="alert alert-info">프로덕트</th>
-        <th class="alert alert-info">분류</th>
-        <th class="alert alert-info">상세내역</th>
-        <th class="alert alert-info">파일</th>
+        <th class="highlight">귀속월</th>
+        <th class="highlight">귀속부서</th>
+        <th class="highlight">프로덕트</th>
+        <th class="highlight">분류</th>
+        <th class="highlight">상세내역</th>
+        <th class="highlight">파일</th>
         <th>업체명</th>
         <th>입금금액</th>
         <th>결제(예정)일</th>
         <th>세금계산서수취여부</th>
         <th>세금계산서일자</th>
-        <th class="alert alert-info">입금은행</th>
-        <th class="alert alert-info">입금계좌번호</th>
-        <th class="alert alert-info">예금주</th>
-        <th class="alert alert-info">비고</th>
+        <th class="highlight">입금은행</th>
+        <th class="highlight">입금계좌번호</th>
+        <th class="highlight">예금주</th>
+        <th class="highlight">비고</th>
         <th>결제수단</th>
         <th>상태</th>
         <th></th>
@@ -419,12 +470,12 @@
               {% endif %}
             {% endif %}
           </td>
-          <td data-key='month'>{{ payment.month }}</td>
-          <td data-key='team' data-keyselect>{{ payment.team }}</td>
-          <td data-key='product' data-keyselect>{{ payment.product }}</td>
-          <td data-key='category'>{{ payment.category }}</td>
-          <td data-key='desc'>{{ payment.desc }}</td>
-          <td>
+          <td class="highlight" data-key='month'>{{ payment.month }}</td>
+          <td class="highlight" data-key='team' data-keyselect>{{ payment.team }}</td>
+          <td class="highlight" data-key='product' data-keyselect>{{ payment.product }}</td>
+          <td class="highlight" data-key='category'>{{ payment.category }}</td>
+          <td class="highlight" data-key='desc'>{{ payment.desc }}</td>
+          <td class="highlight">
             {% if payment.is_file_uploadable %}
               <div class="fileupload_button btn btn-primary btn-xs">
                 <span class="glyphicon glyphicon-open"></span>
@@ -469,10 +520,10 @@
           <td data-key='pay_date'>{{ payment.pay_date | slice(0, 10) }}</td>
           <td data-key='tax' data-keyselect>{{ payment.tax }}</td>
           <td data-key='tax_date'>{{ payment.tax_date }}</td>
-          <td data-key='bank'>{{ payment.bank }}</td>
-          <td data-key='bank_account'>{{ payment.bank_account }}</td>
-          <td data-key='bank_account_owner'>{{ payment.bank_account_owner }}</td>
-          <td data-key='note'>{{ payment.note }}</td>
+          <td class="highlight" data-key='bank'>{{ payment.bank }}</td>
+          <td class="highlight" data-key='bank_account'>{{ payment.bank_account }}</td>
+          <td class="highlight" data-key='bank_account_owner'>{{ payment.bank_account_owner }}</td>
+          <td class="highlight" data-key='note'>{{ payment.note }}</td>
           {% if isSuperAdmin %}
             <td data-key='paytype' data-keyselect>{{ payment.paytype }}</td>
             <td data-key='status' data-keyselect>{{ payment.status }}</td>
@@ -502,56 +553,47 @@
       {% endfor %}
       </tbody>
       <tfoot>
-      <tr class='add'>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-          <label>
-            <select name='manager_uid' js_cookie_save js_data_chosen style="width:80px">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <select name='manager_uid' js_cookie_save js_data_chosen>
               {% for user in managerUsers %}
                 <option value='{{ user.uid }}'>{{ user.name }}</option>
               {% endfor %}
             </select>
-          </label>
-        </td>
-        <td></td>
-        <td>
-          <label>
+          </td>
+          <td></td>
+          <td>
             <select name='is_account_book_registered' js_cookie_save>
               {% for tax in const.is_account_book_registered %}
                 <option value='{{ tax }}'>{{ tax }}</option>
               {% endfor %}
             </select>
-          </label>
-        </td>
-        <td></td>
-        <td class="alert alert-info">
-          <input type='text' name='month' maxlength='7' style='width:60px;' value="{{ todayMonth }}"
-                 placeholder="yyyy/mm"/>
-        </td>
-        <td class="alert alert-info">
-          <label>
-            <select name='team' js_cookie_save js_data_chosen style="width:250px;">
+          </td>
+          <td></td>
+          <td class="highlight">
+            <input class='sm' type='text' name='month' maxlength='7' value="{{ todayMonth }}"
+                   placeholder="yyyy/mm"/>
+          </td>
+          <td class="highlight">
+            <select name='team' js_cookie_save js_data_chosen>
               {% for team in const.team %}
                 <option value='{{ team }}'>{{ team }}</option>
               {% endfor %}
             </select>
-          </label>
-        </td>
-        <td class="alert alert-info">
-          <label>
-            <select name='product' js_cookie_save js_data_chosen style="width:100px;">
+          </td>
+          <td class="highlight">
+            <select name='product' js_cookie_save js_data_chosen>
               {% for product in const.product %}
                 <option value='{{ product }}'>{{ product }}</option>
               {% endfor %}
             </select>
-          </label>
-        </td>
-        <td class="alert alert-info">
-          <label>
-            <select id='js_category_input' js_data_chosen style="width:350px;">
+          </td>
+          <td class="highlight">
+            <select id='js_category_input' js_data_chosen>
               {% for category in const.category %}
                 {% if loop.first %}
                   <option value='{{ category }}' selected>{{ category }}</option>
@@ -561,123 +603,130 @@
               {% endfor %}
             </select>
             <input type='hidden' name='category'/>
-          </label>
-        </td>
-        <td class="alert alert-info"><input type='text' name='desc' style='width:250px' placeholder='행사지원 쿠폰 인쇄'/></td>
-        <td class="alert alert-info"></td>
-        <td><input type='text' name='company_name' placeholder=''/></td>
-        <td><input type='text' name='price' js_number_format placeholder=''/></td>
-        <td>
-          <label>
+          </td>
+          <td class="highlight">
+            <input class='md' type='text' name='desc' placeholder='행사지원 쿠폰 인쇄'/>
+          </td>
+          <td class="highlight"></td>
+          <td>
+            <input class='md' type='text' name='company_name' placeholder=''/>
+          </td>
+          <td>
+            <input class='md' type='text' name='price' js_number_format placeholder=''/>
+          </td>
+          <td>
             <select id="js_pay_date_input">
               {% for product in const.pay_date %}
                 <option value='{{ product }}'>{{ product }}</option>
               {% endfor %}
             </select>
-          </label>
-          <input type='hidden' name='pay_date'/>
-        </td>
-        <td>
-          <label>
+            <input type='hidden' name='pay_date'/>
+          </td>
+          <td>
             <select name='tax' js_cookie_save>
-              <option value='N/A'>N/A</option>
+              <option value='선택'>선택</option>
               {% for tax in const.tax %}
                 <option value='{{ tax }}'>{{ tax }}</option>
               {% endfor %}
             </select>
-          </label>
-        </td>
-        <td><input type='date' name='tax_date' style='width:60px' placeholder='일자'/></td>
-        <td class="alert alert-info"><input type='text' name='bank' style='width:60px' placeholder='우리'/></td>
-        <td class="alert alert-info"><input type='text' name='bank_account' placeholder='xxx-xxxxxxx-xx-xxx'/></td>
-        <td class="alert alert-info"><input type='text' name='bank_account_owner' placeholder='홍길동'/></td>
-        <td class="alert alert-info"><input type='text' name='note' placeholder='비고'/></td>
-        <td>
-          {% if isSuperAdmin %}
-            <label>
+          </td>
+          <td>
+            <input class='lg' type='date' name='tax_date' placeholder='일자'/>
+          </td>
+          <td class="highlight">
+            <input class='md' type='text' name='bank' placeholder='우리'/>
+          </td>
+          <td class="highlight">
+            <input class='lg' type='text' name='bank_account' placeholder='xxx-xxxxxxx-xx-xxx'/>
+          </td>
+          <td class="highlight">
+            <input class='md' type='text' name='bank_account_owner' placeholder='홍길동'/>
+          </td>
+          <td class="highlight">
+            <input class='lg' type='text' name='note' placeholder='비고'/>
+          </td>
+          <td>
+            {% if isSuperAdmin %}
               <select name='paytype' js_cookie_save js_data_chosen>
                 <option value='미정'>미정</option>
                 {% for paytype in const.paytype %}
                   <option value='{{ paytype }}'>{{ paytype }}</option>
                 {% endfor %}
               </select>
-            </label>
-          {% endif %}
-        </td>
-        <td>
-          {% if isSuperAdmin %}
-            <label>
+            {% endif %}
+          </td>
+          <td>
+            {% if isSuperAdmin %}
               <select name='status' js_cookie_save js_data_chosen>
                 <option value='결제 대기중'>결제 대기중</option>
                 {% for status in const.status %}
                   <option value='{{ status }}'>{{ status }}</option>
                 {% endfor %}
               </select>
-            </label>
-          {% endif %}
-        </td>
-        <td>
-          <input type="submit" value="추가"/>
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-          <select class="js_edit_all" data-key="is_manager_accepted" title="is_manager_accepted">
-            <option value='0'>선택 일괄 적용</option>
-            <option value='1'>승인</option>
-          </select>
-        </td>
-        <td>
-          {% if isSuperAdmin %}
-            <select class="js_edit_all" data-key="is_co_accepted" title="is_co_accepted">
+            {% endif %}
+          </td>
+          <td>
+            <input type="submit" value="추가"/>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <select class="js_edit_all" data-key="is_manager_accepted" title="is_manager_accepted">
               <option value='0'>선택 일괄 적용</option>
               <option value='1'>승인</option>
             </select>
-          {% endif %}
-        </td>
-        <td></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td class="alert alert-info"></td>
-        <td>
-          {% if isSuperAdmin %}
-            <select class="js_edit_all" data-key="paytype" title="paytype">
-              <option value='0'>선택 일괄 적용</option>
-              {% for paytype in const.paytype %}
-                <option value='{{ paytype }}'>{{ paytype }}</option>
-              {% endfor %}
-            </select>
-          {% endif %}
-        </td>
-        <td>
-          {% if isSuperAdmin %}
-            <select class="js_edit_all" data-key="status" title="status">
-              <option value='0'>선택 일괄 적용</option>
-              {% for status in const.status %}
-                <option value='{{ status }}'>{{ status }}</option>
-              {% endfor %}
-            </select>
-          {% endif %}
-        </td>
-        <td></td>
-      </tr>
+          </td>
+          <td>
+            {% if isSuperAdmin %}
+              <select class="js_edit_all" data-key="is_co_accepted" title="is_co_accepted">
+                <option value='0'>선택 일괄 적용</option>
+                <option value='1'>승인</option>
+              </select>
+            {% endif %}
+          </td>
+          <td></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td class="highlight"></td>
+          <td>
+            {% if isSuperAdmin %}
+              <select class="js_edit_all" data-key="paytype" title="paytype">
+                <option value='0'>선택 일괄 적용</option>
+                {% for paytype in const.paytype %}
+                  <option value='{{ paytype }}'>{{ paytype }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
+          </td>
+          <td>
+            {% if isSuperAdmin %}
+              <select class="js_edit_all" data-key="status" title="status">
+                <option value='0'>선택 일괄 적용</option>
+                {% for status in const.status %}
+                  <option value='{{ status }}'>{{ status }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
+          </td>
+          <td></td>
+        </tr>
       </tfoot>
     </table>
   </form>
@@ -758,7 +807,7 @@ B. 결제정보
           </td>
           <td>
             <form action="/payments/downloadActiveTeam" method="post">
-              <select name='team' js_cookie_save js_data_chosen style="width:250px;">
+              <select name='team' js_cookie_save js_data_chosen>
                 {% for team in const.team %}
                   <option value='{{ team }}'>{{ team }}</option>
                 {% endfor %}
@@ -773,7 +822,7 @@ B. 결제정보
           </td>
           <td>
             <form action="/payments/downloadActiveCategory" method="post">
-              <select name='category_condition' js_data_chosen style="width:350px;">
+              <select name='category_condition' js_data_chosen>
                 {% for category in const.category %}
                   {% if loop.first %}
                     <option value='{{ category }}' selected>{{ category }}</option>
@@ -805,7 +854,7 @@ B. 결제정보
           </td>
           <td>
             <label>
-              <select name='js_super_edit' js_data_chosen style="width:100px">
+              <select name='js_super_edit' js_data_chosen>
                 {% for user in allUsers %}
                   <option value='{{ user.uid }}'>{{ user.name }}</option>
                 {% endfor %}
