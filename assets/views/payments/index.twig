@@ -74,12 +74,15 @@
         "paging": false,
         "ordering": false,
         "autoWidth": false,
+        "language": {
+          "emptyTable": "데이터가 없습니다."
+        }
       });
 
       $('table[datatable]').css('table-layout', 'fixed');
 
       var columnVisible = {};
-      var columnWidths = [20, 100, 80, 100, 80, 120, 100, 80, 100, 130, 80, 240, 100, 60, 100, 100, 100, 60, 140, 100, 140, 100, 140, 100, 100, 40];
+      var columnWidths = [20, 100, 80, 100, 80, 100, 100, 80, 100, 130, 80, 240, 100, 60, 100, 100, 100, 60, 140, 100, 140, 100, 140, 100, 100, 40];
 
       function setAllColumnWidth() {
         var index = 0;
@@ -91,6 +94,11 @@
           $('.tbody-scroll th:nth-of-type('+(index+1)+'), .tbody-scroll td:nth-of-type('+(index+1)+')').css('width', width+'px');
           ++index;
         });
+
+        {% if payments.length == 0 %}
+          $('.tbody-scroll tbody td').css('width', '2665px');
+          $('.tbody-scroll tbody td').css('background-color', '#ddd');
+        {% endif %}
       }
 
       function setColumnVisible(index, isVisible) {
