@@ -4,7 +4,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
-    holiday_admin: './js/holiday_admin',
+    holiday_adjust: './js/components/HolidayAdjust',
   },
   output: {
     path: path.join(__dirname, '../static/js'),
@@ -31,5 +31,5 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('styles.css'),
-  ]
+  ],
 };
