@@ -8,23 +8,31 @@ use Mailgun\Mailgun;
 
 class UserPaymentMailService
 {
-    public static function sendMail($type, $payment_id)
+    public static function sendMail($type, $payment_id, $detail = null)
     {
-        $payment_dto = PaymentDtoFactory::createFromDatabaseByPk($payment_id);
-        list($title, $html, $receivers) = self::getMailContents($type, $payment_dto);
+        $dto = PaymentDtoFactory::createFromDatabaseByPk($payment_id);
+
+        if ($type == '결제반려') {
+            $title = "[{$type}][{$dto->team}][{$dto->month}] {$dto->register_name}님의 요청, {$dto->category}";
+            $template = 'payments/template/reject';
+        } else {
+            $title = "[{$type}][{$dto->team}][{$dto->month}] {$dto->register_name}님의 요청, {$dto->category}";
+            $template = 'payments/template/add';
+        }
+
+        $html = Application::$view->render($template, ['item' => $dto, 'detail' => $detail]);
+
+        $receivers = self::getReceivers($dto);
         self::sendMailRaw($receivers, $title, $html);
     }
 
     /**
-     * @param $type
      * @param $dto
      *
      * @return array
      */
-    private static function getMailContents($type, PaymentDto $dto)
+    private static function getReceivers(PaymentDto $dto)
     {
-        $title = "[{$type}][{$dto->team}][{$dto->month}] {$dto->register_name}님의 요청, {$dto->category}";
-        $html = Application::$view->render('payments/template/add', ['item' => $dto]);
         $receivers = [
             UserJoinService::getEmailByUidSafe($dto->uid),
             UserJoinService::getEmailByUidSafe($dto->manager_uid)
@@ -39,7 +47,7 @@ class UserPaymentMailService
             $receivers = array_merge($receivers, $receivers_append);
             $receivers = array_unique($receivers);
         }
-        return [$title, $html, $receivers];
+        return $receivers;
     }
 
     /**

@@ -14,8 +14,6 @@ if ($key == 'is_manager_accepted') {
     return $row->acceptManager();
 } elseif ($key == 'is_co_accepted') {
     return $row->acceptCO();
-} elseif ($key == 'is_manager_rejected') {
-    return $row->rejectManager();
 } else {
     return $row->edit($key, $value);
 }

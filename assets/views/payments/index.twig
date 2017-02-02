@@ -26,6 +26,10 @@
       overflow: auto;
     }
 
+    .select2-container {
+      width: 100%;
+    }
+
     input.sm { width: 80px }
     input.md { width: 100px }
     input.lg { width: 140px }
@@ -57,9 +61,6 @@
       opacity: 0;
       filter: alpha(opacity=0);
     }
-
-
-
   </style>
   <script>
     require(["jquery", "jquery.jeditable", "jquery.fileupload", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
@@ -73,7 +74,7 @@
       });
 
       var columnVisible = {};
-      var columnWidths = [20, 100, 80, 100, 80, 100, 100, 120, 100, 200, 80, 240, 100, 60, 100, 100, 100, 60, 140, 100, 140, 100, 300, 100, 100, 40];
+      var columnWidths = [15, 90, 70, 80, 80, 100, 100, 120, 100, 240, 80, 240, 100, 60, 100, 100, 100, 60, 140, 100, 140, 100, 300, 100, 100, 40];
 
       function setAllColumnWidth() {
         var index = 0;
@@ -83,7 +84,16 @@
             return;
           }
 
-          $('.tbody-scroll th:nth-of-type('+(index+1)+'), .tbody-scroll td:nth-of-type('+(index+1)+')').css('width', width+'px');
+          var thSelector = '.tbody-scroll th:nth-of-type('+(index+1)+')';
+          var tdSelector = '.tbody-scroll td:nth-of-type('+(index+1)+')';
+          $(thSelector + ', ' + tdSelector).css('width', width+'px');
+
+          var inputSelector = tdSelector + ' input';
+          var selectSelector = tdSelector + ' select';
+          $(inputSelector + ', ' + selectSelector).each(function () {
+            var groupNum = $(this).siblings().length+1;
+            $(this).css('width', (width-2*groupNum)/groupNum+'px');
+          });
           ++index;
           allWidth += width;
         });
@@ -307,6 +317,31 @@
         .change(function () {
           location.href = '/payments/uid/' + $(this).val();
         });
+
+      var rejectPaymentid = undefined;
+      $('.co-reject').click(function() {
+        $('#rejectModal').modal('show');
+        rejectPaymentid = $(this).attr("data-paymentid");
+      });
+
+      $('#rejectConfirm').click(function () {
+        if (rejectPaymentid === undefined) {
+          return;
+        }
+
+        $.ajax('/payments/paymentid/' + rejectPaymentid + '?key=is_manager_rejected&value=1', {
+          method: 'DELETE',
+          data: $('#rejectModal textarea').val(),
+          success: function (data) {
+            $('#rejectModal').modal('hide');
+            alert('반려되었습니다');
+            location.reload();
+          },
+          error: function (xhr, status, error) {
+            alert(xhr.responseText);
+          }
+        });
+      });
     });
   </script>
 {% endblock %}
@@ -364,6 +399,21 @@
     <input type="checkbox" name="col-toggle24" class="toggle-vis" data-column="23" js_cookie_save js_default_save="true" />결제수단 -
     <input type="checkbox" name="col-toggle25" class="toggle-vis" data-column="24" js_cookie_save js_default_save="true" />상태
   </div>
+
+  <div id="rejectModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div class="form-group">
+              <label for="rejectReason">반려사유</label>
+              <textarea id="rejectReason" class="form-control" rows="3" placeholder="사유를 적어주세요."></textarea>
+            </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+            <button id="rejectConfirm" type="button" class="btn btn-primary">확인</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
   <form
     attrajax
@@ -466,19 +516,20 @@
                          data-aa-onsuccess="refresh"
                          data-aa-onfail-alert="true"
                   />
-                  <input class='alert alert-danger' type='button' value='반려'
-                         attrajax
-                         data-aa-url='/payments/paymentid/{{ payment.paymentid }}'
-                         data-aa-method='PUT'
-                         data-aa-param='key=is_manager_rejected&value=1'
-                         data-aa-confirm='정말 반려하시겠습니까?'
-                         data-aa-datatype="text"
-                         data-aa-success-if-result-is="1"
-                         data-aa-onsuccess-msg="반려되었습니다"
-                         data-aa-onsuccess="refresh"
-                         data-aa-onfail-alert="true"
-                         style="padding: 0 5; margin: 1;"
-                  />
+                  <input class='alert alert-danger co-reject' type='button' data-paymentid="{{ payment.paymentid }}" value='반려' style="padding: 0 5px; margin: 0;" />
+                  {#<input class='alert alert-danger' type='button' value='반려'#}
+                         {#attrajax#}
+                         {#data-aa-url='/payments/paymentid/{{ payment.paymentid }}'#}
+                         {#data-aa-method='PUT'#}
+                         {#data-aa-param='key=is_manager_rejected&value=1'#}
+                         {#data-aa-confirm='정말 반려하시겠습니까?'#}
+                         {#data-aa-datatype="text"#}
+                         {#data-aa-success-if-result-is="1"#}
+                         {#data-aa-onsuccess-msg="반려되었습니다"#}
+                         {#data-aa-onsuccess="refresh"#}
+                         {#data-aa-onfail-alert="true"#}
+                         {#style="padding: 0 5px; margin: 0;"#}
+                  {#/>#}
                 {% else %}
                   X
                 {% endif %}

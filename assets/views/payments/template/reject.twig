@@ -1,0 +1,50 @@
+<!--
+item : PaymentDto
+-->
+<table>
+  <tr>
+    <td>
+      <h3>다음 요청이 반려되었습니다.</h3>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      요청일 : {{ item.request_date }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      요청자 : {{ item.register_name }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      분류 : {{ item.team }} / {{ item.product }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      내용 : {{ item.category }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      상세내용 : {{ item.desc }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      금액 : {{ item.price }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      결제예정일 : {{ item.pay_date }}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>반려사유 : {{ detail }}</h3>
+    </td>
+  </tr>
+</table>
