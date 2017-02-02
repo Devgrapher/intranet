@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HolidayAdmin from './components/HolidayAdmin';
+import HolidayAdjust from './HolidayAdjust';
 
 ReactDOM.render(
-  <HolidayAdmin />,
+  <HolidayAdjust />,
   document.getElementById('content'),
 );

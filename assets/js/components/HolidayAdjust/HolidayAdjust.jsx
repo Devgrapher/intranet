@@ -1,11 +1,11 @@
 import React from 'react';
-import { Table, Form, FormGroup, FormControl, ControlLabel, Grid, Col, Row } from 'react-bootstrap';
+import { Grid, Col, Row } from 'react-bootstrap';
 import Select from 'react-select';
 import axios from 'axios';
 import HolidayAdjustCreator from './HolidayAdjustCreator';
 import HolidayAdjustTable from './HolidayAdjustTable';
 
-class HolidayAdmin extends React.Component {
+class HolidayAdjust extends React.Component {
   constructor() {
     super();
 
@@ -246,4 +246,4 @@ class HolidayAdmin extends React.Component {
   }
 }
 
-export default HolidayAdmin;
+export default HolidayAdjust;
