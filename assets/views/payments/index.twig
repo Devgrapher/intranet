@@ -97,7 +97,7 @@
         });
 
         $('.tbody-scroll').css('width', (allWidth+(2*index))+'px');
-        {% if payments.length == 0 %}
+        {% if payments|length == 0 %}
           $('.tbody-scroll tbody td').css('width', (allWidth+(2*index-2))+'px');
           $('.tbody-scroll tbody td').css('background-color', '#ddd');
         {% endif %}
