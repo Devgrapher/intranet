@@ -101,7 +101,7 @@ class UserPaymentRowInstance
         return true;
     }
 
-    public function acceptManageer()
+    public function acceptManager()
     {
         $payment_dto = PaymentDtoFactory::createFromDatabaseByPk($this->payment_id);
         $self = UserSession::getSelfDto();
@@ -124,6 +124,25 @@ class UserPaymentRowInstance
     {
         $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
         PaymentAcceptModel::insert($payment_accept_dto);
+        return 1;
+    }
+
+    public function rejectManager()
+    {
+        $payment_dto = PaymentDtoFactory::createFromDatabaseByPk($this->payment_id);
+        $is_payment_admin = UserPolicy::isPaymentAdmin(UserSession::getSelfDto());
+        $is_editable = $payment_dto->is_editable;
+        if (!($is_payment_admin || $is_editable)) {
+            throw new MsgException("반려 권한이 없습니다.");
+        }
+
+        return $this->reject('manager', $payment_dto->manager_uid);
+    }
+
+    private function reject($user_type, $uid)
+    {
+        $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
+        PaymentAcceptModel::delete($payment_accept_dto);
         return 1;
     }
 }

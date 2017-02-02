@@ -16,4 +16,13 @@ class PaymentAcceptModel extends BaseModel
         $rows = $payment_accept_dto->exportDatabaseInsert();
         return self::getDb()->sqlInsert('payment_accept', $rows);
     }
+
+    public static function delete(PaymentAcceptDto $payment_accept_dto)
+    {
+        return self::getDb()->sqlDelete('payment_accept', [
+            'paymentid' => $payment_accept_dto->paymentid,
+            'uid' => $payment_accept_dto->uid,
+            'user_type' => $payment_accept_dto->user_type,
+        ]);
+    }
 }
