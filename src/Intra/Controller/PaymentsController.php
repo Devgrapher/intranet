@@ -72,7 +72,7 @@ class PaymentsController implements ControllerProviderInterface
 
             return $app['twig']->render('payments/index.twig', $twig_param);
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
@@ -98,7 +98,7 @@ class PaymentsController implements ControllerProviderInterface
                 return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
@@ -130,7 +130,7 @@ class PaymentsController implements ControllerProviderInterface
                 }
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
@@ -154,7 +154,7 @@ class PaymentsController implements ControllerProviderInterface
                 return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
@@ -286,7 +286,7 @@ class PaymentsController implements ControllerProviderInterface
                 return Response::create('삭제실패했습니다.', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
@@ -305,18 +305,18 @@ class PaymentsController implements ControllerProviderInterface
                 return JsonResponse::create('file upload failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
-    public function getDateByStr(Request $request, Application $app)
+    public function getPayDateByStr(Request $request, Application $app)
     {
         $pay_type_str = $request->get('pay_type_str');
         $paydate = UserPaymentRequestFilter::getPayDateByStr($pay_type_str);
         if ($paydate) {
             return Response::create($paydate, Response::HTTP_OK);
         } else {
-            return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create('fail', Response::HTTP_OK);
         }
     }
 }

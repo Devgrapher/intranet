@@ -162,6 +162,9 @@ class PaymentDto extends BaseDto
         if (DateUtil::isWeekend($return->pay_date)) {
             throw new MsgException('결제(예정)일을 주말로 설정할 수 없습니다');
         }
+        if (!$return->is_account_book_registered) {
+            $return->is_account_book_registered = 'N';
+        }
         return $return;
     }
 
