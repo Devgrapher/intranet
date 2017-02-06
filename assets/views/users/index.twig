@@ -114,7 +114,7 @@
     <script>
       require(["jquery", "jquery-ui", "bootstrap"], function ($) {
         if (location.search == '?after_login' && window.innerWidth < 980) {
-          location.href = '/Rooms';
+          location.href = '/rooms';
         }
 
         var userInfos = {};
@@ -374,7 +374,7 @@
 
               <div id="floor10" class="tab-pane fade in active">
                 {% for user in users %}
-                  {% if user.extra.area is null or user.extra.area == 'floor10' %}
+                  {% if user.extra.area is not defined or user.extra.area == 'floor10' %}
                     {% include 'users/index_user.twig' with {user:user} %}
                   {% endif %}
                 {% endfor %}
@@ -382,7 +382,7 @@
 
               <div id="floor11" class="tab-pane fade">
                 {% for user in users %}
-                  {% if user.extra.area == 'floor11' %}
+                  {% if user.extra.area is defined and user.extra.area == 'floor11' %}
                     {% include 'users/index_user.twig' with {user:user} %}
                   {% endif %}
                 {% endfor %}

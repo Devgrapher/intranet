@@ -17,10 +17,10 @@
         <col width="80">
       </colgroup>
       <tbody>
-      {% for index, post in posts %}
+      {% for post in posts %}
         <tr>
           <td>
-            {{ lastItem + posts.length - index }}
+            {{ lastItem + loop.length - loop.index }}
           </td>
           <td>
             <a href="/posts/{{ group }}/{{ post.id }}">
@@ -39,7 +39,7 @@
     </table>
 
     <div class="row">
-      {% if isPostAdmin %}
+      {% if isPostAdmin is defined %}
         <div class="col-xs-1">
           <a href="/posts/{{ group }}/write">
             <button class="btn btn-primary" type="button">

@@ -44,12 +44,12 @@ class MenuService
                         '_blank'
                     ),
                     new Link('전사 주간 업무 요약', '/weekly', new ExceptTaAuth(), '_blank'),
-                    new Link('회의실', '/Rooms', new PublicAuth()),
-                    new Link('포커스룸', '/Rooms?type=focus'),
+                    new Link('회의실', '/rooms', new PublicAuth()),
+                    new Link('포커스룸', '/rooms?type=focus'),
                     '근태관리' => [
                         new Link('휴가신청', '/holidays', new PublicAuth()),
-                        new Link('휴가조정(관리자)', '/HolidayAdmin', new OnlyHolidayEditable()),
-                        new Link('얼리파마', '/FlexTime', new PublicAuth()),
+                        new Link('휴가조정(관리자)', '/holidayadmin', new OnlyHolidayEditable()),
+                        new Link('얼리파마', '/flextime', new PublicAuth()),
                     ],
                     '지원요청' => [
                         new Link('업무환경 불편사항 문의', '/Support/' . SupportPolicy::TYPE_DEVICE, new PublicAuth()),
@@ -76,8 +76,8 @@ class MenuService
                         new Link('상품권 제작', '/Support/' . SupportPolicy::TYPE_GIFT_CARD),
                     ],
                     new Link('비용정산', '/receipts', new PublicAuth()),
-                    new Link('회의실', '/Rooms', new PublicAuth()),
-                    new Link('포커스룸', '/Rooms?type=focus'),
+                    new Link('회의실', '/rooms', new PublicAuth()),
+                    new Link('포커스룸', '/rooms?type=focus'),
                     new Link('리디 생활 가이드', '/users'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
                 ];

@@ -107,7 +107,7 @@
             //			,rid : $('.dhx_cal_tab.active').attr('rid')
           };
 
-          $.post('/Rooms/Mod', postArg, function (dat) {
+          $.post('/rooms/mod', postArg, function (dat) {
               if (dat != '1') {
                 alert(dat);
                 event_handler.scheduler.setEventStartDate(event_id, edit_selected_date_from);
@@ -156,7 +156,7 @@
           from = from.getFullYear() + "-" + (from.getMonth() + 1) + "-" + from.getDate() + " " + from.getHours() + ":" + from.getMinutes();
           to = to.getFullYear() + "-" + (to.getMonth() + 1) + "-" + to.getDate() + " " + to.getHours() + ":" + to.getMinutes();
 
-          $.post('/Rooms/Add', {
+          $.post('/rooms/add', {
               desc: event_handler.scheduler.getEventText(event_id),
               from: from,
               to: to,
@@ -181,7 +181,7 @@
           return true;
         };
         this.onBeforeEventDelete = function (event_id) {
-          $.post('/Rooms/Del/id/' + event_id);
+          $.post('/rooms/del/id/' + event_id);
           return true;
         };
       };
@@ -238,7 +238,7 @@
       $.each(sections, function (index, section) {
         room_ids.push(section.key);
       });
-      scheduler.load("/Rooms/Get?room_ids=" + room_ids.join(','), 'json');
+      scheduler.load("/rooms/get?room_ids=" + room_ids.join(','), 'json');
 
     }
     require(["jquery"], function ($) {

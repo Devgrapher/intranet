@@ -43,7 +43,7 @@
     require(["jquery", "jquery.jeditable", "jquery.fileupload", "jquery.attrajax", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
       $(function () {
         $('button#add').attrAjax({
-          'url': '/Support/{{ target }}/add',
+          'url': '/support/{{ target }}/add',
           'method': 'post',
           'success-if-result-is': "1",
           'param-form': 'tr.add',
@@ -55,7 +55,7 @@
           return e.which != 13;
         });
         // Change this to the location of your server-side upload handler:
-        var url = '/Support/{{ target }}/file_upload';
+        var url = '/support/{{ target }}/file_upload';
         $('.js_fileupload').each(function () {
           var $this = $(this);
           var tr_object = $this.parentsUntil('table').filter('tr');
@@ -111,24 +111,24 @@
 
           if (is_keyselect) {
             args['type'] = 'select';
-            args['loadurl'] = '/Support/{{ target }}/const/' + key;
+            args['loadurl'] = '/support/{{ target }}/const/' + key;
             args['submit'] = "OK";
           }
 
-          $(this).editable('/Support/{{ target }}/id/' + supportid, args);
+          $(this).editable('/support/{{ target }}/id/' + supportid, args);
         });
 
         $('tr.support_row').each(function () {
           var supportid = $(this).data('id');
           $("button.js_delete", this).attrAjax({
-            'url': "/Support/{{ target }}/id/" + supportid,
+            'url': "/support/{{ target }}/id/" + supportid,
             'method': "delete",
             'confirm': '정말 삭제하시겠습니까?',
             'onsuccess-url': location.href,
             'oncomplete-alert': true
           });
           $("button.js_complete", this).attrAjax({
-            'url': "/Support/{{ target }}/id/" + supportid + "/complete",
+            'url': "/support/{{ target }}/id/" + supportid + "/complete",
             'method': "put",
             'confirm': '정말 승인하시겠습니까??',
             'onsuccess-url': location.href,
@@ -140,7 +140,7 @@
           .val({{ uid }})
           .trigger("change")
           .change(function () {
-            location.href = "/Support/{{ target }}/uid/" + $(this).val() + "/yearmonth/{{ yearmonth }}";
+            location.href = "/support/{{ target }}/uid/" + $(this).val() + "/yearmonth/{{ yearmonth }}";
           });
 
         var columnManager = new function () {
@@ -226,11 +226,11 @@
     </span>
   </h2>
   <h4>
-    <a href='/Support/{{ target }}/uid/{{ uid }}/yearmonth/{{ prev_yearmonth }}'>{{ prev_yearmonth }}</a>
+    <a href='/support/{{ target }}/uid/{{ uid }}/yearmonth/{{ prev_yearmonth }}'>{{ prev_yearmonth }}</a>
     / {{ yearmonth }} /
-    <a href='/Support/{{ target }}/uid/{{ uid }}/yearmonth/{{ next_yearmonth }}'>{{ next_yearmonth }}</a>
+    <a href='/support/{{ target }}/uid/{{ uid }}/yearmonth/{{ next_yearmonth }}'>{{ next_yearmonth }}</a>
     /
-    <a href='/Support/{{ target }}/remain'>미승인</a>
+    <a href='/support/{{ target }}/remain'>미승인</a>
 
   </h4>
   <table class="table table-striped table-hover table-bordered table-condensed" datatable>
@@ -302,7 +302,7 @@
                       {% for file in support_view_dto.files[key] %}
                         <div style="clear: both;padding-right: 5px;">
                           <button attrajax
-                                  data-aa-url='/Support/{{ target }}/file/{{ file.id }}'
+                                  data-aa-url='/support/{{ target }}/file/{{ file.id }}'
                                   data-aa-method='DELETE'
                                   data-aa-confirm='{{ file.original_filename }} 파일을 정말 삭제하시겠습니까?'
                                   data-aa-datatype="text"
@@ -314,7 +314,7 @@
                                   style="margin:3px;"
                           >
                           </button>
-                          <a href="/Support/{{ target }}/file/{{ file.id }}" title="{{ file.reg_date }}">
+                          <a href="/support/{{ target }}/file/{{ file.id }}" title="{{ file.reg_date }}">
                             {{ file.original_filename }}
                           </a>
                         </div>
@@ -500,7 +500,7 @@
             해당월 엑셀 다운로드
           </td>
           <td>
-            <a href='/Support/{{ target }}/download/yearmonth/{{ yearmonth }}'>
+            <a href='/support/{{ target }}/download/yearmonth/{{ yearmonth }}'>
               <button>다운로드</button>
             </a>
           </td>
@@ -510,7 +510,7 @@
             해당년도 엑셀 다운로드
           </td>
           <td>
-            <a href='/Support/{{ target }}/download/year/{{ yearmonth }}'>
+            <a href='/support/{{ target }}/download/year/{{ yearmonth }}'>
               <button>다운로드</button>
             </a>
           </td>

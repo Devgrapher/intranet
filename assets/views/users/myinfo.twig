@@ -60,7 +60,7 @@
       });
 
       $("#edit-img").fileupload( {
-        url : '/users/image_upload/',
+        url : '/users/image_upload',
         formData: {uid: {{ info.uid }}},
         dropZone: $(this),
         dataType: 'json',

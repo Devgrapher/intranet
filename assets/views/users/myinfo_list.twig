@@ -6,7 +6,7 @@
     <span>
       {{ value }}
     </span>
-    {% if not readOnly %}
+    {% if readOnly is not defined %}
       <div class="pull-right">
         <button class="btn btn-xs edit" data-key="{{ key }}">편집</button>
       </div>

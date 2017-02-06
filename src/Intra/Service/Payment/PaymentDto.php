@@ -4,7 +4,6 @@ namespace Intra\Service\Payment;
 use Intra\Core\BaseDto;
 use Intra\Core\MsgException;
 use Intra\Service\User\UserJoinService;
-use Intra\Service\Payment\UserPaymentConst;
 use Ridibooks\Platform\Common\DateUtil;
 use Symfony\Component\HttpFoundation\Request;
 
