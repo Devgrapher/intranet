@@ -83,7 +83,7 @@ class UserModel extends BaseModel
         $where = [];
         $where['on_date'] = sqlLesserEqual(sqlNow());
         $where['off_date'] = sqlGreaterEqual(sqlNow());
-        $where['position'] = ['CEO', '팀장', 'CTO', 'COO', 'CDO', '기타'];
+        $where['position'] = ['CEO', '팀장', 'CTO', 'CFO', 'CDO', '기타'];
 
         return self::getDb()->sqlDicts('select * from users where ? order by name', sqlWhere($where));
     }

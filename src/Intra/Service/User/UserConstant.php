@@ -5,9 +5,10 @@ namespace Intra\Service\User;
 class UserConstant
 {
     // Team
-    const TEAM_CEO = '공통 / CEO / CEO';
-    const TEAM_CDO = '공통 / CEO / CDO';
-    const TEAM_CTO = '공통 / CEO / CTO';
+    const TEAM_CEO = '공통 / C-lv / CEO';
+    const TEAM_CDO = '공통 / C-lv / CDO';
+    const TEAM_CFO = '공통 / C-lv / CFO';
+    const TEAM_CTO = '공통 / C-lv / CTO';
 
     const TEAM_BI = '공통 / 경영지원그룹 / 사업분석팀';
     const TEAM_HUMAN_MANAGE = '공통 / 경영지원그룹 / 인사팀';
@@ -41,6 +42,7 @@ class UserConstant
         'team' => [
             self::TEAM_CEO,
             self::TEAM_CDO,
+            self::TEAM_CFO,
             self::TEAM_CTO,
             self::TEAM_BI,
             self::TEAM_HUMAN_MANAGE,
