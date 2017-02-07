@@ -28,25 +28,26 @@ class SupportRowService
     /**
      * @param UserDto    $target_user_dto
      * @param SupportDto $support_dto
+     * @param $app
      *
      * @return JsonResponse
      * @throws \Exception
      */
-    public static function add($target_user_dto, $support_dto)
+    public static function add($target_user_dto, $support_dto, $app)
     {
-        return JsonDtoWrapper::create(function () use ($target_user_dto, $support_dto) {
+        return JsonDtoWrapper::create(function () use ($target_user_dto, $support_dto, $app) {
             $support_dto = SupportDtoFilter::filterAddingDto($target_user_dto, $support_dto);
             $insert_id = SupportModel::add($support_dto);
             if (!$insert_id) {
                 throw new MsgException('자료추가 실패했습니다');
             }
-            SupportMailService::sendMail($support_dto->target, '추가', $insert_id);
+            SupportMailService::sendMail($support_dto->target, '추가', $insert_id, $app);
 
             return new JsonDto('성공했습니다.');
         });
     }
 
-    public static function edit($target, $id, $key, $value)
+    public static function edit($target, $id, $key, $value, $app)
     {
         $support_dto = SupportDtoFactory::get($target, $id);
 
@@ -92,7 +93,7 @@ class SupportRowService
         return false;
     }
 
-    public static function del($target, $id)
+    public static function del($target, $id, $app)
     {
         return JsonDtoWrapper::create(function () use ($target, $id) {
             $support_dto = SupportDtoFactory::get($target, $id);
@@ -118,9 +119,9 @@ class SupportRowService
         throw new MsgException('권한이 없습니다.');
     }
 
-    public static function complete($target, $id, $key)
+    public static function complete($target, $id, $key, $app)
     {
-        return JsonDtoWrapper::create(function () use ($target, $id, $key) {
+        return JsonDtoWrapper::create(function () use ($target, $id, $key, $app) {
             $self = UserSession::getSelfDto();
             $columns = SupportPolicy::getColumnFields($target);
             $support_dto = SupportDtoFactory::get($target, $id);
@@ -179,7 +180,7 @@ class SupportRowService
             } else {
                 $result = '승인';
             }
-            SupportMailService::sendMail($target, $result, $id);
+            SupportMailService::sendMail($target, $result, $id, $app);
 
             return new JsonDto('승인되었습니다.');
         });

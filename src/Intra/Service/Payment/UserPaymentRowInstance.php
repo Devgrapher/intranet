@@ -25,19 +25,14 @@ class UserPaymentRowInstance
         $old_value = $payment_dto->$key;
 
         if (!$this->validateEditAuth($key, $old_value, $new_value, $payment_dto)) {
-            return $old_value;
+            return null;
         }
         $this->user_payment_model->update($this->payment_id, $key, $new_value);
 
         $updated_payment_dto = PaymentDtoFactory::createFromDatabaseByPk($this->payment_id);
         $updated_value = $updated_payment_dto->$key;
 
-        if ($key == 'status') {
-            if ($updated_value == '결제 완료') {
-                $type = '결제완료';
-                UserPaymentMailService::sendMail($type, $this->payment_id);
-            }
-        } elseif ($key == 'price') {
+        if ($key == 'price') {
             return number_format($updated_value) . ' 원';
         } elseif ($key == 'manager_uid') {
             $user_name = UserJoinService::getNameByUidSafe($updated_value);
@@ -127,7 +122,7 @@ class UserPaymentRowInstance
         return 1;
     }
 
-    public function rejectManager($reason)
+    public function rejectManager()
     {
         $payment_dto = PaymentDtoFactory::createFromDatabaseByPk($this->payment_id);
         $is_payment_admin = UserPolicy::isPaymentAdmin(UserSession::getSelfDto());
@@ -136,15 +131,13 @@ class UserPaymentRowInstance
             throw new MsgException("반려 권한이 없습니다.");
         }
 
-        return $this->reject('manager', $payment_dto->manager_uid, $reason);
+        return $this->reject('manager', $payment_dto->manager_uid);
     }
 
-    private function reject($user_type, $uid, $reason)
+    private function reject($user_type, $uid)
     {
         $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
         PaymentAcceptModel::delete($payment_accept_dto);
-
-        UserPaymentMailService::sendMail('결제반려', $this->payment_id, $reason);
         return 1;
     }
 }

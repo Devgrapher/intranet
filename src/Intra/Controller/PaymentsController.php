@@ -6,6 +6,7 @@ use Intra\Model\PaymentModel;
 use Intra\Service\Payment\PaymentDto;
 use Intra\Service\Payment\PaymentDtoFactory;
 use Intra\Service\Payment\UserPaymentConst;
+use Intra\Service\Payment\UserPaymentMailService;
 use Intra\Service\Payment\UserPaymentRequestFilter;
 use Intra\Service\Payment\UserPaymentService;
 use Intra\Service\Payment\UserPaymentStatService;
@@ -30,7 +31,7 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->get('/remain', [$this, 'index']);
         $controller_collection->get('/today', [$this, 'index']);
         $controller_collection->post('/uid/{uid}', [$this, 'add']);
-        $controller_collection->put('/paymentid/{paymentid}', [$this, 'edit']);
+        $controller_collection->match('/paymentid/{paymentid}', [$this, 'edit'])->method('PUT|POST');
         $controller_collection->delete('/paymentid/{paymentid}', [$this, 'del']);
         $controller_collection->get('/const/{key}', [$this, 'getConst']);
         $controller_collection->get('/download/{month}', [$this, 'download']);
@@ -92,7 +93,9 @@ class PaymentsController implements ControllerProviderInterface
             $target_user_dto = $user_dto_instancce->exportDto();
 
             $payment_service = new UserPaymentService($target_user_dto);
-            if ($payment_service->add($payment_dto)) {
+            $insert_id = $payment_service->add($payment_dto);
+            if ($insert_id != null) {
+                UserPaymentMailService::sendMail('결제요청', $insert_id, null, $app);
                 return Response::create('success', Response::HTTP_OK);
             } else {
                 return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -118,6 +121,9 @@ class PaymentsController implements ControllerProviderInterface
                 $result = $row->acceptCO();
             } else {
                 $result = $row->edit($key, $value);
+                if ($key == 'status' && $result == '결제 완료') {
+                    UserPaymentMailService::sendMail('결제완료', $paymentid, null, $app);
+                }
             }
 
             if ($result == 1) {
@@ -143,8 +149,10 @@ class PaymentsController implements ControllerProviderInterface
             $payment_service = new UserPaymentService(UserSession::getSelfDto());
             $row = $payment_service->getRowService($paymentid);
             if ($key == 'is_manager_rejected') {
-                $reason = $request->getContent();
-                return $row->rejectManager($reason);
+                if ($row->rejectManager()) {
+                    $reason = $request->getContent();
+                    UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
+                }
             }
 
             $result = $row->del();

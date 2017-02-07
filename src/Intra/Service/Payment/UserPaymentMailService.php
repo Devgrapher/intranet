@@ -1,26 +1,25 @@
 <?php
 namespace Intra\Service\Payment;
 
-use Intra\Core\Application;
 use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserJoinService;
 use Mailgun\Mailgun;
 
 class UserPaymentMailService
 {
-    public static function sendMail($type, $payment_id, $detail = null)
+    public static function sendMail($type, $payment_id, $detail, $app)
     {
         $dto = PaymentDtoFactory::createFromDatabaseByPk($payment_id);
 
         if ($type == '결제반려') {
             $title = "[{$type}][{$dto->team}][{$dto->month}] {$dto->register_name}님의 요청, {$dto->category}";
-            $template = 'payments/template/reject';
+            $template = 'payments/template/reject.twig';
         } else {
             $title = "[{$type}][{$dto->team}][{$dto->month}] {$dto->register_name}님의 요청, {$dto->category}";
-            $template = 'payments/template/add';
+            $template = 'payments/template/add.twig';
         }
 
-        $html = Application::$view->render($template, ['item' => $dto, 'detail' => $detail]);
+        $html = $app['twig']->render($template, ['item' => $dto, 'detail' => $detail]);
 
         $receivers = self::getReceivers($dto);
         self::sendMailRaw($receivers, $title, $html);

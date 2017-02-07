@@ -45,7 +45,6 @@
         $('button#add').attrAjax({
           'url': '/support/{{ target }}/add',
           'method': 'post',
-          'success-if-result-is': "1",
           'param-form': 'tr.add',
           'onsuccess-url': location.href,
           'oncomplete-alert': true
@@ -306,7 +305,6 @@
                                   data-aa-method='DELETE'
                                   data-aa-confirm='{{ file.original_filename }} 파일을 정말 삭제하시겠습니까?'
                                   data-aa-datatype="text"
-                                  data-aa-success-if-result-is="1"
                                   data-aa-onsuccess-msg="삭제되었습니다"
                                   data-aa-onsuccess="refresh"
                                   data-aa-onfail-alert="true"

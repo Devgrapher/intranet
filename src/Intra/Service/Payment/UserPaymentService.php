@@ -215,9 +215,7 @@ class UserPaymentService
             $payment_model->updateUuid($insert_id);
         });
 
-        UserPaymentMailService::sendMail('결제요청', $insert_id);
-
-        return 1;
+        return $insert_id;
     }
 
     public function getRowService($paymentid)

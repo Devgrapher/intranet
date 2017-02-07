@@ -38,8 +38,8 @@ class SupportController implements ControllerProviderInterface
         $controller_collection->get('/{target}/uid/{uid}/yearmonth/{yearmonth}', [$this, 'index']);
 
         $controller_collection->post('/{target}/add', [$this, 'add']);
-        $controller_collection->put('/{target}/id/{id}', [$this, 'edit']);
-        $controller_collection->put('/{target}/id/{id}/complete', [$this, 'edit'])->value('type', 'complete');
+        $controller_collection->match('/{target}/id/{id}', [$this, 'edit'])->method('PUT|POST');
+        $controller_collection->match('/{target}/id/{id}/complete', [$this, 'edit'])->method('PUT|POST')->value('type', 'complete');
 
         $controller_collection->delete('/{target}/id/{id}', [$this, 'del']);
         $controller_collection->get('/{target}/const/{key}', [$this, 'constVaules']);
@@ -114,7 +114,7 @@ class SupportController implements ControllerProviderInterface
         $support_dto = SupportDto::importFromAddRequest($request, $uid, $columns);
         $target_user_dto = UserDtoFactory::createByUid($uid);
 
-        return SupportRowService::add($target_user_dto, $support_dto);
+        return SupportRowService::add($target_user_dto, $support_dto, $app);
     }
 
     public function constVaules(Request $request, Application $app)
@@ -149,7 +149,7 @@ class SupportController implements ControllerProviderInterface
         $target = $request->get('target');
         $id = $request->get('id');
 
-        return SupportRowService::del($target, $id);
+        return SupportRowService::del($target, $id, $app);
     }
 
     public function edit(Request $request, Application $app)
@@ -161,9 +161,9 @@ class SupportController implements ControllerProviderInterface
 
         $type = $request->get('type');
         if ($type == 'complete') {
-            return SupportRowService::complete($target, $id, $key);
+            return SupportRowService::complete($target, $id, $key, $app);
         }
-        return SupportRowService::edit($target, $id, $key, $value);
+        return SupportRowService::edit($target, $id, $key, $value, $app);
     }
 
     public function excelDownload(Request $request, Application $app)

@@ -2,7 +2,6 @@
 
 namespace Intra\Service\FlexTime;
 
-use Intra\Core\Application;
 use Intra\Model\FlexTimeModel;
 use Intra\Service\Mail\MailingDto;
 use Intra\Service\Mail\MailSendService;
@@ -29,7 +28,7 @@ class FlexTimeMailService
         return array_unique(array_filter($emails));
     }
 
-    public static function sendMail(FlexTimeModel $flextime, $type)
+    public static function sendMail(FlexTimeModel $flextime, $type, $app)
     {
         $today = date('Y-m-d');
         $title = "[얼리파마][{$type}][{$today}] {$flextime->name}님의 요청";
@@ -38,7 +37,7 @@ class FlexTimeMailService
         $flextime->uid_name = UserJoinService::getNameByUidSafe($flextime->uid);
         $flextime->manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);
         $flextime->keeper_uid_name = UserJoinService::getNameByUidSafe($flextime->keeper_uid);
-        $html = Application::$view->render('flextime/template/mail', [
+        $html = $app['twig']->render('flextime/template/mail', [
             'flextime' => $flextime,
         ]);
 

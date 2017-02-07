@@ -72,7 +72,7 @@ class FlexTimeController implements ControllerProviderInterface
         ]);
     }
 
-    public function add(Request $request)
+    public function add(Request $request, Application $app)
     {
         try {
             $weekdays = $request->get('weekdays');
@@ -92,7 +92,7 @@ class FlexTimeController implements ControllerProviderInterface
                 'weekdays' => $weekdays,
             ]);
 
-            FlexTimeMailService::sendMail($flextime, '추가');
+            FlexTimeMailService::sendMail($flextime, '추가', $app);
         } catch (\Exception $e) {
             throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
@@ -100,7 +100,7 @@ class FlexTimeController implements ControllerProviderInterface
         return Response::create('success', Response::HTTP_OK);
     }
 
-    public function edit(Request $request)
+    public function edit(Request $request, Application $app)
     {
         try {
             $flextimeid = $request->get('flextimeid');
@@ -111,7 +111,7 @@ class FlexTimeController implements ControllerProviderInterface
             if ($flextime) {
                 $flextime->$key = $value;
                 if ($flextime->save()) {
-                    FlexTimeMailService::sendMail($flextime, '변경');
+                    FlexTimeMailService::sendMail($flextime, '변경', $app);
                 }
             }
             return Response::create($value, Response::HTTP_OK);
@@ -120,14 +120,14 @@ class FlexTimeController implements ControllerProviderInterface
         }
     }
 
-    public function del(Request $request)
+    public function del(Request $request, Application $app)
     {
         try {
             $flextimeid = $request->get('flextimeid');
             $flextime = FlexTimeModel::find($flextimeid);
             if ($flextime) {
                 if ($flextime->delete()) {
-                    FlexTimeMailService::sendMail($flextime, '삭제');
+                    FlexTimeMailService::sendMail($flextime, '삭제', $app);
                 }
             }
         } catch (\Exception $e) {

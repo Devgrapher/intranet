@@ -2,7 +2,6 @@
 
 namespace Intra\Service\Support;
 
-use Intra\Core\Application;
 use Intra\Service\Mail\MailingDto;
 use Intra\Service\Mail\MailSendService;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
@@ -12,10 +11,10 @@ use Intra\Service\User\UserJoinService;
 
 class SupportMailService
 {
-    public static function sendMail($target, $type, $id)
+    public static function sendMail($target, $type, $id, $app)
     {
         $support_dto = SupportDtoFactory::get($target, $id);
-        $mailing_dtos = self::getMailContents($target, $type, $support_dto);
+        $mailing_dtos = self::getMailContents($target, $type, $support_dto, $app);
         MailSendService::sends($mailing_dtos);
     }
 
@@ -23,10 +22,11 @@ class SupportMailService
      * @param            $target
      * @param            $type
      * @param SupportDto $support_dto
+     * @param $app
      *
      * @return MailingDto[]
      */
-    private static function getMailContents($target, $type, $support_dto)
+    private static function getMailContents($target, $type, $support_dto, $app)
     {
         $support_view_dto = SupportViewDto::create($support_dto);
         $title = SupportPolicy::getColumnTitle($target);
@@ -43,12 +43,12 @@ class SupportMailService
             }
         }
         $uids = array_unique(array_filter($uids));
-        $register_name = UserJoinService::getEmailByUidSafe($support_dto->uid);
+        $register_name = UserJoinService::getNameByUidSafe($support_dto->uid);
 
         $title = "[{$title}][{$type}][{$working_date}] {$register_name}님의 요청";
         $link = 'http://intra.' . $_ENV['domain'] . '/support/' . $target . '/remain';
-        $html = Application::$view->render(
-            'support/template/mail',
+        $html = $app['twig']->render(
+            'support/template/mail.twig',
             [
                 'dto' => $support_view_dto,
                 'columns' => $column_fields,

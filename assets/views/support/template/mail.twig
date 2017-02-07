@@ -9,32 +9,38 @@ dto : $support_view_dto
     <tr>
       <td style="width:200px;text-align: center;border-right: 1px solid #848484;border-bottom: 1px solid #dddddd; padding-right: 5px;">{{ column_name }}</td>
       {% set key = column.key %}
-      <td data-key="{{ column.key }}" style="padding-left: 5px;border-bottom: 1px solid #dddddd;">
-        {% if column.class_name == 'SupportColumnTeam' %}
-          <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'SupportColumnCategory' %}
-          <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'SupportColumnWorker' %}
-          <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'SupportColumnText' %}
-          <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'initSupportColumnTextDetail' %}
-          <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'SupportColumnDate' %}
-          <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'SupportColumnDatetime' %}
-          <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
-        {% elseif column.class_name == 'SupportColumnComplete' %}
-          {{ display_dict[key] }}
-        {% elseif column.class_name == 'SupportColumnAccept' %}
-          {{ display_dict[key] }}
-        {% elseif column.class_name == 'SupportColumnMoney' %}
-          {{ display_dict[key] | number_format }}
-        {% elseif column.class_name == 'SupportColumnFile' %}
-        {% else %}
-          {{ display_dict[key] }}
-        {% endif %}
-      </td>
+      {% if display_dict[key] is not defined %}
+        <td data-key="{{ column.key }}" style="padding-left: 5px;border-bottom: 1px solid #dddddd;">
+          <span data-editable='{{ key }}'></span>
+        </td>
+      {% else %}
+        <td data-key="{{ column.key }}" style="padding-left: 5px;border-bottom: 1px solid #dddddd;">
+          {% if column.class_name == 'SupportColumnTeam' %}
+            <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'SupportColumnCategory' %}
+            <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'SupportColumnWorker' %}
+            <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'SupportColumnText' %}
+            <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'initSupportColumnTextDetail' %}
+            <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'SupportColumnDate' %}
+            <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'SupportColumnDatetime' %}
+            <span data-editable='{{ key }}'>{{ display_dict[key] }}</span>
+          {% elseif column.class_name == 'SupportColumnComplete' %}
+            {{ display_dict[key] }}
+          {% elseif column.class_name == 'SupportColumnAccept' %}
+            {{ display_dict[key] }}
+          {% elseif column.class_name == 'SupportColumnMoney' %}
+            {{ display_dict[key] | number_format }}
+          {% elseif column.class_name == 'SupportColumnFile' %}
+          {% else %}
+            {{ display_dict[key] }}
+          {% endif %}
+        </td>
+      {% endif %}
     </tr>
   {% endfor %}
   </tbody>
