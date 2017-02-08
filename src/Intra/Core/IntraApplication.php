@@ -63,6 +63,10 @@ class IntraApplication extends Application
         $this->mount('/flextime', new FlexTimeController());
         $this->mount('/holidayadmin', new HolidayAdminController());
         $this->mount('/rooms', new RoomsController());
+        $this->get('/focus', function () {
+            $subRequest = Request::create('/rooms', 'GET', ['type' => 'focus']);
+            return $this->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        });
         $this->mount('/support', new SupportController());
     }
 }
