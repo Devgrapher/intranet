@@ -254,13 +254,13 @@
   <div id="scheduler_here" class="dhx_cal_container"
        style='width:100%; height:100%;margin-top:35px;overflow: visible'>
     <div class="dhx_cal_navline" style="margin-bottom: 100px;">
-      {% if notice %}
+      {% if notice is defined %}
         <div style="position:absolute;left:180px;top:-10px;color: #888888">
           {{ notice }}
         </div>
       {% endif %}
 
-      {% if warning %}
+      {% if warning is defined %}
         <div style="position:absolute;left:180px;top:20px;text-decoration:underline;font-weight:bold;font-size:14px;">
           {{ warning }}
         </div>
@@ -276,7 +276,7 @@
     <div class="dhx_cal_data">
     </div>
   </div>
-  {% if description %}
+  {% if description is defined %}
     <div style="position:absolute;right:15px;top:120px;z-index: 1000;">
       <div style="float:right;text-align: right" id="js_howto">
         <button id="js_howto_button" class="btn btn-default">사용법</button>
