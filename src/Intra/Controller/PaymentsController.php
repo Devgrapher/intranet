@@ -28,8 +28,8 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->get('/', [$this, 'index']);
         $controller_collection->get('/uid/{uid}/month/{month}', [$this, 'index']);
         $controller_collection->get('/uid/{uid}', [$this, 'index']);
-        $controller_collection->get('/remain', [$this, 'index']);
-        $controller_collection->get('/today', [$this, 'index']);
+        $controller_collection->get('/remain', [$this, 'index'])->value('type', 'remain');
+        $controller_collection->get('/today', [$this, 'index'])->value('type', 'today');
         $controller_collection->post('/uid/{uid}', [$this, 'add']);
         $controller_collection->match('/paymentid/{paymentid}', [$this, 'edit'])->method('PUT|POST');
         $controller_collection->delete('/paymentid/{paymentid}', [$this, 'del']);

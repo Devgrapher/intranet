@@ -21,6 +21,7 @@ use Intra\Service\User\UserPolicy;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class IntraApplication extends Application
 {
@@ -44,7 +45,8 @@ class IntraApplication extends Application
         });
 
         $this->get('/', function () {
-            return $this->redirect('/posts/notice');
+            $subRequest = Request::create('/posts/notice', 'GET');
+            return $this->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         });
         $this->mount('/api', new APIController());
         $this->mount('/holidays', new HolidaysController());
