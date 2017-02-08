@@ -158,7 +158,7 @@ class UserPaymentService
         } elseif ($type == 'month') {
             if (UserPolicy::isPaymentAdmin($self)) {
                 $return['title'] = "귀속월($param)";
-                $payment_dicts = $this->payment_model->monthQueued($param);
+                $payment_dicts = $this->payment_model->payMonth($param);
             } else {
                 $payment_dicts = [];
             }
