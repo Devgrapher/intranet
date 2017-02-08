@@ -44,7 +44,7 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->post('/downloadTaxDate', [$this, 'downloadTaxDate']);
         $controller_collection->get('/file/{fileid}', [$this, 'downloadFile']);
         $controller_collection->delete('/file/{fileid}', [$this, 'deleteFile']);
-        $controller_collection->delete('/file_upload', [$this, 'uploadFile']);
+        $controller_collection->post('/file_upload', [$this, 'uploadFile']);
         $controller_collection->post('/get_pay_date_by_str', [$this, 'getPayDateByStr']);
         return $controller_collection;
     }
