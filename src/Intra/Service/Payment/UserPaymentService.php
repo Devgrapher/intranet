@@ -115,7 +115,7 @@ class UserPaymentService
         }
     }
 
-    public function index($month, $type)
+    public function index($month, $type, $param)
     {
         $return = [];
         $return['user'] = $this->user;
@@ -142,13 +142,23 @@ class UserPaymentService
 
         if ($type == 'remain') {
             if (UserPolicy::isPaymentAdmin($self)) {
+                $return['title'] = '모든 미결제 항목(관리자)';
                 $payment_dicts = $queued_payment_dicts;
             } else {
+                $return['title'] = '모든 미승인 목록';
                 $payment_dicts = $this->payment_model->queuedPaymentsByManager($this->user->uid);
             }
         } elseif ($type == 'today') {
+            $return['title'] = '오늘 결제 예정';
             if (UserPolicy::isPaymentAdmin($self)) {
                 $payment_dicts = $this->payment_model->todayQueued();
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'month') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $return['title'] = "귀속월($param)";
+                $payment_dicts = $this->payment_model->monthQueued($param);
             } else {
                 $payment_dicts = [];
             }
@@ -183,16 +193,6 @@ class UserPaymentService
         $return['allUsers'] = UserDtoFactory::createAllUserDtos();
 
         $return['const'] = UserPaymentConst::get();
-
-        if ($type == 'remain') {
-            if (UserPolicy::isPaymentAdmin($self)) {
-                $return['title'] = '모든 미결제 항목(관리자)';
-            } else {
-                $return['title'] = '모든 미승인 목록';
-            }
-        } elseif ($type == 'today') {
-            $return['title'] = '오늘 결제 예정';
-        }
 
         return $return;
     }

@@ -30,6 +30,7 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->get('/uid/{uid}', [$this, 'index']);
         $controller_collection->get('/remain', [$this, 'index'])->value('type', 'remain');
         $controller_collection->get('/today', [$this, 'index'])->value('type', 'today');
+        $controller_collection->get('/month', [$this, 'index'])->value('type', 'month');
         $controller_collection->post('/uid/{uid}', [$this, 'add']);
         $controller_collection->match('/paymentid/{paymentid}', [$this, 'edit'])->method('PUT|POST');
         $controller_collection->delete('/paymentid/{paymentid}', [$this, 'del']);
@@ -62,14 +63,14 @@ class PaymentsController implements ControllerProviderInterface
                 $month = date('Y-m');
             }
             $type = ($request->get('type'));
-
             $month = UserPaymentRequestFilter::parseMonth($month);
+            $param = $request->get('param');
 
             $user_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($uid));
             $target_user_dto = $user_dto_object->exportDto();
 
             $payment_service = new UserPaymentService($target_user_dto);
-            $twig_param = $payment_service->index($month, $type);
+            $twig_param = $payment_service->index($month, $type, $param);
 
             return $app['twig']->render('payments/index.twig', $twig_param);
         } catch (\Exception $e) {

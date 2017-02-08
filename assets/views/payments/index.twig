@@ -22,12 +22,16 @@
 
     .tbody-scroll tbody {
       display: block;
-      max-height: 400px;
+      max-height: 1200px;
       overflow: auto;
     }
 
     .select2-container {
       width: 100%;
+    }
+
+    .ui-datepicker-calendar {
+      display: none;
     }
 
     input.sm { width: 80px }
@@ -64,6 +68,17 @@
   </style>
   <script>
     require(["jquery", "jquery.jeditable", "jquery.fileupload", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
+      var selectMonth = $('input#select-month');
+      selectMonth.datepicker({
+        changeMonth: true,
+        changeYear: true,
+        onClose: function(dateText, inst) {
+          $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+        },
+        monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+      });
+      selectMonth.datepicker('option', 'dateFormat', 'yy-mm');
+
       var datatable = $('table[datatable]').DataTable({
         "paging": false,
         "ordering": false,
@@ -365,6 +380,12 @@
     {% if isSuperAdmin %}
       /
       <a href='/payments/today' class='paymentsCommand'>오늘 결제 예정</a> ({{ todayQueuedCost }}원, {{ todayQueuedCount }}건)
+      /
+      귀속월 기준
+      <form action="/payments/month" method="get" style="display: inline;">
+        <input id="select-month" name="param" type="text" style="width:80px;" />
+        <input type="submit" value="조회" />
+      </form>
     {% endif %}
 
   </h4>
