@@ -26,11 +26,11 @@ use Intra\Service\User\UserDto;
 
 class SupportPolicy
 {
-    const TYPE_DEVICE = 'Device';
-    const TYPE_FAMILY_EVENT = 'FamilyEvent';
-    const TYPE_BUSINESS_CARD = 'BusinessCard';
-    const TYPE_DEPOT = 'Depot';
-    const TYPE_GIFT_CARD = 'GiftCard';
+    const TYPE_DEVICE = 'device';
+    const TYPE_FAMILY_EVENT = 'familyevent';
+    const TYPE_BUSINESS_CARD = 'businesscard';
+    const TYPE_DEPOT = 'depot';
+    const TYPE_GIFT_CARD = 'giftcard';
 
     const DB_TABLE = [
         self::TYPE_DEVICE => 'device',
