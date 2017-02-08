@@ -290,6 +290,7 @@ class SupportPolicy
                     ]
                 ),
                 '품목/수량' => new SupportColumnText('detail'),
+                '구매사유' => new SupportColumnText('reason'),
                 '수령희망일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($callback_is_human_manage_team),
