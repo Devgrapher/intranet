@@ -42,6 +42,6 @@ class WeeklyController implements ControllerProviderInterface
             Weekly::dumpToHtml($infile, $outfile);
         }
 
-        return $app['twig']->render('weekly/index.twig', []);
+        return $app['twig']->render('weekly/upload.twig', []);
     }
 }
