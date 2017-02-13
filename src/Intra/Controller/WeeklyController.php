@@ -15,7 +15,7 @@ class WeeklyController implements ControllerProviderInterface
     {
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/', [$this, 'index']);
-        $controller_collection->get('/upload', [$this, 'upload']);
+        $controller_collection->match('/upload', [$this, 'upload'])->method('GET|POST');
         return $controller_collection;
     }
 
