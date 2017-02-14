@@ -136,6 +136,10 @@ class UserPaymentService
             $return['queuedPayments'] = PaymentDtoFactory::importFromDatabaseDicts($queued_payment_dicts);
             $return['todayQueuedCount'] = $this->payment_model->todayQueuedCount();
             $return['todayQueuedCost'] = $this->payment_model->todayQueuedCost();
+            $return['todayConfirmedQueuedCount'] = $this->payment_model->todayConfirmedQueuedCount();
+            $return['todayConfirmedQueuedCost'] = $this->payment_model->todayConfirmedQueuedCost();
+            $return['todayUnconfirmedQueuedCount'] = $this->payment_model->todayUnconfirmedQueuedCount();
+            $return['todayUnconfirmedQueuedCost'] = $this->payment_model->todayUnconfirmedQueuedCost();
         }
         $return['currentUid'] = $this->user->uid;
         $return['selfUid'] = $self->uid;
@@ -152,6 +156,20 @@ class UserPaymentService
             $return['title'] = '오늘 결제 예정';
             if (UserPolicy::isPaymentAdmin($self)) {
                 $payment_dicts = $this->payment_model->todayQueued();
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'todayConfirmed') {
+            $return['title'] = '오늘 승인된 결제 예정';
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $payment_dicts = $this->payment_model->todayConfirmedQueued();
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'todayUnconfirmed') {
+            $return['title'] = '오늘 미승인된 결제 예정';
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $payment_dicts = $this->payment_model->todayUnconfirmedQueued();
             } else {
                 $payment_dicts = [];
             }

@@ -78,6 +78,46 @@ class PaymentModel extends BaseModel
         );
     }
 
+    public function todayConfirmedQueuedCost()
+    {
+        $table = [
+            'payments.uid' => 'users.uid',
+            'payments.paymentid' => [
+                'payment_accept.paymentid',
+                'payment_accept.user_type' => 'manager',
+            ],
+        ];
+        $where = $this->getTodayConfirmedQueuedWhere();
+
+        return number_format(
+            $this->db->sqlData(
+                'select sum(price) from ? where ? order by `pay_date` asc, payment_accept.paymentid asc',
+                sqlLeftJoin($table),
+                sqlWhere($where)
+            )
+        );
+    }
+
+    public function todayUnconfirmedQueuedCost()
+    {
+        $table = [
+            'payments.uid' => 'users.uid',
+            'payments.paymentid' => [
+                'payment_accept.paymentid',
+                'payment_accept.user_type' => 'manager',
+            ],
+        ];
+        $where = $this->getTodayUnconfirmedQueuedWhere();
+
+        return number_format(
+            $this->db->sqlData(
+                'select sum(price) from ? where ? order by `pay_date` asc, payment_accept.paymentid asc',
+                sqlLeftJoin($table),
+                sqlWhere($where)
+            )
+        );
+    }
+
     /**
      * @return array
      */
@@ -92,6 +132,30 @@ class PaymentModel extends BaseModel
         ];
     }
 
+    private function getTodayConfirmedQueuedWhere()
+    {
+        return [
+            'status' => ["결제 대기중"],
+            'pay_date' => sqlRange(
+                date('Y/m/d'),
+                date('Y/m/d', strtotime('+1 day'))
+            ),
+            'payment_accept.paymentid' => sqlNot(null),
+        ];
+    }
+
+    private function getTodayUnconfirmedQueuedWhere()
+    {
+        return [
+            'status' => ["결제 대기중"],
+            'pay_date' => sqlRange(
+                date('Y/m/d'),
+                date('Y/m/d', strtotime('+1 day'))
+            ),
+            'payment_accept.paymentid' => null,
+        ];
+    }
+
     private function getPayMonthWhere($pay_month)
     {
         return ['month' => $pay_month];
@@ -102,6 +166,32 @@ class PaymentModel extends BaseModel
         $where = $this->getTodayQueuedWhere();
 
         return $this->db->sqlCount('payments', $where);
+    }
+
+    public function todayConfirmedQueuedCount()
+    {
+        $table = [
+            'payments.uid' => 'users.uid',
+            'payments.paymentid' => [
+                'payment_accept.paymentid',
+                'payment_accept.user_type' => 'manager',
+            ],
+        ];
+        $where = $this->getTodayConfirmedQueuedWhere();
+        return $this->db->sqlCount(sqlLeftJoin($table), $where);
+    }
+
+    public function todayUnconfirmedQueuedCount()
+    {
+        $table = [
+            'payments.uid' => 'users.uid',
+            'payments.paymentid' => [
+                'payment_accept.paymentid',
+                'payment_accept.user_type' => 'manager',
+            ],
+        ];
+        $where = $this->getTodayUnconfirmedQueuedWhere();
+        return $this->db->sqlCount(sqlLeftJoin($table), $where);
     }
 
     public function add($payment_insert)
@@ -206,6 +296,42 @@ class PaymentModel extends BaseModel
             'payments.uid' => 'users.uid'
         ];
         $where = $this->getTodayQueuedWhere();
+
+        return $this->db->sqlDicts(
+            'select payments.*, users.name from ? where ? order by `pay_date` asc, paymentid asc',
+            sqlLeftJoin($table),
+            sqlWhere($where)
+        );
+    }
+
+    public function todayConfirmedQueued()
+    {
+        $table = [
+            'payments.uid' => 'users.uid',
+            'payments.paymentid' => [
+                'payment_accept.paymentid',
+                'payment_accept.user_type' => 'manager',
+            ],
+        ];
+        $where = $this->getTodayConfirmedQueuedWhere();
+
+        return $this->db->sqlDicts(
+            'select payments.*, users.name from ? where ? order by `pay_date` asc, paymentid asc',
+            sqlLeftJoin($table),
+            sqlWhere($where)
+        );
+    }
+
+    public function todayUnconfirmedQueued()
+    {
+        $table = [
+            'payments.uid' => 'users.uid',
+            'payments.paymentid' => [
+                'payment_accept.paymentid',
+                'payment_accept.user_type' => 'manager',
+            ],
+        ];
+        $where = $this->getTodayUnconfirmedQueuedWhere();
 
         return $this->db->sqlDicts(
             'select payments.*, users.name from ? where ? order by `pay_date` asc, paymentid asc',

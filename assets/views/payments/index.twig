@@ -357,6 +357,15 @@
           }
         });
       });
+
+      $('#today-select').change(function () {
+        var selected = $(this).val();
+        if (selected == 'all') {
+          window.location.href = '/payments/today';
+        } else if (selected != 'none') {
+          window.location.href = '/payments/today/' + selected;
+        }
+      });
     });
   </script>
 {% endblock %}
@@ -371,24 +380,35 @@
       {% endif %}
     </span>
   </h2>
-  <h4>
-    <a href='/payments/uid/{{ currentUid }}/month/{{ prevmonth }}'>{{ prevmonth }}</a>
-    / {{ month }} /
-    <a href='/payments/uid/{{ currentUid }}/month/{{ nextmonth }}'>{{ nextmonth }}</a>
-    /
-    <a href='/payments/remain' class='paymentsCommand'>미승인</a>
-    {% if isSuperAdmin %}
+  <div>
+    <h4>
+      <a href='/payments/uid/{{ currentUid }}/month/{{ prevmonth }}'>{{ prevmonth }}</a>
+      / {{ month }} /
+      <a href='/payments/uid/{{ currentUid }}/month/{{ nextmonth }}'>{{ nextmonth }}</a>
       /
-      <a href='/payments/today' class='paymentsCommand'>오늘 결제 예정</a> ({{ todayQueuedCost }}원, {{ todayQueuedCount }}건)
-      /
-      귀속월 기준
-      <form action="/payments/month" method="get" style="display: inline;">
-        <input id="select-month" name="param" type="text" style="width:80px;" />
-        <input type="submit" value="조회" />
-      </form>
-    {% endif %}
-
-  </h4>
+      <a href='/payments/remain' class='paymentsCommand'>미승인</a>
+    </h4>
+  </div>
+  {% if isSuperAdmin %}
+    <div>
+      <h4>
+        /
+        오늘 결제 예정
+        <select id="today-select">
+          <option value='none'>조건 선택</option>
+          <option value='all'>전체({{ todayQueuedCost }}원, {{ todayQueuedCount }}건)</option>
+          <option value='confirmed'>승인({{ todayConfirmedQueuedCost }}원, {{ todayConfirmedQueuedCount }}건)</option>
+          <option value='unconfirmed'>미승인({{ todayUnconfirmedQueuedCost }}원, {{ todayUnconfirmedQueuedCount }}건)</option>
+        </select>
+        /
+        귀속월 기준
+        <form action="/payments/month" method="get" style="display: inline;">
+          <input id="select-month" name="param" type="text" style="width:80px;" />
+          <input type="submit" value="조회" />
+        </form>
+      </h4>
+    </div>
+  {% endif %}
 
   <button class="btn btn-sm" type="button" data-toggle="collapse" data-target="#col-setting" aria-expanded="false" aria-controls="col-setting">
     열 숨김/보이기

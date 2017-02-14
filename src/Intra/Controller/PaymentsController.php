@@ -30,6 +30,8 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->get('/uid/{uid}', [$this, 'index']);
         $controller_collection->get('/remain', [$this, 'index'])->value('type', 'remain');
         $controller_collection->get('/today', [$this, 'index'])->value('type', 'today');
+        $controller_collection->get('/today/confirmed', [$this, 'index'])->value('type', 'todayConfirmed');
+        $controller_collection->get('/today/unconfirmed', [$this, 'index'])->value('type', 'todayUnconfirmed');
         $controller_collection->get('/month', [$this, 'index'])->value('type', 'month');
         $controller_collection->post('/uid/{uid}', [$this, 'add']);
         $controller_collection->match('/paymentid/{paymentid}', [$this, 'edit'])->method('PUT|POST');
@@ -153,14 +155,17 @@ class PaymentsController implements ControllerProviderInterface
                 if ($row->rejectManager()) {
                     $reason = $request->getContent();
                     UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
+                    return Response::create('success', Response::HTTP_OK);
+                } else {
+                    return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
-            }
-
-            $result = $row->del();
-            if ($result == 1) {
-                return Response::create('success', Response::HTTP_OK);
             } else {
-                return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
+                $result = $row->del();
+                if ($result == 1) {
+                    return Response::create('success', Response::HTTP_OK);
+                } else {
+                    return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
             }
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_OK);
