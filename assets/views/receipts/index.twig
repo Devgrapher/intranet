@@ -22,11 +22,15 @@
         switch (type) {
           case '저녁/휴일 식사비':
           case '야근교통비':
-          case '땀친 지원비':
+          case '사운드 리디':
+          case '리디캐시':
+          case '도서 지원비':
+          case '사외수강비':
             $name.val('개인비용').attr('disabled', 'disabled');
             break;
           case '업무차 식음료비':
           case '업무차 교통비':
+          case '회식비':
             $name.val('회사비용').attr('disabled', 'disabled');
             break;
           default:
@@ -160,8 +164,16 @@
                   업무차 식음료비
                 <option value='업무차 교통비'>
                   업무차 교통비
-                <option value='땀친 지원비'>
-                  땀친 지원비
+                <option value='사운드 리디'>
+                  사운드 리디
+                <option value='리디캐시'>
+                  리디캐시
+                <option value='회식비'>
+                  회식비
+                <option value='도서 지원비'>
+                  도서 지원비
+                <option value='사외수강비'>
+                  사외수강비
                 <option value='기타'>
                   기타
               </select>
@@ -249,7 +261,7 @@
  [ 비고 ]
 
  1. 리디캐시 충전 내역은 [기타] – [개인비용] 으로 신청해주시고, 영수증 금액의 30% 금액을 기재해주세요.
- 2. [땀친 지원비]는 월 결제 금액의 80%를 기재해주세요.
+ 2. [사운드 리디]는 월 결제 금액의 80%를 기재해주세요.
  3. 지불방식, 적요 등 모든 입력 사항은 공란 없이 입력해주세요.
 
 
