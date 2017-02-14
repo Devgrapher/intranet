@@ -7,6 +7,7 @@ class AddSupportDepotReasonColumn extends AbstractMigration
     public function change()
     {
         $this->table('support_depot')
-            ->addColumn('reason', 'text', ['length' => 255]);
+            ->addColumn('reason', 'string', ['length' => 255])
+            ->save();
     }
 }

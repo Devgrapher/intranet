@@ -9,7 +9,7 @@ class CreateHolidayAdjusts extends AbstractMigration
         $this->table('holiday_adjusts')
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('manager_uid', 'integer', ['signed' => false])
-            ->addColumn('reason', 'text', ['length' => 100])
+            ->addColumn('reason', 'string', ['length' => 100])
             ->addColumn('diff_year', 'integer', ['signed' => false])
             ->addColumn('diff', 'integer')
             ->addTimestamps()
