@@ -152,7 +152,6 @@ class UsersController implements ControllerProviderInterface
             if ($new_user_dto) {
                 UserMailService::sendMail('인트라넷 회원가입', $new_user_dto, $app);
                 return Response::create('success', Response::HTTP_OK);
-
             } else {
                 return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
