@@ -34,7 +34,10 @@ class UserJoinService
     {
         $join_dto = UserDto::importFromJoinRequest($request);
         self::assertJoin($join_dto);
-        UserModel::addUser($join_dto);
+        if (UserModel::addUser($join_dto)) {
+            return $join_dto;
+        }
+        return null;
     }
 
     private static function assertJoin($join_dto)

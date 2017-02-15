@@ -8,6 +8,7 @@ use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserDtoHandler;
 use Intra\Service\User\UserEditService;
 use Intra\Service\User\UserJoinService;
+use Intra\Service\User\UserMailService;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
 use Intra\Service\User\UserType;
@@ -146,8 +147,18 @@ class UsersController implements ControllerProviderInterface
 
     public function joinAjax(Request $request, Application $app)
     {
-        UserJoinService::join($request);
-        return Response::create('success', Response::HTTP_OK);
+        try {
+            $new_user_dto = UserJoinService::join($request);
+            if ($new_user_dto) {
+                UserMailService::sendMail('인트라넷 회원가입', $new_user_dto, $app);
+                return Response::create('success', Response::HTTP_OK);
+
+            } else {
+                return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            return Response::create($e->getMessage(), Response::HTTP_OK);
+        }
     }
 
     public function image(Request $request, Application $app)
