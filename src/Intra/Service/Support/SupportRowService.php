@@ -53,7 +53,7 @@ class SupportRowService
 
         $columns = SupportPolicy::getColumnFields($target);
         $user = UserSession::getSelfDto();
-        if (!(self::isEditable($user, $target, $columns, $key, $support_dto))) {
+        if (!(self::isEditable($user, $target, $columns, $key, $value, $support_dto))) {
             return $support_dto->dict[$key];
         }
         SupportModel::edit($target, $id, $key, $value);
@@ -64,6 +64,30 @@ class SupportRowService
         return $support_dto->dict[$key];
     }
 
+    private static function hasAuth($user, $target, $columns, $key, $support_dto)
+    {
+        if (UserPolicy::isSupportAdmin($user, $target)) {
+            return true;
+        }
+
+        if ($support_dto->uid == $user->uid) {
+            foreach ($columns as $column) {
+                if ($column->key == $key) {
+                    if ($column instanceof SupportColumnCategory ||
+                        $column instanceof SupportColumnText ||
+                        $column instanceof SupportColumnDate ||
+                        $column instanceof SupportColumnTeam
+                    ) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param UserDto         $user
      * @param SupportColumn[] $columns
@@ -72,25 +96,25 @@ class SupportRowService
      *
      * @return bool
      */
-    private static function isEditable($user, $target, $columns, $key, $support_dto)
+    private static function isEditable($user, $target, $columns, $key, $value, $support_dto)
     {
-        if (UserPolicy::isSupportAdmin($user, $target)) {
-            return true;
+        if (!self::hasAuth($user, $target, $columns, $key, $support_dto)) {
+            return false;
         }
+
         foreach ($columns as $column) {
             if ($column->key == $key) {
-                if ($column instanceof SupportColumnCategory ||
-                    $column instanceof SupportColumnText ||
-                    $column instanceof SupportColumnDate ||
-                    $column instanceof SupportColumnTeam
-                ) {
-                    if ($support_dto->uid == $user->uid) {
-                        return true;
+                if ($column instanceof SupportColumnDate) {
+                    $d = \DateTime::createFromFormat('Y-m-d', $value);
+                    if ($d === false || array_sum($d->getLastErrors())) {
+                        return false;
                     }
                 }
+                break;
             }
         }
-        return false;
+
+        return true;
     }
 
     public static function del($target, $id, $app)
