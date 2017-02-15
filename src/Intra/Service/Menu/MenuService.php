@@ -58,7 +58,7 @@ class MenuService
                         new Link('구매 요청', '/support/' . SupportPolicy::TYPE_DEPOT, (new ExceptTaAuth())->accept(['hr.ta'])),
                         new Link('상품권 제작', '/support/' . SupportPolicy::TYPE_GIFT_CARD),
                     ],
-                    new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta'])),
+                    new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3'])),
                     new Link('비용정산', '/receipts/', new PublicAuth()),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
                     new Link('보도자료 관리', '/press/', new OnlyPressManager()),
