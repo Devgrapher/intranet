@@ -157,7 +157,10 @@ class PaymentDto extends BaseDto
             throw new MsgException('결제(예정)일을 다시 입력해주세요');
         }
         if (!in_array($return->tax, UserPaymentConst::getByKey('tax'))) {
-            throw new MsgException('세금수취여부를 다시 입력해주세요');
+            throw new MsgException('세금계산서수취여부를 다시 입력해주세요');
+        }
+        if ($return->tax == 'Y' && !$return->tax_date) {
+            throw new MsgException('세금계산서를 수취한 경우, 세금계산서일자를 입력해야 합니다.');
         }
         if (DateUtil::isWeekend($return->pay_date)) {
             throw new MsgException('결제(예정)일을 주말로 설정할 수 없습니다');
