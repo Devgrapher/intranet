@@ -28,6 +28,8 @@ class UsersController implements ControllerProviderInterface
         $controller_collection->get('/list', [$this, 'getList']);
         $controller_collection->get('/myinfo', [$this, 'myInfo']);
         $controller_collection->post('/edit', [$this, 'edit']);
+        $controller_collection->get('/image_upload', [$this, 'getUploadImage']);
+        $controller_collection->get('/image_upload/{uid}', [$this, 'getUploadImage']);
         $controller_collection->post('/image_upload', [$this, 'uploadImage']);
         $controller_collection->post('/{userid}/updateExtra/{key}/{value}', [$this, 'updateExtraAjax']);
         $controller_collection->get('/jeditable_key/{key}', [$this, 'jeditableKey']);
@@ -92,6 +94,25 @@ class UsersController implements ControllerProviderInterface
         } else {
             return Response::create("server error", Response::HTTP_SERVICE_UNAVAILABLE);
         }
+    }
+
+    public function getUploadImage(Request $request, Application $app) {
+        if (!UserSession::isUserManager()) {
+            return '권한이 없습니다';
+        }
+
+        $uid = $request->get('uid');
+        if (!$uid) {
+            $uid = UserSession::getSelfDto()->uid;
+        }
+        $dto = UserDtoFactory::createByUid($uid);
+        $users = UserDtoFactory::createAvailableUserDtos();
+
+        return $app['twig']->render('users/image_upload.twig', [
+            'uid' => $uid,
+            'image' => $dto->image? $dto->image : null,
+            'users' => $users,
+        ]);
     }
 
     public function uploadImage(Request $request, Application $app)

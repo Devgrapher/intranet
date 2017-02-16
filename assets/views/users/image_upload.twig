@@ -1,0 +1,95 @@
+{% extends 'ridi.twig' %}
+
+{% block head %}
+  {{ parent() }}
+
+  <script>
+    require(["jquery", "jquery.fileupload", "bootstrap"], function ($) {
+      $("#edit-img").fileupload( {
+        url : '/users/image_upload',
+        formData: {uid: {{ uid }}},
+        dropZone: $(this),
+        dataType: 'json',
+        //replaceFileInput: false,
+        add: function (e, data) {
+          let uploadFile = data.files[0];
+          let isValid = true;
+          if (!(/png|jpe?g|gif/i).test(uploadFile.name)) {
+            alert('png, jpg, gif 만 가능합니다');
+            isValid = false;
+          } else if (uploadFile.size > 5000000) { // 5mb
+            alert('파일 용량은 5메가를 초과할 수 없습니다.');
+            isValid = false;
+          }
+          if (isValid) {
+            data.submit();
+          }
+        },
+        progressall: function (e, data) {
+          let progress = parseInt(data.loaded / data.total * 100, 10);
+          $('#progress .bar').css(
+            'width',
+            progress + '%'
+          );
+        },
+        done: function (e, data) {
+          alert('업로드 완료');
+          location.reload();
+
+        },
+        fail: function (e, data){
+          // data.errorThrown
+          // data.textStatus;
+          // data.jqXHR;
+          alert('서버와 통신 중 문제가 발생했습니다');
+        }
+      });
+
+      $('#select-btn').click(function () {
+        var uid = $('#uid').val();
+        window.location.href = '/users/image_upload/' + uid;
+      });
+
+    });
+  </script>
+  <style>
+    .upload-button {
+      position: relative;
+      overflow: hidden;
+    }
+    .upload-button input {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <select id='uid' style="width:120px;" js_data_chosen>
+    {% for user in users %}
+      <option value='{{ user.uid }}'>{{ user.name }}</option>
+    {% endfor %}
+  </select>
+  <input id="select-btn" type="button" value="선택" />
+
+  <figure>
+    <img class="img-responsive"
+    {% if image is not null %}
+      src={{ image }}
+    {% else %}
+      src="http://placehold.it/300x300">
+    {% endif %}
+  </figure>
+
+  <span class="btn btn-xs btn-primary upload-button";>
+    <i class="glyphicon glyphicon-upload"></i>
+    <span>사진 변경..</span>
+    <input id="edit-img" type="file">
+  </span>
+
+{% endblock %}
