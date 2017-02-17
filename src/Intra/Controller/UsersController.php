@@ -103,13 +103,15 @@ class UsersController implements ControllerProviderInterface
 
         $uid = $request->get('uid');
         if (!$uid) {
-            $uid = UserSession::getSelfDto()->uid;
+            $dto = UserSession::getSelfDto();
+        } else {
+            $dto = UserDtoFactory::createByUid($uid);
         }
-        $dto = UserDtoFactory::createByUid($uid);
+
         $users = UserDtoFactory::createAvailableUserDtos();
 
         return $app['twig']->render('users/image_upload.twig', [
-            'uid' => $uid,
+            'uid' => $dto->uid,
             'name' => $dto->name,
             'image' => $dto->image? $dto->image : null,
             'users' => $users,
@@ -124,7 +126,10 @@ class UsersController implements ControllerProviderInterface
             return JsonResponse::create('unknown user', JsonResponse::HTTP_UNAUTHORIZED);
         }
 
-        $uid = $self->uid;
+        $uid = $request->get('uid');
+        if (!$uid) {
+            return JsonResponse::create('no uid', JsonResponse::HTTP_BAD_REQUEST);
+        }
         $savedFile = UserEditService::saveImage($uid, $uploadedFile);
         if ($savedFile != null) {
             $thumbFile = UserEditService::createThumb($uid, 180, 180);
