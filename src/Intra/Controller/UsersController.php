@@ -110,6 +110,7 @@ class UsersController implements ControllerProviderInterface
 
         return $app['twig']->render('users/image_upload.twig', [
             'uid' => $uid,
+            'name' => $dto->name,
             'image' => $dto->image? $dto->image : null,
             'users' => $users,
         ]);
