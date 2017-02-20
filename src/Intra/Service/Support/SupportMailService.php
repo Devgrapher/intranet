@@ -56,19 +56,17 @@ class SupportMailService
             ]
         );
 
-        $receivers = [
-            $register_name,
-        ];
+        $receivers = [UserJoinService::getEmailByUidSafe($support_dto->uid)];
         foreach ($uids as $uid) {
             $receivers[] = UserJoinService::getEmailByUidSafe($uid);
         }
         $support_all = $_ENV['user_policy.support_admin.all'];
         if ($support_all) {
-            $receivers[] = explode(',', $support_all);
+            $receivers = array_merge($receivers, explode(',', $support_all));
         }
         $support_target = $_ENV["user_policy.support_admin.$target"];
         if ($support_target) {
-            $receivers[] = explode(',', $support_target);
+            $receivers = array_merge($receivers, explode(',', $support_target));
         }
         $receivers = array_unique($receivers);
 
