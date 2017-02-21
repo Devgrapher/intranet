@@ -31,7 +31,7 @@
       </div>
 
       <div class="col-xs-1">
-        {% if isPostAdmin is defined %}
+        {% if isPostAdmin is defined and isPostAdmin %}
           <a href="/posts/{{ group }}/{{ id }}/modify">
             <button class="btn btn-primary" type="button">
               수정하기
@@ -40,7 +40,7 @@
         {% endif %}
       </div>
       <div class="col-xs-1">
-        {% if isPostAdmin is defined %}
+        {% if isPostAdmin is defined and isPostAdmin %}
           <button attrajax
                   data-aa-url='/posts/{{ group }}/{{ id }}'
                   data-aa-method='DELETE'

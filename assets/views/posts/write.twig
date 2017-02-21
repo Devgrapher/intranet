@@ -34,13 +34,22 @@
         <div class="col-xs-8">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <input name="title" type="text" class="form-control" placeholder="제목" aria-describedby="basic-addon2"
-                     value="{{ title | escape('html_attr') }}"
-              >
+              {% if title is defined %}
+                <input name="title" type="text" class="form-control" placeholder="제목" aria-describedby="basic-addon2"
+                       value="{{ title | escape('html_attr') }}"
+                >
+              {% else %}
+                <input name="title" type="text" class="form-control" placeholder="제목" aria-describedby="basic-addon2">
+              {% endif %}
             </div>
             <div class="panel-body" style="padding: 0;">
-              <textarea id="js-textarea" name="content_html" class="form-control" placeholder="본문"
-                        style="height: 400px;">{{ content_html }}</textarea>
+              {% if content_html is defined %}
+                <textarea id="js-textarea" name="content_html" class="form-control" placeholder="본문"
+                          style="height: 400px;">{{ content_html }}</textarea>
+              {% else %}
+                <textarea id="js-textarea" name="content_html" class="form-control" placeholder="본문"
+                          style="height: 400px;"></textarea>
+              {% endif %}
             </div>
           </div>
         </div>
