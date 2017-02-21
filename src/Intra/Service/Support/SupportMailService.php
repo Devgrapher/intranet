@@ -60,11 +60,11 @@ class SupportMailService
         foreach ($uids as $uid) {
             $receivers[] = UserJoinService::getEmailByUidSafe($uid);
         }
-        $support_all = $_ENV['user_policy.support_admin.all'];
+        $support_all = $_ENV['recipients.support_admin.all'];
         if ($support_all) {
             $receivers = array_merge($receivers, explode(',', $support_all));
         }
-        $support_target = $_ENV["user_policy.support_admin.$target"];
+        $support_target = $_ENV["recipients.support_admin.$target"];
         if ($support_target) {
             $receivers = array_merge($receivers, explode(',', $support_target));
         }
