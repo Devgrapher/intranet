@@ -96,7 +96,8 @@ class UsersController implements ControllerProviderInterface
         }
     }
 
-    public function getUploadImage(Request $request, Application $app) {
+    public function getUploadImage(Request $request, Application $app)
+    {
         if (!UserSession::isUserManager()) {
             return '권한이 없습니다';
         }
@@ -113,7 +114,7 @@ class UsersController implements ControllerProviderInterface
         return $app['twig']->render('users/image_upload.twig', [
             'uid' => $dto->uid,
             'name' => $dto->name,
-            'image' => $dto->image? $dto->image : null,
+            'image' => $dto->image ? $dto->image : null,
             'users' => $users,
         ]);
     }

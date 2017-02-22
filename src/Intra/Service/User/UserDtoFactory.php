@@ -16,6 +16,7 @@ class UserDtoFactory
     public static function createByUid($uid)
     {
         if (!UserModel::isExistByUid($uid)) {
+            UserSession::logout();
             throw new Exception("Database Row Not Exist");
         }
         $dict = UserModel::getDictWithUid($uid);
