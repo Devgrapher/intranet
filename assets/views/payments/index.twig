@@ -19,6 +19,7 @@
 
     .tbody-scroll th { border: 1px solid #ddd; font-size: 12px; }
     .tbody-scroll td { border: 1px solid #ddd; }
+    .tbody-scroll .price { text-align: right; padding-right: 5px; }
 
     .tbody-scroll tbody {
       display: block;
@@ -612,7 +613,7 @@
             {% endif %}
           </td>
           <td data-key='company_name'>{{ payment.company_name }}</td>
-          <td data-key='price'>{{ payment.price | number_format }}</td>
+          <td data-key='price'><div class="price">{{ payment.price | number_format }}</div></td>
           <td data-key='pay_date'>{{ payment.pay_date | slice(0, 10) }}</td>
           <td data-key='tax' data-keyselect>{{ payment.tax }}</td>
           <td data-key='tax_date'>{{ payment.tax_date }}</td>
