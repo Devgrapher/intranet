@@ -43,7 +43,7 @@
         var receiptid = $(this).parent().data('receiptid');
         var key = $(this).data('key');
         var submitdata = {key: key};
-        var args = {submitdata: submitdata, method: 'PUT'};
+        var args = {submitdata: submitdata, method: 'POST'};
         if (key == 'cost') {
           args['data'] = function (value) {
             return value.replace(/\D/gi, '');

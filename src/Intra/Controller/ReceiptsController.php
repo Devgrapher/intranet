@@ -23,7 +23,7 @@ class ReceiptsController implements ControllerProviderInterface
         $controller_collection->get('/uid/{uid}', [$this, 'index']);
         $controller_collection->get('/uid/{uid}/month/{month}', [$this, 'index']);
         $controller_collection->post('/uid/{uid}', [$this, 'add']);
-        $controller_collection->put('/receiptid/{receiptid}', [$this, 'edit']);
+        $controller_collection->post('/receiptid/{receiptid}', [$this, 'edit']);
         $controller_collection->delete('/receiptid/{receiptid}', [$this, 'del']);
         $controller_collection->get('/download/{month}', [$this, 'download']);
         $controller_collection->get('/downloadYear/{month}', [$this, 'downloadYear']);
@@ -81,7 +81,7 @@ class ReceiptsController implements ControllerProviderInterface
                 return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return Response::create($e->getMessage(), Response::HTTP_OK);
         }
     }
 
