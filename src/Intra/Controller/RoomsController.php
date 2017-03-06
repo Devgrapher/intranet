@@ -220,16 +220,6 @@ class RoomsController implements ControllerProviderInterface
                 ];
         }
             */
-            //플랫폼팀 일간미팅
-            $datas[] =
-                [
-                    'id' => 0,
-                    'start_date' => $from . ' 18:30:00',
-                    'end_date' => $from . ' 19:00:00',
-                    'text' => '[예약자] 박주현 [예약내용] 일간미팅',
-                    'details' => '[예약자] 박주현 [예약내용] 일간미팅',
-                    'room_id' => $room_11_4,
-                ];
         }
         return $datas;
     }
