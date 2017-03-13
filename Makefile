@@ -10,4 +10,4 @@ build:
 	cd assets && bower install
 
 config:
-	cp docs/ConfigDevelop.sample.php ConfigDevelop.php
+	cp docs/config.sample.env .env

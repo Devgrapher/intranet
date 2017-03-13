@@ -4,7 +4,7 @@
 ## Development Settings
 1. Run `make` command from project's root directory.
 
-2. Fill DB information at `ConfigDevelop.php`.
+2. Fill DB information at `.env`.
     ```
     public static $mysql_host = '';
     public static $mysql_user = '';
@@ -37,7 +37,7 @@
 3. 브라우저에서 localhost:9000 접속
 
 
-## Deploy 방법
+## 배포 방법
 1. deployer설치 (https://deployer.org/)
 
 2. deployer파일은 프로젝트 docs/deployer에 존재한다.
