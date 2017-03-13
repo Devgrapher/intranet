@@ -18,6 +18,7 @@ class UserConstant
 
     const TEAM_BUSINESS_PLANNING = '공통 / 사업기획팀';
     const TEAM_HUMAN_PLANNING = '공통 / 인사기획팀';
+    const TEAM_PRODUCT_PLANNING = '공통 / 상품기획팀';
 
     const TEAM_DEV = '리디북스 / 개발센터 / 개발센터';
     const TEAM_DATA = '리디북스 / 개발센터 / 데이터팀';
@@ -57,11 +58,12 @@ class UserConstant
             self::TEAM_CFO,
             self::TEAM_CTO,
             self::TEAM_PM,
-            self::TEAM_BUSINESS_PLANNING,
             self::TEAM_HUMAN_MANAGE,
             self::TEAM_BI,
             self::TEAM_CASH_FLOW,
+            self::TEAM_BUSINESS_PLANNING,
             self::TEAM_HUMAN_PLANNING,
+            self::TEAM_PRODUCT_PLANNING,
             self::TEAM_DEV,
             self::TEAM_DATA,
             self::TEAM_VIEWER,
