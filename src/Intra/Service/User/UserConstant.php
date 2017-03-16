@@ -16,7 +16,6 @@ class UserConstant
     const TEAM_BI = '공통 / 경영지원그룹 / 사업분석팀';
     const TEAM_CASH_FLOW = '공통 / 경영지원그룹 / 재무팀';
 
-    const TEAM_BUSINESS_PLANNING = '공통 / 사업기획팀';
     const TEAM_HUMAN_PLANNING = '공통 / 인사기획팀';
     const TEAM_PRODUCT_PLANNING = '공통 / 상품기획팀';
 
@@ -26,7 +25,7 @@ class UserConstant
     const TEAM_STORE = '리디북스 / 개발센터 / 스토어팀';
     const TEAM_PAPER = '리디북스 / 개발센터 / 페이퍼팀';
     const TEAM_PLATFORM = '리디북스 / 개발센터 / 플랫폼팀';
-    const TEAM_PERFORMANCE = '리디북스 / 개발센터 / 퍼포먼스 개발팀';
+    const TEAM_PERFORMANCE = '리디북스 / 개발센터 / 퍼포먼스팀';
 
     const TEAM_DESIGN = '리디북스 / 사업그룹 / 디자인팀';
     const TEAM_CM = '리디북스 / 사업그룹 / 만화사업부';
@@ -61,7 +60,6 @@ class UserConstant
             self::TEAM_HUMAN_MANAGE,
             self::TEAM_BI,
             self::TEAM_CASH_FLOW,
-            self::TEAM_BUSINESS_PLANNING,
             self::TEAM_HUMAN_PLANNING,
             self::TEAM_PRODUCT_PLANNING,
             self::TEAM_DEV,
