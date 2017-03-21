@@ -156,6 +156,9 @@ class PaymentDto extends BaseDto
         if (!strtotime($return->pay_date)) {
             throw new MsgException('결제(예정)일을 다시 입력해주세요');
         }
+        if (strtotime($return->pay_date) < strtotime(date('Y-m-d'))) {
+            throw new MsgException('결제(예정)일은 과거일자로 지정할 수 없습니다.');
+        }
         if (!in_array($return->tax, UserPaymentConst::getByKey('tax'))) {
             throw new MsgException('세금계산서수취여부를 다시 입력해주세요');
         }
