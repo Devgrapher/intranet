@@ -1,5 +1,5 @@
 <div class='js_user'
-     style='left:{{ user.extra.posX }}px;top:{{ user.extra.posY }}px;'
+     style='left:{{ user.extra.posX }}px;top:{{ user.extra.posY }}px;{% if user.color is defined %} background-color:{{ user.color }}; {% endif %}'
      data-userid='{{ user.uid }}'>
   <div class='content' data-userid='{{ user.uid }}'>
     {{ user.name }}

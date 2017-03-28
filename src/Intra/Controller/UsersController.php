@@ -2,6 +2,7 @@
 
 namespace Intra\Controller;
 
+use Intra\Model\HolidayModel;
 use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
@@ -45,11 +46,41 @@ class UsersController implements ControllerProviderInterface
         $self = UserSession::getSelfDto();
         $replaceable = UserPolicy::isFirstPageEditable($self);
 
+        $holiday_model = new HolidayModel();
+        $today_holidays = $holiday_model->getsToday();
+        $users = UserDtoFactory::createAvailableUserDtos();
+
+        $users_ret = [];
+        foreach ($users as $user) {
+            $user_arr = [];
+            $user_arr['uid'] = $user->uid;
+            $user_arr['name'] = $user->name;
+            $user_arr['image'] = $user->image;
+            $user_arr['team'] = $user->team;
+            $user_arr['email'] = $user->email;
+            $user_arr['inner_call'] = $user->inner_call;
+            $user_arr['mobile'] = $user->mobile;
+            $user_arr['position'] = $user->position;
+            $user_arr['birth'] = $user->birth;
+            $user_arr['extra'] = $user->extra;
+
+            foreach ($today_holidays as $holiday) {
+                if ($user->uid == $holiday->uid) {
+                    if ($holiday->type == '오전반차' || $holiday->type == '무급오전반차') {
+                        $user_arr['color'] = '#d9534f';
+                    } else if ($holiday->type == '오후반차' || $holiday->type == '무급오후반차') {
+                        $user_arr['color'] = '#f0ad4e';
+                    } else if ($holiday->type != 'PWT') {
+                        $user_arr['color'] = '#5cb85c';
+                    }
+                }
+            }
+
+            $users_ret[] = $user_arr;
+        }
         return $app['twig']->render('users/index.twig', [
             'replaceable' => $replaceable,
-            'users' => UserDtoFactory::createAvailableUserDtos(),
-            'allUsers' => UserDtoFactory::createAllUserDtos(),
-            'allCurrentUsers' => UserDtoFactory::createAvailableUserDtos()
+            'users' => $users_ret
         ]);
     }
 

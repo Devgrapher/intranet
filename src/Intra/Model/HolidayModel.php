@@ -100,6 +100,12 @@ class HolidayModel
         return $this->db->sqlObjects('select * from holidays where ? order by date asc', sqlWhere($where));
     }
 
+    public function getsToday()
+    {
+        $where = ['date' => date('Y-m-d')];
+        return $this->db->sqlObjects('select uid, `type` from holidays where ?', sqlWhere($where));
+    }
+
     public function isAllowedToAdd($date, $uid, $cost)
     {
         $date = date('Y-m-d', strtotime($date));
