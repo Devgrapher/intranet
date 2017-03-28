@@ -299,97 +299,103 @@
 {% block body %}
   {% if globalDomain == "ridi.com" %}
 
-      <!-- Modal -->
-      <div class="modal fade" id="infoModal" role="dialog">
-        <div class="modal-dialog">
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" role="dialog">
+      <div class="modal-dialog">
 
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="row">
-              <div class="col-sm-6 col-md-6 col-lg-6">
-                <img class="img-responsive" src="http://placehold.it/300x300">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+              <img class="img-responsive" src="http://placehold.it/300x300">
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
-              <div class="col-sm-6 col-md-6 col-lg-6">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <div class="modal-body">
+                <div class="modal-content-header">
+                  <h4 class="modal-title"></h4>
                 </div>
-                <div class="modal-body">
-                  <div class="modal-content-header">
-                    <h4 class="modal-title"></h4>
-                  </div>
-                  <div class="modal-content-body">
-                    <dl class="dl-horizontal">
-                      <dt>부서</dt>
-                      <dd id="team"></dd>
-                      <dt>이메일</dt>
-                      <dd id="email"></dd>
-                      <dt>내선번호</dt>
-                      <dd id="inner_call"></dd>
-                      <dt>휴대전화</dt>
-                      <dd id="mobile"></dd>
-                      <dt>직무</dt>
-                      <dd id="position"></dd>
-                      <dt>생일</dt>
-                      <dd id="birth"></dd>
-                    </dl>
-                  </div>
+                <div class="modal-content-body">
+                  <dl class="dl-horizontal">
+                    <dt>부서</dt>
+                    <dd id="team"></dd>
+                    <dt>이메일</dt>
+                    <dd id="email"></dd>
+                    <dt>내선번호</dt>
+                    <dd id="inner_call"></dd>
+                    <dt>휴대전화</dt>
+                    <dd id="mobile"></dd>
+                    <dt>직무</dt>
+                    <dd id="position"></dd>
+                    <dt>생일</dt>
+                    <dd id="birth"></dd>
+                  </dl>
                 </div>
-                <div class="modal-footer">
-                </div>
+              </div>
+              <div class="modal-footer">
               </div>
             </div>
           </div>
+        </div>
 
+      </div>
+    </div>
+
+    <ul id="userMenu" class="dropdown-menu" role="menu" style="display:none">
+      <li class="dropdown-submenu">
+        <a tabindex="-1" href="#">위치 옮기기</a>
+        <ul class="dropdown-menu">
+          <li><a tabindex="0" href="#">10층</a></li>
+          <li><a tabindex="1" href="#">11층</a></li>
+        </ul>
+      </li>
+      <li class="dropdown-submenu">
+        <a tabindex="-1" href="#">색 바꾸기</a>
+        <ul class="dropdown-menu">
+          <li><a tabindex="2" href="#"><div class="btn" style="color:#337ab7;">#337ab7</div></a></li>
+          <li><a tabindex="3" href="#"><div class="btn" style="color:#5cb85c;">#5cb85c</div></a></li>
+          <li><a tabindex="4" href="#"><div class="btn" style="color:#5bc0de;">#5bc0de</div></a></li>
+          <li><a tabindex="5" href="#"><div class="btn" style="color:#f0ad4e;">#f0ad4e</div></a></li>
+          <li><a tabindex="6" href="#"><div class="btn" style="color:#d9534f;">#d9534f</div></a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <span class="label label-danger">&nbsp;</span> 오전반차
+        <span class="label label-warning">&nbsp;</span> 오후반차
+        <span class="label label-success">&nbsp;</span> 연차
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#floor10">10층</a></li>
+        <li><a data-toggle="tab" href="#floor11">11층</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+      <div id="user_map">
+        <div id="floor10" class="tab-pane fade in active">
+          {% for user in users %}
+            {% if user.extra.area is not defined or user.extra.area == 'floor10' %}
+              {% include 'users/index_user.twig' with {user:user} %}
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div id="floor11" class="tab-pane fade">
+          {% for user in users %}
+            {% if user.extra.area is defined and user.extra.area == 'floor11' %}
+              {% include 'users/index_user.twig' with {user:user} %}
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
 
-      <ul id="userMenu" class="dropdown-menu" role="menu" style="display:none">
-        <li class="dropdown-submenu">
-          <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">위치 옮기기</a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="0" href="#">10층</a></li>
-              <li><a tabindex="1" href="#">11층</a></li>
-            </ul>
-          </li>
-          <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">색 바꾸기</a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="2" href="#"><div class="btn" style="color:#337ab7;">#337ab7</div></a></li>
-              <li><a tabindex="3" href="#"><div class="btn" style="color:#5cb85c;">#5cb85c</div></a></li>
-              <li><a tabindex="4" href="#"><div class="btn" style="color:#5bc0de;">#5bc0de</div></a></li>
-              <li><a tabindex="5" href="#"><div class="btn" style="color:#f0ad4e;">#f0ad4e</div></a></li>
-              <li><a tabindex="6" href="#"><div class="btn" style="color:#d9534f;">#d9534f</div></a></li>
-            </ul>
-          </li>
-      </ul>
-
-      <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#floor10">10층</a></li>
-          <li><a data-toggle="tab" href="#floor11">11층</a></li>
-      </ul>
-
-      <div class="tab-content">
-          <div id="user_map">
-
-              <div id="floor10" class="tab-pane fade in active">
-                {% for user in users %}
-                  {% if user.extra.area is not defined or user.extra.area == 'floor10' %}
-                    {% include 'users/index_user.twig' with {user:user} %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-
-              <div id="floor11" class="tab-pane fade">
-                {% for user in users %}
-                  {% if user.extra.area is defined and user.extra.area == 'floor11' %}
-                    {% include 'users/index_user.twig' with {user:user} %}
-                  {% endif %}
-                {% endfor %}
-              </div>
-
-          </div>
-
-      </div>
+    </div>
   {% endif %}
 {% endblock %}
