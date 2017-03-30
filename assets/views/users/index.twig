@@ -43,6 +43,25 @@
         transform: translateY(-50%);
       }
 
+      .js_user.morning-off {
+        background-color: #d9534f;
+      }
+      .js_user.afternoon-off {
+        background-color: #f0ad4e;
+      }
+      .js_user.day-off {
+        background-color: #5cb85c;
+      }
+
+      .js_user .name {
+        margin: 0;
+      }
+
+      .js_user .state {
+        margin: 0;
+        font-size: 6pt;
+      }
+
       #user_map {
         position: relative;
         height: 1000px;
@@ -146,6 +165,16 @@
           var deactivated = $(e.relatedTarget).attr('href');
           $(activated + ' .js_user').show();
           $(deactivated + ' .js_user').hide();
+        });
+
+        $('.js_user').each(function () {
+          if ($(this).hasClass('day-off')) {
+            $(this).find('.state').text('연차');
+          } else if ($(this).hasClass('morning-off')) {
+            $(this).find('.state').text('오전반차');
+          } else if ($(this).hasClass('afternoon-off')) {
+            $(this).find('.state').text('오후반차');
+          }
         });
 
         {% if replaceable %}

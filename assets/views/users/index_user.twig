@@ -1,7 +1,8 @@
-<div class='js_user'
-     style='left:{{ user.extra.posX }}px;top:{{ user.extra.posY }}px;{% if user.color is defined %} background-color:{{ user.color }}; {% endif %}'
+<div class="js_user{% if user.state is defined %} {{ user.state }} {% endif %}"
+     style="left:{{ user.extra.posX }}px;top:{{ user.extra.posY }}px;"
      data-userid='{{ user.uid }}'>
-  <div class='content' data-userid='{{ user.uid }}'>
-    {{ user.name }}
+  <div class="content" data-userid='{{ user.uid }}'>
+      <p class="name">{{ user.name }}</p>
+      <p class="state"></p>
   </div>
 </div>

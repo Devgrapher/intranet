@@ -67,11 +67,11 @@ class UsersController implements ControllerProviderInterface
             foreach ($today_holidays as $holiday) {
                 if ($user->uid == $holiday->uid) {
                     if ($holiday->type == '오전반차' || $holiday->type == '무급오전반차') {
-                        $user_arr['color'] = '#d9534f';
+                        $user_arr['state'] = 'morning-off';
                     } else if ($holiday->type == '오후반차' || $holiday->type == '무급오후반차') {
-                        $user_arr['color'] = '#f0ad4e';
+                        $user_arr['state'] = 'afternoon-off';
                     } else if ($holiday->type != 'PWT') {
-                        $user_arr['color'] = '#5cb85c';
+                        $user_arr['state'] = 'day-off';
                     }
                 }
             }
