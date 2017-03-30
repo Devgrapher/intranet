@@ -64,13 +64,25 @@ class UsersController implements ControllerProviderInterface
             $user_arr['birth'] = $user->birth;
             $user_arr['extra'] = $user->extra;
 
+            $timezone = 'Asia/Seoul';
+            $now = new \DateTime();
+
             foreach ($today_holidays as $holiday) {
                 if ($user->uid == $holiday->uid) {
                     if ($holiday->type == '오전반차' || $holiday->type == '무급오전반차') {
-                        $user_arr['state'] = 'morning-off';
+                        $dateTime = new \DateTime('15:00', new \DateTimeZone($timezone));
+                        if ($dateTime->diff($now)->format('%R') === '-') {
+                            $user_arr['absence'] = true;
+                            $user_arr['state'] = 'morning-off';
+                        }
                     } else if ($holiday->type == '오후반차' || $holiday->type == '무급오후반차') {
+                        $dateTime = new \DateTime('14:00', new \DateTimeZone($timezone));
+                        if ($dateTime->diff($now)->format('%R') === '+') {
+                            $user_arr['absence'] = true;
+                        }
                         $user_arr['state'] = 'afternoon-off';
                     } else if ($holiday->type != 'PWT') {
+                        $user_arr['absence'] = true;
                         $user_arr['state'] = 'day-off';
                     }
                 }

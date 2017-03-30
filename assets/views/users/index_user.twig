@@ -4,5 +4,6 @@
   <div class="content" data-userid='{{ user.uid }}'>
       <p class="name">{{ user.name }}</p>
       <p class="state"></p>
+      <p {% if user.absence is defined %} class="absence" {% endif %}></p>
   </div>
 </div>
