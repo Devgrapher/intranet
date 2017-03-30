@@ -1,6 +1,6 @@
 .PHONY: all composer build config
 
-all: build config
+all: build composer config
 
 composer:
 	composer install
