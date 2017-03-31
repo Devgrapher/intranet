@@ -192,6 +192,11 @@ class UsersController implements ControllerProviderInterface
         $uid = $request->get('userid');
         $key = $request->get('key');
         $value = rawurldecode($request->get('value'));
+        if ($value === 'true') {
+            $value = true;
+        } else if ($value === 'false') {
+            $value = false;
+        }
 
         $user = new UserDtoHandler(UserDtoFactory::createByUid($uid));
         $user->setExtra($key, $value);

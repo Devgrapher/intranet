@@ -255,7 +255,7 @@
                 userElem.detach().appendTo('#' + area);
               })
               .fail(() => {
-                alert('MoveUserTo: 서버와 통신에 실패했습니다');
+                alert('setUserArea: 서버와 통신에 실패했습니다');
               })
               .always(() => {
                 userElem.attr('disabled', false);
@@ -272,11 +272,31 @@
                 userElem.css('background-color', colorCode);
               })
               .fail(() => {
-                alert('MoveUserTo: 서버와 통신에 실패했습니다');
+                alert('setUserColor: 서버와 통신에 실패했습니다');
               })
               .always(() => {
                 userElem.attr('disabled', false);
+              });
+          }
+
+          function setUserHideShow(userId, isShow) {
+            var userElem = $('.js_user[data-userid=' + userId + ']');
+            userElem.attr('disabled', true);
+
+            $.post('/users/' + userId + '/updateExtra/show/' + isShow)
+              .done(() => {
+                if (isShow) {
+                  userElem.css('opacity', 1);
+                } else {
+                  userElem.css('opacity', 0.3);
+                }
               })
+              .fail(() => {
+                alert('setUserHideShow: 서버와 통신에 실패했습니다');
+              })
+              .always(() => {
+                userElem.attr('disabled', false);
+              });
           }
 
           //context menu setting
@@ -291,6 +311,10 @@
 
               } else if (menuIndex == '1') {
                 setUserArea(userId, 'floor11');
+
+              } else if (menuIndex == '7') {
+                var isShow = invokedOn.css('opacity');
+                setUserHideShow(userId, isShow!=1);
 
               } else {
                 var colorCode = selectedMenu.text();
@@ -393,6 +417,7 @@
           <li><a tabindex="6" href="#"><div class="btn" style="color:#d9534f;">#d9534f</div></a></li>
         </ul>
       </li>
+      <li><a tabindex="7" href="#">숨기기/보이기</a></li>
     </ul>
 
     <div class="panel panel-default">
