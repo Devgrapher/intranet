@@ -253,7 +253,7 @@ class HolidaysController implements ControllerProviderInterface
         }
 
         $rows = [
-            ['연도', '사원번호', '이름', '입사일자', '퇴사일자', '연차부여', '사용일수', '잔여일수']
+            ['연도', '사원번호', '이름', '입사일자', '퇴사일자', '연차부여', '사용일수', '조정일수', '잔여일수']
         ];
 
         $users = UserDtoFactory::createAllUserDtos();
@@ -268,7 +268,7 @@ class HolidaysController implements ControllerProviderInterface
             $fullCost = $user_holiday_policy->getAvailableCost($yearly);
             $usedCost = $user_holiday_policy->getUsedCost($yearly);
             $modCost = $user_holiday_policy->getModCost($year);
-            $remainCost = $fullCost - $usedCost;
+            $remainCost = $fullCost - $usedCost + $modCost;
 
             $rows[] = [
                 $year,
