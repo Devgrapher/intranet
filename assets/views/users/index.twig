@@ -28,13 +28,21 @@
         padding: 0;
         width: 60px;
         height: 60px;
-        color: #fff;
+        color: #e0e0e0;
         border: 1px solid;
         border-color: #fff;
-        background-color: #337ab7;
+        background-color: #2d2d2d;
         overflow: hidden;
         text-align: center;
         cursor: pointer;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+        border-radius: 4px;
+        transition: all .15s;
+      }
+
+      .js_user:hover {
+        transform: scale(1.05);
+        z-index: 5;
       }
 
       .js_user .content {
@@ -42,27 +50,38 @@
         top: 50%;
         transform: translateY(-50%);
       }
+      .js_user:after {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        content: '';
+        background: #6dd26d;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+      }
 
-      .js_user.morning-off {
-        background-color: #d9534f;
+      .js_user.morning-off:after,
+      .js_user.afternoon-off:after {
+        background-color: #f7c547;
       }
-      .js_user.afternoon-off {
-        background-color: #f0ad4e;
-      }
-      .js_user.day-off {
-        background-color: #5cb85c;
+      .js_user.day-off:after {
+        background-color: #9f9f9f;
       }
       .js_user .absence {
-        color: #ff0000;
+        background-color: #676767;
       }
 
       .js_user .name {
         margin: 0;
+        font-weight: bold;
       }
 
       .js_user .state {
         margin: 0;
-        font-size: 6pt;
+        font-size: 10px;
+        color: #e0e0e0;
+        color: rgba(255,255,255,.5);
       }
 
       #user_map {
@@ -419,14 +438,6 @@
       </li>
       <li><a tabindex="7" href="#">숨기기/보이기</a></li>
     </ul>
-
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <span class="label label-danger">&nbsp;</span> 오전반차
-        <span class="label label-warning">&nbsp;</span> 오후반차
-        <span class="label label-success">&nbsp;</span> 연차
-      </div>
-    </div>
 
     <ul class="nav nav-tabs">
         <li class="active"><a data-toggle="tab" href="#floor10">10층</a></li>
