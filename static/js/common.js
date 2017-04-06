@@ -3,7 +3,11 @@ require(["jquery", "jquery.attrajax", 'jquery-ui', "jquery-number", "jquery.cook
     $('*[attrajax]').attrAjax();
     $('input[js_number_format]').number(true).css('text-align', 'right');
   });
-  $('select[js_data_chosen]').select2();
+
+  if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    $('select[js_data_chosen]').select2();
+  }
+
   $('input[js_datepicker]').datepicker({dateFormat: "yy-mm-dd"});
   $('select[js_cookie_save],input[js_cookie_save]')
     .change(function () {
