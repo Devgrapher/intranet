@@ -71,6 +71,9 @@
       .js_user.absence {
         background-color: #676767;
       }
+      .js_user.long-absence {
+        opacity:0.4;
+      }
 
       .js_user .name {
         margin: 0;
@@ -196,6 +199,8 @@
             $(this).find('.state').text('오전반차');
           } else if ($(this).hasClass('afternoon-off')) {
             $(this).find('.state').text('오후반차');
+          } else if ($(this).hasClass('long-absence')) {
+            $(this).find('.state').text('숨겨짐');
           }
         });
 
@@ -305,9 +310,11 @@
             $.post('/users/' + userId + '/updateExtra/show/' + isShow)
               .done(() => {
                 if (isShow) {
-                  userElem.css('opacity', 1);
+                  userElem.removeClass('long-absence');
+                  userElem.find('.state').text('');
                 } else {
-                  userElem.css('opacity', 0.3);
+                  userElem.addClass('long-absence');
+                  userElem.find('.state').text('숨겨짐');
                 }
               })
               .fail(() => {

@@ -1,6 +1,6 @@
 {% if replaceable or user.extra.show is not defined or user.extra.show == true %}
-  <div class="js_user {{ user.state is defined ? user.state }} {{ user.absence is defined ? 'absence' }}"
-       style="left:{{ user.extra.posX }}px;top:{{ user.extra.posY }}px;{{ user.extra.show is defined and user.extra.show == false? 'opacity:0.3;' }}"
+  <div class="js_user {{ user.state is defined ? user.state }} {{ user.absence is defined ? 'absence' }} {{ user.extra.show is defined and user.extra.show == false? 'long-absence' }}"
+       style="left:{{ user.extra.posX }}px;top:{{ user.extra.posY }}px;"
        data-userid='{{ user.uid }}'>
     <div class="content" data-userid='{{ user.uid }}'>
         <p class="name">{{ user.name }}</p>
