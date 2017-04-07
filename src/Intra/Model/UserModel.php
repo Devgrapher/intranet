@@ -66,7 +66,10 @@ class UserModel extends BaseModel
 
     public static function getDictsAvailable()
     {
-        $where = [];
+        //$where = [];
+        $where = [
+            'email' => sqlNot('isms@ridi.com')
+        ];
         $where['on_date'] = sqlLesserEqual(sqlNow());
         $where['off_date'] = sqlGreaterEqual(sqlNow());
 
@@ -80,7 +83,10 @@ class UserModel extends BaseModel
 
     public static function getDictsOfManager()
     {
-        $where = [];
+        //$where = [];
+        $where = [
+            'email' => sqlNot('isms@ridi.com')
+        ];
         $where['on_date'] = sqlLesserEqual(sqlNow());
         $where['off_date'] = sqlGreaterEqual(sqlNow());
         $where['position'] = ['CEO', '팀장', 'CTO', 'CFO', 'CDO', '기타'];
