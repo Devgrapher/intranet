@@ -102,7 +102,10 @@ class HolidayModel
 
     public function getsToday()
     {
-        $where = ['date' => date('Y-m-d')];
+        $where = [
+            'date' => date('Y-m-d'),
+            'hidden' => 0
+        ];
         return $this->db->sqlObjects('select uid, `type` from holidays where ?', sqlWhere($where));
     }
 
