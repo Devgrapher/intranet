@@ -101,7 +101,6 @@ class PostsController implements ControllerProviderInterface
     {
         $jsonDto = new JsonDto();
         try {
-            $request = $this->getRequest();
             $post = new Post();
             if ($post->del($request)) {
                 $jsonDto->setMsg('삭제되었습니다.');
