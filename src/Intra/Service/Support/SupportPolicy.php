@@ -12,6 +12,7 @@ use Intra\Service\Support\Column\SupportColumnCompleteDatetime;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
 use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\Support\Column\SupportColumnDatetime;
+use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnFile;
 use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
@@ -31,6 +32,7 @@ class SupportPolicy
     const TYPE_BUSINESS_CARD = 'businesscard';
     const TYPE_DEPOT = 'depot';
     const TYPE_GIFT_CARD = 'giftcard';
+    const TYPE_GIFT_CARD_PURCHASE = 'giftcard_purchase';
 
     const DB_TABLE = [
         self::TYPE_DEVICE => 'device',
@@ -38,6 +40,7 @@ class SupportPolicy
         self::TYPE_BUSINESS_CARD => 'business_card',
         self::TYPE_DEPOT => 'depot',
         self::TYPE_GIFT_CARD => 'gift_card',
+        self::TYPE_GIFT_CARD_PURCHASE => 'gift_card_purchase',
     ];
 
     /**
@@ -153,6 +156,16 @@ class SupportPolicy
 '1. 권종, 유효기간, 수량에 맞는 난수번호 파일 업로드
 2. 권종, 유효기간에 맞는 이미지 파일 업로드
 3. 기본으로 상품권 1장당 봉투 1장 제작. 변경 필요 시 비고에 기재';
+        } elseif ($target == self::TYPE_GIFT_CARD_PURCHASE) {
+            return
+'입금계좌 : 기업은행 477-016864-01-057 리디 주식회사
+* 입금자명을 정확하게 기재해주세요.
+* 설정하신 입금예정일시에 최대한 맞춰 입금을 진행해주세요.
+* 인사팀에서 수령하실 때 희망하시는 봉투수량을 말씀해주세요.
+* 리디캐시상품권 구매는 비용지원이 불가합니다.
+사내지원사항인 리디캐시 지원금은 직원이 본인 아이디로 충전하는 별개의 지원제도입니다.';
+        } else {
+            return "";
         }
     }
 
@@ -164,10 +177,14 @@ class SupportPolicy
             self::TYPE_BUSINESS_CARD => '명함 신청',
             self::TYPE_DEPOT => '구매 요청',
             self::TYPE_GIFT_CARD => '상품권 제작',
+            self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
         ];
 
         $callback_is_human_manage_team = function (UserDto $user_dto) {
             return $user_dto->team == UserConstant::TEAM_HUMAN_MANAGE;
+        };
+        $callback_is_cash_flow_team = function (UserDto $user_dto) {
+            return $user_dto->team == UserConstant::TEAM_CASH_FLOW;
         };
         self::$column_fields = [
             self::TYPE_DEVICE => [
@@ -316,6 +333,27 @@ class SupportPolicy
                 '제작(예정)일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
                 '비고' => new SupportColumnText('note', '', '비고'),
                 '이미지파일' => new SupportColumnFile('image_file'),
+            ],
+            self::TYPE_GIFT_CARD_PURCHASE => [
+                '일련번호' => new SupportColumnReadonly('uuid'),
+                '일련번호2' => new SupportColumnReadonly('id'),
+                '요청일' => new SupportColumnReadonly('reg_date'),
+                '요청자' => new SupportColumnRegisterUser('uid'),
+                '귀속부서' => new SupportColumnTeam('team'),
+                '입금자명' => new SupportColumnText('deposit_name', '', ''),
+                '입금예정일시' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day'))),
+                '재무팀 처리' => new SupportColumnComplete('is_completed_by_cf', $callback_is_cash_flow_team),
+                '재무팀 처리자' => new SupportColumnCompleteUser('completed_by_cf_uid', 'is_completed_by_cf'),
+                '재무팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_cf_datetime', 'is_completed_by_cf'),
+                '입금상태' => (new SupportColumnCategory('is_deposited', ['N','Y']))->isVisibleIf($callback_is_cash_flow_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed_by_hr', $callback_is_human_manage_team),
+                '인사팀 처리자' => new SupportColumnCompleteUser('completed_by_hr_uid', 'is_completed_by_hr'),
+                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_hr_datetime', 'is_completed_by_hr'),
+                '권종' => new SupportColumnCategory('cash_category', ['10000','50000']),
+                '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
+                '신청금액' => (new SupportColumnSum('req_sum', ['cash_category','req_count']))->readonly(),
+                '입금기한' => (new SupportColumnDate('deposit_duedate', date('Y/m/d H:i', strtotime('+1 day')), true))->readonly(),
+                '사용용도' => new SupportColumnText('purpose', ''),
             ],
         ];
     }

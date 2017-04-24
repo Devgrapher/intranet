@@ -168,6 +168,9 @@
               if (column.class_name == 'SupportColumnTextDetail') {
                 columnManager.initSupportColumnTextDetail(column);
               }
+              if (column.class_name == 'SupportColumnSum') {
+                columnManager.initSupportColumnSum(column);
+              }
             }
           };
           this.initSupportColumnMutual = function (column) {
@@ -206,6 +209,22 @@
               target_object = $this.parentsUntil('table').find('input[name=' + key + ']');
               target_object.attr('disabled', !is_visible).trigger("change")
             })).trigger('change');
+          };
+          this.initSupportColumnSum = function (column) {
+            var sum_elem = $('tr.add input[name=' + column.key + ']');
+            var values = [];
+            $.each(column.operands, function (idx, column_name) {
+              values.push(0);
+
+              $('tr.add [name=' + column_name + ']').on('change', {val: idx}, function (e) {
+                var operand_elem = $(this).parentsUntil('table').find('[name=' + column_name + ']');
+
+                values[e.data.val] = operand_elem.val();
+                var sum = 1;
+                $.each(values, function(i, elem){ sum *= parseInt(elem); });
+                sum_elem.val(sum);
+              }).trigger('change');
+            });
           };
         };
         columnManager.initColumns({{ columns | json_encode | raw }});
@@ -281,6 +300,8 @@
                 {{ display_dict[key] }}
               {% endif %}
             {% elseif column.class_name == 'SupportColumnMoney' %}
+              {{ display_dict[key] | number_format }}
+            {% elseif column.class_name == 'SupportColumnSum' %}
               {{ display_dict[key] | number_format }}
             {% elseif column.class_name == 'SupportColumnFile' %}
               {% if not support_view_dto.is_all_complted %}
@@ -396,7 +417,7 @@
             />
           {% elseif column.class_name == 'SupportColumnDate' %}
             <input style='width:150px'
-                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}"
+                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnDatetime' %}
             <input style='width:150px' js_datetimepicker data-date-format="yyyy-mm-dd hh:ii"
@@ -407,6 +428,10 @@
                    name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}"
             />
           {% elseif column.class_name == 'SupportColumnFile' %}
+          {% elseif column.class_name == 'SupportColumnSum' %}
+            <input style='width:120px' js_number_format
+                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
+            />
           {% else %}
             {{ column.class_name }}
           {% endif %}

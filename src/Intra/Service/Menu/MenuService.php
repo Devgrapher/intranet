@@ -57,6 +57,7 @@ class MenuService
                         new Link('명함 신청', '/support/' . SupportPolicy::TYPE_BUSINESS_CARD),
                         new Link('구매 요청', '/support/' . SupportPolicy::TYPE_DEPOT, (new ExceptTaAuth())->accept(['hr.ta'])),
                         new Link('상품권 제작', '/support/' . SupportPolicy::TYPE_GIFT_CARD),
+                        new Link('상품권 구매', '/support/' . SupportPolicy::TYPE_GIFT_CARD_PURCHASE),
                         new Link('저녁 주문', 'https://ridi.typeform.com/to/VpjZON', new PublicAuth(), '_blank'),
                     ],
                     new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3'])),

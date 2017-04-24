@@ -11,6 +11,7 @@ use Intra\Service\Support\Column\SupportColumnDatetime;
 use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
+use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
@@ -54,6 +55,7 @@ class SupportDto
                 || $column instanceof SupportColumnTextDetail
                 || $column instanceof SupportColumnMoney
                 || $column instanceof SupportColumnDatetime
+                || $column instanceof SupportColumnSum
             ) {
                 $key = $column->key;
                 $value = $request->get($key);
