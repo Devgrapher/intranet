@@ -6,11 +6,13 @@ use Intra\Core\MsgException;
 use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnCategory;
+use Intra\Service\Support\Column\SupportColumnComplete;
 use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\Support\Column\SupportColumnDatetime;
 use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
+use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
@@ -21,6 +23,7 @@ class SupportDto
 {
     public $target;
     public $dict;
+    public $is_all_completed;
 
     /**
      * view only
@@ -42,6 +45,7 @@ class SupportDto
         $dto = new self();
         $dto->target = $request->get('target');
         $dto->dict = [];
+        $dto->is_all_completed = false;
 
         foreach ($columns as $column_name => $column) {
             if ($column instanceof SupportColumnCategory
@@ -54,6 +58,7 @@ class SupportDto
                 || $column instanceof SupportColumnTextDetail
                 || $column instanceof SupportColumnMoney
                 || $column instanceof SupportColumnDatetime
+                || $column instanceof SupportColumnSum
             ) {
                 $key = $column->key;
                 $value = $request->get($key);
@@ -83,11 +88,15 @@ class SupportDto
         $dto->id = $dict['id'];
         $dto->target = $target;
         $dto->dict = $dict;
+        $dto->is_all_completed = true;
 
         foreach ($columns as $column_name => $column) {
             if ($column instanceof SupportColumnRegisterUser) {
-                $key = $column->key;
-                $dto->uid = $dict[$key];
+                $dto->uid = $dict[$column->key];
+            } elseif ($column instanceof SupportColumnComplete) {
+                if (!$dict[$column->key]) {
+                    $dto->is_all_completed = false;
+                }
             }
         }
         return $dto;

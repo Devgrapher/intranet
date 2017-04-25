@@ -111,6 +111,11 @@ class SupportDtoFilter
             if ($request_datetime === false) {
                 throw new MsgException('날짜입력을 다시 확인해주세요');
             }
+        } elseif ($support_dto->target == SupportPolicy::TYPE_GIFT_CARD_PURCHASE) {
+            if($support_dto->dict[$columns['신청매수']->key] <= 0 ||
+                $support_dto->dict[$columns['신청금액']->key] <= 0) {
+                throw new MsgException('신청 매수와 금액을 확인해주세요');
+            }
         }
 
         $support_dto->dict['uuid'] = self::getUuidHeader($support_dto->target);
@@ -125,7 +130,7 @@ class SupportDtoFilter
             SupportPolicy::TYPE_BUSINESS_CARD => 'bs',
             SupportPolicy::TYPE_DEPOT => 'pe',
             SupportPolicy::TYPE_FAMILY_EVENT => 'bt',
-            SupportPolicy::TYPE_GIFT_CARD => 'gt',
+            SupportPolicy::TYPE_GIFT_CARD_PURCHASE => 'gp',
             SupportPolicy::TYPE_DEVICE => 'hp',
         ];
         $code = $codes[$target];
