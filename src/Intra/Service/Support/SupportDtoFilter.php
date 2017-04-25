@@ -130,7 +130,6 @@ class SupportDtoFilter
             SupportPolicy::TYPE_BUSINESS_CARD => 'bs',
             SupportPolicy::TYPE_DEPOT => 'pe',
             SupportPolicy::TYPE_FAMILY_EVENT => 'bt',
-            SupportPolicy::TYPE_GIFT_CARD => 'gt',
             SupportPolicy::TYPE_GIFT_CARD_PURCHASE => 'gp',
             SupportPolicy::TYPE_DEVICE => 'hp',
         ];

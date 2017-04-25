@@ -31,7 +31,6 @@ class SupportPolicy
     const TYPE_FAMILY_EVENT = 'familyevent';
     const TYPE_BUSINESS_CARD = 'businesscard';
     const TYPE_DEPOT = 'depot';
-    const TYPE_GIFT_CARD = 'giftcard';
     const TYPE_GIFT_CARD_PURCHASE = 'giftcard_purchase';
 
     const DB_TABLE = [
@@ -39,7 +38,6 @@ class SupportPolicy
         self::TYPE_FAMILY_EVENT => 'family_event',
         self::TYPE_BUSINESS_CARD => 'business_card',
         self::TYPE_DEPOT => 'depot',
-        self::TYPE_GIFT_CARD => 'gift_card',
         self::TYPE_GIFT_CARD_PURCHASE => 'gift_card_purchase',
     ];
 
@@ -150,12 +148,7 @@ class SupportPolicy
 '1. 업무 상 필요한 자산 및 비품 구매 요청
 2. 수령희망일은 배송기간 감안하여 설정';
 
-            //'상품권 제작'
-        } elseif ($target == self::TYPE_GIFT_CARD) {
-            return
-'1. 권종, 유효기간, 수량에 맞는 난수번호 파일 업로드
-2. 권종, 유효기간에 맞는 이미지 파일 업로드
-3. 기본으로 상품권 1장당 봉투 1장 제작. 변경 필요 시 비고에 기재';
+            //'상품권 구매'
         } elseif ($target == self::TYPE_GIFT_CARD_PURCHASE) {
             return
 '입금계좌 : 기업은행 477-016864-01-057 리디 주식회사
@@ -176,7 +169,6 @@ class SupportPolicy
             self::TYPE_FAMILY_EVENT => '경조 지원',
             self::TYPE_BUSINESS_CARD => '명함 신청',
             self::TYPE_DEPOT => '구매 요청',
-            self::TYPE_GIFT_CARD => '상품권 제작',
             self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
         ];
 
@@ -313,26 +305,6 @@ class SupportPolicy
                 '파일첨부' => new SupportColumnFile('file'),
                 '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($callback_is_human_manage_team),
                 '라벨번호' => (new SupportColumnText('label'))->isVisibleIf($callback_is_human_manage_team),
-            ],
-            self::TYPE_GIFT_CARD => [
-                '일련번호' => new SupportColumnReadonly('uuid'),
-                '일련번호2' => new SupportColumnReadonly('id'),
-                '요청일' => new SupportColumnReadonly('reg_date'),
-                '요청자' => new SupportColumnRegisterUser('uid'),
-                '승인' => new SupportColumnAccept('is_accepted'),
-                '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
-                '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
-                '권종' => new SupportColumnCategory('category', ['포인트']),
-                '금액' => new SupportColumnMoney('cash'),
-                '유효기간' => new SupportColumnDate('expire_date', date('Y/m/d', strtotime('+7 day'))),
-                '수량' => new SupportColumnMoney('count'),
-                '난수번호 파일' => new SupportColumnFile('random_file'),
-                '제작(예정)일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
-                '비고' => new SupportColumnText('note', '', '비고'),
-                '이미지파일' => new SupportColumnFile('image_file'),
             ],
             self::TYPE_GIFT_CARD_PURCHASE => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
