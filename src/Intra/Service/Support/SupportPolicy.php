@@ -154,10 +154,10 @@ class SupportPolicy
             return
 '입금계좌 : 기업은행 477-016864-01-057 리디 주식회사
 * 입금자명을 정확하게 기재해주세요.
-* 설정하신 입금예정일시에 최대한 맞춰 입금을 진행해주세요.
-* 인사팀에서 수령하실 때 희망하시는 봉투수량을 말씀해주세요.
-* 리디캐시상품권 구매는 비용지원이 불가합니다.
-사내지원사항인 리디캐시 지원금은 직원이 본인 아이디로 충전하는 별개의 지원제도입니다.';
+* 최대한 입금예정일시에 맞춰서 입금을 진행해주세요.
+* 상품권을 담는데 필요한 봉투수량을 기재해주세요. 최대 신청매수까지 입력할 수 있습니다.
+* 실물의 리디캐시 상품권 구매는 비용지원이 불가합니다. 사내지원사항인 리디캐시 지원금은 
+  임직원이 서점에서 본인 아이디로 충전 시 충전금액의 30%를 지원해드리는 별개의 제도입니다.';
         } else {
             return "";
         }
@@ -327,6 +327,7 @@ class SupportPolicy
                 '신청금액' => (new SupportColumnSum('req_sum', ['cash_category','req_count']))->readonly(),
                 '입금기한' => (new SupportColumnDate('deposit_duedate', date('Y/m/d H:i', strtotime('+1 day')), true))->readonly(),
                 '사용용도' => new SupportColumnText('purpose', ''),
+                '봉투수량' => (new SupportColumnMoney('envelops'))->defaultValue('1'),
             ],
         ];
     }

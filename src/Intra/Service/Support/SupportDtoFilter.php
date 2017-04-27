@@ -116,6 +116,13 @@ class SupportDtoFilter
                 $support_dto->dict[$columns['신청금액']->key] <= 0) {
                 throw new MsgException('신청 매수와 금액을 확인해주세요');
             }
+            if(empty($support_dto->dict[$columns['입금자명']->key])) {
+                throw new MsgException('입금자명을 입력해주세요');
+            }
+            if($support_dto->dict[$columns['신청매수']->key] <
+                $support_dto->dict[$columns['봉투수량']->key]) {
+                throw new MsgException('봉투수량은 최대 신청매수까지 입력할 수 있습니다.');
+            }
         }
 
         $support_dto->dict['uuid'] = self::getUuidHeader($support_dto->target);
