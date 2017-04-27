@@ -14,6 +14,7 @@ class SupportColumn
     public $textInputType = 'text';
     public $placeholder = '';
     public $default = '';
+    public $viewOnly = false;
     private $isVisiblePreds;
     private $editableUserPreds;
 

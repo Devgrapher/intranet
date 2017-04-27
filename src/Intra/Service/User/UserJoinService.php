@@ -106,6 +106,16 @@ class UserJoinService
         return $dto->personcode;
     }
 
+    public static function getTeamByUidSafe($uid)
+    {
+        $dto = self::getDtoByUidSafe($uid);
+        if ($dto == null) {
+            return null;
+        }
+
+        return $dto->team;
+    }
+
     public static function getEmailsByTeam($team)
     {
         $dicts = UserModel::getDictsWithTeam($team);

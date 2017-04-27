@@ -11,6 +11,7 @@ use Intra\Service\Support\Column\SupportColumnComplete;
 use Intra\Service\Support\Column\SupportColumnCompleteDatetime;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
 use Intra\Service\Support\Column\SupportColumnFile;
+use Intra\Service\Support\Column\SupportColumnViewOnly;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\User\UserJoinService;
@@ -146,6 +147,9 @@ class SupportViewDto
                 $key = $column->key;
                 $files_dtos = FileUploadDtoFactory::createFromGroupId('support.' . $target . '.' . $key, $display_dict['id']);
                 $this->files[$key] = $files_dtos;
+            } elseif ($column instanceof SupportColumnViewOnly) {
+                $key = $column->key;
+                $display_dict[$key] = ($column->dataCallback)($support_dto);
             }
         }
 

@@ -12,6 +12,7 @@ use Intra\Service\Support\Column\SupportColumnCompleteDatetime;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
 use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\Support\Column\SupportColumnDatetime;
+use Intra\Service\Support\Column\SupportColumnViewOnly;
 use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnFile;
 use Intra\Service\Support\Column\SupportColumnMoney;
@@ -24,6 +25,7 @@ use Intra\Service\Support\Column\SupportColumnTextDetail;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserDto;
+use Intra\Service\User\UserJoinService;
 
 class SupportPolicy
 {
@@ -153,11 +155,21 @@ class SupportPolicy
         } elseif ($target == self::TYPE_GIFT_CARD_PURCHASE) {
             return
 '입금계좌 : 기업은행 477-016864-01-057 리디 주식회사
-* 입금자명을 정확하게 기재해주세요.
-* 최대한 입금예정일시에 맞춰서 입금을 진행해주세요.
-* 상품권을 담는데 필요한 봉투수량을 기재해주세요. 최대 신청매수까지 입력할 수 있습니다.
-* 실물의 리디캐시 상품권 구매는 비용지원이 불가합니다. 사내지원사항인 리디캐시 지원금은 
-  임직원이 서점에서 본인 아이디로 충전 시 충전금액의 30%를 지원해드리는 별개의 제도입니다.';
+※ 거래처로부터 구매 문의를 받으신 경우, 재무팀에 문의하여 주세요.
+
+1. 리디캐시 상품권의 종류와 구매가
+   1) 1만원권 : 직원 구매가 9,500원
+   2) 5만원권 : 직원 구매가 46,500원
+
+2. 신청 안내
+   1) 입금자명을 정확하게 기재하고 입금예정일시는 24시간내로 설정하여 입금을 진행해주세요.
+   2) 권종 별로 각각 신청해주세요.
+
+3. 참고 사항
+   1) 서점 리디포인트 적립률을 준용하여 할인 가격이 책정되었으며, 권면금액별로 할인율이 적용된 점 참고 부탁 드립니다.
+   2) 리디캐시 상품권은 유가증권으로 분류되어 신용카드나 휴대폰 등의 결제 수단으로는 구매가 불가능하며, 세법상 현금영수증 및 세금계산서가 발급되지 않습니다.
+   3) 임직원께서 리디북스 서점에서 본인 아이디로 리디캐시 충전 시 충전금액의 30%를 비용 지원 받으실 수 있으나 (TA 지원불가), 실물의 리디캐시 상품권 구매 시에는 적용되지 않음을 참고 부탁 드립니다.
+';
         } else {
             return "";
         }
@@ -178,6 +190,10 @@ class SupportPolicy
         };
         $is_cash_flow_team = function (UserDto $user_dto) {
             return $user_dto->team == UserConstant::TEAM_CASH_FLOW;
+        };
+        $get_team_by_uid = function (SupportDto $support_dto) {
+            $uid = $support_dto->dict['uid'];
+            return UserJoinService::getTeamByUidSafe($uid);
         };
         self::$column_fields = [
             self::TYPE_DEVICE => [
@@ -312,9 +328,7 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                '귀속부서' => new SupportColumnTeam('team'),
-                '입금자명' => new SupportColumnText('deposit_name', '', ''),
-                '입금예정일시' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day'))),
+                '귀속부서' => new SupportColumnViewOnly('team', $get_team_by_uid),
                 '재무팀 처리' => new SupportColumnComplete('is_completed_by_cf', $is_cash_flow_team),
                 '재무팀 처리자' => new SupportColumnCompleteUser('completed_by_cf_uid', 'is_completed_by_cf'),
                 '재무팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_cf_datetime', 'is_completed_by_cf'),
@@ -328,7 +342,8 @@ class SupportPolicy
                 '권종' => (new SupportColumnCategory('cash_category', ['10,000','50,000'], [9500, 46500]))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
                 '신청금액' => (new SupportColumnSum('req_sum', ['cash_category','req_count']))->readonly(),
-                '입금기한' => (new SupportColumnDate('deposit_duedate', date('Y/m/d H:i', strtotime('+1 day')), true))->readonly(),
+                '입금자명' => new SupportColumnText('deposit_name', '', ''),
+                '입금예정일시(24시간 내)' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day')), true),
                 '사용용도' => new SupportColumnText('purpose', ''),
                 '봉투수량' => (new SupportColumnMoney('envelops'))->defaultValue('1'),
             ],

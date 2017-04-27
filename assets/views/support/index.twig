@@ -282,7 +282,11 @@
             {% elseif column.class_name == 'SupportColumnTeam' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnCategory' %}
-              <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
+              {% for name, value in column.category_items %}
+                {% if value == display_dict[key]  %}
+                  <span data-editable='{{ key }}' data-keyselect>{{ name }}</span>
+                {% endif %}
+              {% endfor %}
             {% elseif column.class_name == 'SupportColumnWorker' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnText' %}
@@ -363,8 +367,9 @@
     <tfoot>
     <tr class='add'>
       {% for column_name, column in columns %}
-        <td data-key="{{ column.key }}">
+        <td {% if not column.viewOnly %} data-key="{{ column.key }} {% endif %}">
           {% if column.class_name == 'SupportColumnReadonly' %}
+          {% elseif column.class_name == 'SupportColumnViewOnly' %}
           {% elseif column.class_name == 'SupportColumnRegisterUser' %}
           {% elseif column.class_name == 'SupportColumnComplete' %}
           {% elseif column.class_name == 'SupportColumnCompleteUser' %}
@@ -407,10 +412,10 @@
             <label>
               <select name='{{ column.key }}' js_cookie_save js_data_chosen>
                 {% if column.readonly %}
-                  <option value='{{ column.default }}'>{{ column.default }}</option>
+                  <option value='{{ column.category_items[column.default] }}'>{{ column.default }}</option>
                 {% else %}
-                  {% for category_item in column.category_items %}
-                  <option value='{{ category_item }}'>{{ category_item }}</option>
+                  {% for name, value in column.category_items %}
+                  <option value='{{ value }}'>{{ name }}</option>
                   {% endfor %}
                 {% endif %}
               </select>
@@ -458,7 +463,7 @@
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-6">
+    <div class="col-xs-12">
       <pre>{{ explain }}</pre>
     </div>
   
