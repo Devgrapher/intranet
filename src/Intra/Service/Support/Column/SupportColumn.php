@@ -15,6 +15,7 @@ class SupportColumn
     public $placeholder = '';
     public $default = '';
     private $isVisibleCallbacks;
+    private $editableCallbacks;
 
     public function __construct($column_name)
     {
@@ -27,6 +28,21 @@ class SupportColumn
     {
         $this->readonly = true;
         return $this;
+    }
+
+    public function editableOnlyIf(callable $callback)
+    {
+        $this->editableCallbacks[] = $callback;
+        return $this;
+    }
+
+    public function updateReadonly(UserDto $user_dto)
+    {
+        if (count($this->editableCallbacks) > 0) {
+            foreach ($this->editableCallbacks as $callback) {
+                $this->readonly = !$callback($user_dto);
+            }
+        }
     }
 
     public function placeholder($placeholder)

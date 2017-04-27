@@ -67,6 +67,7 @@ class SupportPolicy
             if (!$return_column->isVisible($self)) {
                 unset($return_columns[$key]);
             }
+            $return_column->updateReadonly($self);
         }
 
         return $return_columns;
@@ -317,7 +318,7 @@ class SupportPolicy
                 '재무팀 처리' => new SupportColumnComplete('is_completed_by_cf', $callback_is_cash_flow_team),
                 '재무팀 처리자' => new SupportColumnCompleteUser('completed_by_cf_uid', 'is_completed_by_cf'),
                 '재무팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_cf_datetime', 'is_completed_by_cf'),
-                '입금상태' => (new SupportColumnCategory('is_deposited', ['N','Y']))->isVisibleIf($callback_is_cash_flow_team),
+                '입금상태' => (new SupportColumnCategory('is_deposited', ['N','Y']))->editableOnlyIf($callback_is_cash_flow_team)->defaultValue('N'),
                 '인사팀 처리' => new SupportColumnComplete('is_completed_by_hr', $callback_is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_by_hr_uid', 'is_completed_by_hr'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_hr_datetime', 'is_completed_by_hr'),

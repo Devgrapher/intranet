@@ -273,7 +273,13 @@
         {% for column_name, column in columns %}
           {% set key = column.key %}
           <td data-key="{{ column.key }}">
-            {% if column.class_name == 'SupportColumnTeam' %}
+            {% if column.readonly %}
+              {% if column.class_name == 'SupportColumnSum' %}
+                {{ display_dict[key] | number_format }}
+              {% else %}
+                {{ display_dict[key] }}
+              {% endif %}
+            {% elseif column.class_name == 'SupportColumnTeam' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnCategory' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
@@ -300,8 +306,6 @@
                 {{ display_dict[key] }}
               {% endif %}
             {% elseif column.class_name == 'SupportColumnMoney' %}
-              {{ display_dict[key] | number_format }}
-            {% elseif column.class_name == 'SupportColumnSum' %}
               {{ display_dict[key] | number_format }}
             {% elseif column.class_name == 'SupportColumnFile' %}
               {% if not support_view_dto.is_all_complted %}
@@ -402,9 +406,13 @@
           {% elseif column.class_name == 'SupportColumnCategory' %}
             <label>
               <select name='{{ column.key }}' js_cookie_save js_data_chosen>
-                {% for category_item in column.category_items %}
+                {% if column.readonly %}
+                  <option value='{{ column.default }}'>{{ column.default }}</option>
+                {% else %}
+                  {% for category_item in column.category_items %}
                   <option value='{{ category_item }}'>{{ category_item }}</option>
-                {% endfor %}
+                  {% endfor %}
+                {% endif %}
               </select>
             </label>
           {% elseif column.class_name == 'SupportColumnText' %}
