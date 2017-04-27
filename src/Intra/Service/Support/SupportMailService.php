@@ -58,6 +58,7 @@ class SupportMailService
             ]
         );
 
+        $receivers = [];
         if (!$is_pending) {
             $receivers = [UserJoinService::getEmailByUidSafe($support_dto->uid)];
             foreach ($uids as $uid) {

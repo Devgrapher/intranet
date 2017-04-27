@@ -42,7 +42,8 @@ class MailSendService
         $mg = new Mailgun($_ENV['mailgun_api_key']);
         $domain = "ridibooks.com";
 
-        $html = $dto->body_header . DictsUtils::convertDictsToHtmlTable($dto->dicts) . $dto->body_footer;
+        $body = $dto->dicts ? DictsUtils::convertDictsToHtmlTable($dto->dicts) : "";
+        $html = $dto->body_header . $body . $dto->body_footer;
         $mail_post = [
             'from' => 'noreply@ridibooks.com',
             'subject' => $dto->title,
@@ -83,7 +84,7 @@ class MailSendService
      * @return \string[]
      * @throws \Exception
      */
-    private function filterMails($mailReceiver)
+    private static function filterMails($mailReceiver)
     {
         if (is_null($mailReceiver)) {
             return $mailReceiver;
