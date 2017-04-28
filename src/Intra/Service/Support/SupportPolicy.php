@@ -67,7 +67,7 @@ class SupportPolicy
             if (!$return_column->isVisible($self)) {
                 unset($return_columns[$key]);
             }
-            $return_column->updateReadonly($self);
+            $return_column->updateEditableForUser($self);
         }
 
         return $return_columns;
@@ -173,10 +173,10 @@ class SupportPolicy
             self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
         ];
 
-        $callback_is_human_manage_team = function (UserDto $user_dto) {
+        $is_human_manage_team = function (UserDto $user_dto) {
             return $user_dto->team == UserConstant::TEAM_HUMAN_MANAGE;
         };
-        $callback_is_cash_flow_team = function (UserDto $user_dto) {
+        $is_cash_flow_team = function (UserDto $user_dto) {
             return $user_dto->team == UserConstant::TEAM_CASH_FLOW;
         };
         self::$column_fields = [
@@ -185,7 +185,7 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '귀속부서' => new SupportColumnTeam('team'),
@@ -202,7 +202,7 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
@@ -231,7 +231,7 @@ class SupportPolicy
                     ]
                 ),
                 '분류 상세' => (new SupportColumnText('category_detail'))->placeholder('나리디님 결혼'),
-                '경조금' => (new SupportColumnMoney('cash'))->placeholder('미입력시 자동입력')->isVisibleIf($callback_is_human_manage_team),
+                '경조금' => (new SupportColumnMoney('cash'))->placeholder('미입력시 자동입력')->isVisibleIf($is_human_manage_team),
                 '경조일자' => new SupportColumnDate('request_date', date('Y/m/d'), true),
                 '화환 종류' => new SupportColumnCategory('flower_category', ['자동선택', '화환', '과일바구니', '조화', '기타']),
                 '화환 상세' => new SupportColumnTextDetail('flower_category_detail', 'flower_category', ['기타', '화환']),
@@ -250,7 +250,7 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
@@ -284,7 +284,7 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '사용자(직원)' => new SupportColumnWorker('receiver_uid'),
@@ -304,8 +304,8 @@ class SupportPolicy
                 '수령희망일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '파일첨부' => new SupportColumnFile('file'),
-                '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($callback_is_human_manage_team),
-                '라벨번호' => (new SupportColumnText('label'))->isVisibleIf($callback_is_human_manage_team),
+                '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($is_human_manage_team),
+                '라벨번호' => (new SupportColumnText('label'))->isVisibleIf($is_human_manage_team),
             ],
             self::TYPE_GIFT_CARD_PURCHASE => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
@@ -315,14 +315,17 @@ class SupportPolicy
                 '귀속부서' => new SupportColumnTeam('team'),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
                 '입금예정일시' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day'))),
-                '재무팀 처리' => new SupportColumnComplete('is_completed_by_cf', $callback_is_cash_flow_team),
+                '재무팀 처리' => new SupportColumnComplete('is_completed_by_cf', $is_cash_flow_team),
                 '재무팀 처리자' => new SupportColumnCompleteUser('completed_by_cf_uid', 'is_completed_by_cf'),
                 '재무팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_cf_datetime', 'is_completed_by_cf'),
-                '입금상태' => (new SupportColumnCategory('is_deposited', ['N','Y']))->editableOnlyIf($callback_is_cash_flow_team)->defaultValue('N'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed_by_hr', $callback_is_human_manage_team),
+                '입금상태' => (new SupportColumnCategory('is_deposited', ['N','Y']))
+                    ->readonly()
+                    ->addEditableUserPred($is_cash_flow_team)
+                    ->defaultValue('N'),
+                '인사팀 처리' => new SupportColumnComplete('is_completed_by_hr', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_by_hr_uid', 'is_completed_by_hr'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_hr_datetime', 'is_completed_by_hr'),
-                '권종' => new SupportColumnCategory('cash_category', ['10000','50000']),
+                '권종' => (new SupportColumnCategory('cash_category', ['10,000','50,000'], [9500, 46500]))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
                 '신청금액' => (new SupportColumnSum('req_sum', ['cash_category','req_count']))->readonly(),
                 '입금기한' => (new SupportColumnDate('deposit_duedate', date('Y/m/d H:i', strtotime('+1 day')), true))->readonly(),
