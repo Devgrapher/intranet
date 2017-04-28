@@ -19,6 +19,6 @@ class SupportColumnCategory extends SupportColumn
     public function __construct($string, $category_items, $category_values = null)
     {
         parent::__construct($string);
-        $this->category_items = array_combine($category_items, isset($category_values) ? $category_values: $category_items);
+        $this->category_items = array_combine($category_items, isset($category_values) ? $category_values : $category_items);
     }
 }
