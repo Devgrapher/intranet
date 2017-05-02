@@ -7,6 +7,7 @@ use Intra\Service\Payment\FileUploadDtoFactory;
 use Intra\Service\Support\Column\SupportColumnAccept;
 use Intra\Service\Support\Column\SupportColumnAcceptDatetime;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
+use Intra\Service\Support\Column\SupportColumnByValueCallback;
 use Intra\Service\Support\Column\SupportColumnComplete;
 use Intra\Service\Support\Column\SupportColumnCompleteDatetime;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
@@ -146,6 +147,9 @@ class SupportViewDto
                 $key = $column->key;
                 $files_dtos = FileUploadDtoFactory::createFromGroupId('support.' . $target . '.' . $key, $display_dict['id']);
                 $this->files[$key] = $files_dtos;
+            } elseif ($column instanceof SupportColumnByValueCallback) {
+                $key = $column->key;
+                $display_dict[$key] = ($column->valueCallback)($support_dto);
             }
         }
 

@@ -48,7 +48,7 @@ class SupportMailService
         $is_pending = ($type === "완료" && !$support_dto->is_all_completed);
 
         $title = "[{$title}][{$type}][{$working_date}] {$register_name}님의 요청";
-        $link = 'http://intra.' . $_ENV['domain'] . '/support/' . $target . '/remain';
+        $link = 'http://intra.' . $_ENV['domain'] . '/support/' . $target;
         $html = $app['twig']->render(
             'support/template/mail.twig',
             [
@@ -58,6 +58,7 @@ class SupportMailService
             ]
         );
 
+        $receivers = [];
         if (!$is_pending) {
             $receivers = [UserJoinService::getEmailByUidSafe($support_dto->uid)];
             foreach ($uids as $uid) {

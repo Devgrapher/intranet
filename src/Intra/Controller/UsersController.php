@@ -75,13 +75,13 @@ class UsersController implements ControllerProviderInterface
                             $user_arr['absence'] = true;
                             $user_arr['state'] = 'morning-off';
                         }
-                    } else if ($holiday->type == '오후반차' || $holiday->type == '무급오후반차') {
+                    } elseif ($holiday->type == '오후반차' || $holiday->type == '무급오후반차') {
                         $dateTime = new \DateTime('14:00', new \DateTimeZone($timezone));
                         if ($dateTime->diff($now)->format('%R') === '+') {
                             $user_arr['absence'] = true;
                         }
                         $user_arr['state'] = 'afternoon-off';
-                    } else if ($holiday->type != 'PWT') {
+                    } elseif ($holiday->type != 'PWT') {
                         $user_arr['absence'] = true;
                         $user_arr['state'] = 'day-off';
                     }
@@ -194,7 +194,7 @@ class UsersController implements ControllerProviderInterface
         $value = rawurldecode($request->get('value'));
         if ($value === 'true') {
             $value = true;
-        } else if ($value === 'false') {
+        } elseif ($value === 'false') {
             $value = false;
         }
 

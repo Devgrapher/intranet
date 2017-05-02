@@ -6,24 +6,26 @@ use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAccept;
 use Intra\Service\Support\Column\SupportColumnAcceptDatetime;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
+use Intra\Service\Support\Column\SupportColumnByValueCallback;
 use Intra\Service\Support\Column\SupportColumnCategory;
 use Intra\Service\Support\Column\SupportColumnComplete;
 use Intra\Service\Support\Column\SupportColumnCompleteDatetime;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
 use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\Support\Column\SupportColumnDatetime;
-use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnFile;
 use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\Support\Column\SupportColumnReadonly;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
+use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserDto;
+use Intra\Service\User\UserJoinService;
 
 class SupportPolicy
 {
@@ -67,6 +69,7 @@ class SupportPolicy
             if (!$return_column->isVisible($self)) {
                 unset($return_columns[$key]);
             }
+            $return_column->updateEditableForUser($self);
         }
 
         return $return_columns;
@@ -152,11 +155,21 @@ class SupportPolicy
         } elseif ($target == self::TYPE_GIFT_CARD_PURCHASE) {
             return
 '입금계좌 : 기업은행 477-016864-01-057 리디 주식회사
-* 입금자명을 정확하게 기재해주세요.
-* 설정하신 입금예정일시에 최대한 맞춰 입금을 진행해주세요.
-* 인사팀에서 수령하실 때 희망하시는 봉투수량을 말씀해주세요.
-* 리디캐시상품권 구매는 비용지원이 불가합니다.
-사내지원사항인 리디캐시 지원금은 직원이 본인 아이디로 충전하는 별개의 지원제도입니다.';
+※ 거래처로부터 구매 문의를 받으신 경우, 재무팀에 문의하여 주세요.
+
+1. 리디캐시 상품권의 종류와 구매가
+   1) 1만원권 : 직원 구매가 9,500원
+   2) 5만원권 : 직원 구매가 46,500원
+
+2. 신청 안내
+   1) 입금자명을 정확하게 기재하고 입금예정일시는 24시간내로 설정하여 입금을 진행해주세요.
+   2) 권종 별로 각각 신청해주세요.
+
+3. 참고 사항
+   1) 서점 리디포인트 적립률을 준용하여 할인 가격이 책정되었으며, 권면금액별로 할인율이 적용된 점 참고 부탁 드립니다.
+   2) 리디캐시 상품권은 유가증권으로 분류되어 신용카드나 휴대폰 등의 결제 수단으로는 구매가 불가능하며, 세법상 현금영수증 및 세금계산서가 발급되지 않습니다.
+   3) 임직원께서 리디북스 서점에서 본인 아이디로 리디캐시 충전 시 충전금액의 30%를 비용 지원 받으실 수 있으나 (TA 지원불가), 실물의 리디캐시 상품권 구매 시에는 적용되지 않음을 참고 부탁 드립니다.
+';
         } else {
             return "";
         }
@@ -172,11 +185,15 @@ class SupportPolicy
             self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
         ];
 
-        $callback_is_human_manage_team = function (UserDto $user_dto) {
+        $is_human_manage_team = function (UserDto $user_dto) {
             return $user_dto->team == UserConstant::TEAM_HUMAN_MANAGE;
         };
-        $callback_is_cash_flow_team = function (UserDto $user_dto) {
+        $is_cash_flow_team = function (UserDto $user_dto) {
             return $user_dto->team == UserConstant::TEAM_CASH_FLOW;
+        };
+        $get_team_by_uid = function (SupportDto $support_dto) {
+            $uid = $support_dto->dict['uid'];
+            return UserJoinService::getTeamByUidSafe($uid);
         };
         self::$column_fields = [
             self::TYPE_DEVICE => [
@@ -184,7 +201,7 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '귀속부서' => new SupportColumnTeam('team'),
@@ -201,7 +218,7 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
@@ -230,7 +247,7 @@ class SupportPolicy
                     ]
                 ),
                 '분류 상세' => (new SupportColumnText('category_detail'))->placeholder('나리디님 결혼'),
-                '경조금' => (new SupportColumnMoney('cash'))->placeholder('미입력시 자동입력')->isVisibleIf($callback_is_human_manage_team),
+                '경조금' => (new SupportColumnMoney('cash'))->placeholder('미입력시 자동입력')->isVisibleIf($is_human_manage_team),
                 '경조일자' => new SupportColumnDate('request_date', date('Y/m/d'), true),
                 '화환 종류' => new SupportColumnCategory('flower_category', ['자동선택', '화환', '과일바구니', '조화', '기타']),
                 '화환 상세' => new SupportColumnTextDetail('flower_category_detail', 'flower_category', ['기타', '화환']),
@@ -249,7 +266,7 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
@@ -283,7 +300,7 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $callback_is_human_manage_team),
+                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '사용자(직원)' => new SupportColumnWorker('receiver_uid'),
@@ -303,29 +320,32 @@ class SupportPolicy
                 '수령희망일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '파일첨부' => new SupportColumnFile('file'),
-                '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($callback_is_human_manage_team),
-                '라벨번호' => (new SupportColumnText('label'))->isVisibleIf($callback_is_human_manage_team),
+                '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($is_human_manage_team),
+                '라벨번호' => (new SupportColumnText('label'))->isVisibleIf($is_human_manage_team),
             ],
             self::TYPE_GIFT_CARD_PURCHASE => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                '귀속부서' => new SupportColumnTeam('team'),
-                '입금자명' => new SupportColumnText('deposit_name', '', ''),
-                '입금예정일시' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day'))),
-                '재무팀 처리' => new SupportColumnComplete('is_completed_by_cf', $callback_is_cash_flow_team),
-                '재무팀 처리자' => new SupportColumnCompleteUser('completed_by_cf_uid', 'is_completed_by_cf'),
-                '재무팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_cf_datetime', 'is_completed_by_cf'),
-                '입금상태' => (new SupportColumnCategory('is_deposited', ['N','Y']))->isVisibleIf($callback_is_cash_flow_team),
-                '인사팀 처리' => new SupportColumnComplete('is_completed_by_hr', $callback_is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_by_hr_uid', 'is_completed_by_hr'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_hr_datetime', 'is_completed_by_hr'),
-                '권종' => new SupportColumnCategory('cash_category', ['10000','50000']),
+                '귀속부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
+                '재무팀 처리' => new SupportColumnComplete('is_approved_by_cashflow', $is_cash_flow_team),
+                '재무팀 처리자' => new SupportColumnCompleteUser('approved_by_cashflow_uid', 'is_approved_by_cashflow'),
+                '재무팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_cashflow_datetime', 'is_approved_by_cashflow'),
+                '입금상태' => (new SupportColumnCategory('is_deposited', ['N', 'Y']))
+                    ->readonly()
+                    ->addEditableUserPred($is_cash_flow_team)
+                    ->defaultValue('N'),
+                '인사팀 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
+                '인사팀 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
+                '인사팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
+                '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000'], [9500, 46500]))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
-                '신청금액' => (new SupportColumnSum('req_sum', ['cash_category','req_count']))->readonly(),
-                '입금기한' => (new SupportColumnDate('deposit_duedate', date('Y/m/d H:i', strtotime('+1 day')), true))->readonly(),
+                '신청금액' => (new SupportColumnSum('req_sum', ['giftcard_category', 'req_count']))->readonly(),
+                '입금자명' => new SupportColumnText('deposit_name', '', ''),
+                '입금예정일시(24시간 내)' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day')), true),
                 '사용용도' => new SupportColumnText('purpose', ''),
+                '봉투수량' => (new SupportColumnMoney('num_envelops'))->defaultValue('1'),
             ],
         ];
     }

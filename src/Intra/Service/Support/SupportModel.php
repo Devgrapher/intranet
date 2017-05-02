@@ -158,7 +158,7 @@ class SupportModel extends BaseModel
             throw new \Exception('정렬 컬럼지정이 되어있지 않습니다.');
         }
         if (count($accept_columns) == 0) {
-            throw new \Exception('승인가능한 컬럼지정이 되어있지 않습니다.');
+            return null;
         }
 
         $table = self::getTableName($target);

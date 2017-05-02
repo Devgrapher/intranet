@@ -14,10 +14,11 @@ class SupportColumnCategory extends SupportColumn
      *
      * @param string $string
      * @param array  $category_items
+     * @param array  $category_values
      */
-    public function __construct($string, $category_items)
+    public function __construct($string, $category_items, $category_values = null)
     {
         parent::__construct($string);
-        $this->category_items = $category_items;
+        $this->category_items = array_combine($category_items, isset($category_values) ? $category_values : $category_items);
     }
 }

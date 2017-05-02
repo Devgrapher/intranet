@@ -14,7 +14,9 @@ class SupportColumn
     public $textInputType = 'text';
     public $placeholder = '';
     public $default = '';
-    private $isVisibleCallbacks;
+    public $noDbColumn = false;
+    private $isVisiblePreds;
+    private $editableUserPreds = [];
 
     public function __construct($column_name)
     {
@@ -29,6 +31,22 @@ class SupportColumn
         return $this;
     }
 
+    public function addEditableUserPred(callable $predicate)
+    {
+        $this->editableUserPreds[] = $predicate;
+        return $this;
+    }
+
+    public function updateEditableForUser(UserDto $login_user)
+    {
+        foreach ($this->editableUserPreds as $predicate) {
+            if ($predicate($login_user)) {
+                $this->readonly = false;
+                break;
+            }
+        }
+    }
+
     public function placeholder($placeholder)
     {
         $this->placeholder = $placeholder;
@@ -41,19 +59,19 @@ class SupportColumn
         return $this;
     }
 
-    public function isVisibleIf(callable $callback)
+    public function isVisibleIf(callable $predicate)
     {
-        $this->isVisibleCallbacks[] = $callback;
+        $this->isVisiblePreds[] = $predicate;
         return $this;
     }
 
-    public function isVisible(UserDto $user_dto)
+    public function isVisible(UserDto $login_user)
     {
-        if (count($this->isVisibleCallbacks) == 0) {
+        if (count($this->isVisiblePreds) == 0) {
             return true;
         }
-        foreach ($this->isVisibleCallbacks as $callback) {
-            if ($callback($user_dto)) {
+        foreach ($this->isVisiblePreds as $predicate) {
+            if ($predicate($login_user)) {
                 return true;
             }
         }

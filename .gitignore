@@ -11,3 +11,5 @@ composer.lock
 ConfigDevelop.php
 ConfigRelease.php
 *.env
+phinx.yml
+.php_cs.cache
