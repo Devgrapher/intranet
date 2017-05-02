@@ -4,17 +4,15 @@ namespace Intra\Service\Support\Column;
 
 class SupportColumnSum extends SupportColumn
 {
-    public $operands;
+    public $priceColumn;
+    public $countColumn;
+    public $discountDict;
 
-    /**
-     * initSupportColumnMutual constructor.
-     *
-     * @param $column
-     * @param $operands
-     */
-    public function __construct($column, $operands)
+    public function __construct($column, $priceColumn, $countColumn, $discountDict)
     {
         parent::__construct($column);
-        $this->operands = $operands;
+        $this->priceColumn = $priceColumn;
+        $this->countColumn = $countColumn;
+        $this->discountDict = $discountDict;
     }
 }
