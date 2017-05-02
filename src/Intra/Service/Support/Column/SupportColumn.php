@@ -14,9 +14,9 @@ class SupportColumn
     public $textInputType = 'text';
     public $placeholder = '';
     public $default = '';
-    public $viewOnly = false;
+    public $noDbColumn = false;
     private $isVisiblePreds;
-    private $editableUserPreds;
+    private $editableUserPreds = [];
 
     public function __construct($column_name)
     {
@@ -39,7 +39,7 @@ class SupportColumn
 
     public function updateEditableForUser(UserDto $login_user)
     {
-        foreach ((array)$this->editableUserPreds as $predicate) {
+        foreach ($this->editableUserPreds as $predicate) {
             if ($predicate($login_user)) {
                 $this->readonly = false;
                 break;

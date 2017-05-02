@@ -367,9 +367,9 @@
     <tfoot>
     <tr class='add'>
       {% for column_name, column in columns %}
-        <td {% if not column.viewOnly %} data-key="{{ column.key }} {% endif %}">
+        <td {% if not column.noDbColumn%} data-key="{{ column.key }} {% endif %}">
           {% if column.class_name == 'SupportColumnReadonly' %}
-          {% elseif column.class_name == 'SupportColumnViewOnly' %}
+          {% elseif column.class_name == 'SupportColumnByValueCallback' %}
           {% elseif column.class_name == 'SupportColumnRegisterUser' %}
           {% elseif column.class_name == 'SupportColumnComplete' %}
           {% elseif column.class_name == 'SupportColumnCompleteUser' %}

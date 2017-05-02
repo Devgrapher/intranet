@@ -6,6 +6,7 @@ use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAccept;
 use Intra\Service\Support\Column\SupportColumnAcceptDatetime;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
+use Intra\Service\Support\Column\SupportColumnByValueCallback;
 use Intra\Service\Support\Column\SupportColumnCategory;
 use Intra\Service\Support\Column\SupportColumnComplete;
 use Intra\Service\Support\Column\SupportColumnCompleteDatetime;
@@ -21,7 +22,6 @@ use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
-use Intra\Service\Support\Column\SupportColumnViewOnly;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\User\UserConstant;
 use Intra\Service\User\UserDto;
@@ -328,24 +328,24 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                '귀속부서' => new SupportColumnViewOnly('team', $get_team_by_uid),
-                '재무팀 처리' => new SupportColumnComplete('is_completed_by_cashflow', $is_cash_flow_team),
-                '재무팀 처리자' => new SupportColumnCompleteUser('completed_by_cashflow_uid', 'is_completed_by_cashflow'),
-                '재무팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_cashflow_datetime', 'is_completed_by_cashflow'),
+                '귀속부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
+                '재무팀 처리' => new SupportColumnComplete('is_approved_by_cashflow', $is_cash_flow_team),
+                '재무팀 처리자' => new SupportColumnCompleteUser('approved_by_cashflow_uid', 'is_approved_by_cashflow'),
+                '재무팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_cashflow_datetime', 'is_approved_by_cashflow'),
                 '입금상태' => (new SupportColumnCategory('is_deposited', ['N', 'Y']))
                     ->readonly()
                     ->addEditableUserPred($is_cash_flow_team)
                     ->defaultValue('N'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed_by_hr', $is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_by_hr_uid', 'is_completed_by_hr'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_by_hr_datetime', 'is_completed_by_hr'),
-                '권종' => (new SupportColumnCategory('cash_category', ['10,000', '50,000'], [9500, 46500]))->defaultValue('10,000'),
+                '인사팀 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
+                '인사팀 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
+                '인사팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
+                '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000'], [9500, 46500]))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
-                '신청금액' => (new SupportColumnSum('req_sum', ['cash_category', 'req_count']))->readonly(),
+                '신청금액' => (new SupportColumnSum('req_sum', ['giftcard_category', 'req_count']))->readonly(),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
                 '입금예정일시(24시간 내)' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day')), true),
                 '사용용도' => new SupportColumnText('purpose', ''),
-                '봉투수량' => (new SupportColumnMoney('envelops'))->defaultValue('1'),
+                '봉투수량' => (new SupportColumnMoney('num_envelops'))->defaultValue('1'),
             ],
         ];
     }
