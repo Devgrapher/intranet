@@ -212,19 +212,23 @@
           };
           this.initSupportColumnSum = function (column) {
             var sum_elem = $('tr.add input[name=' + column.key + ']');
-            var values = [];
-            $.each(column.operands, function (idx, column_name) {
-              values.push(0);
+            var price_elem = $('tr.add [name=' + column.priceColumn + ']');
+            var count_elem = $('tr.add [name=' + column.countColumn + ']');
+            var discount_dict = column.discountDict;
 
-              $('tr.add [name=' + column_name + ']').on('change', {val: idx}, function (e) {
-                var operand_elem = $(this).parentsUntil('table').find('[name=' + column_name + ']');
+            this.updateSumColumn = function () {
+              sum_elem.val(this.price * this.count);
+            };
 
-                values[e.data.val] = operand_elem.val();
-                var sum = 1;
-                $.each(values, function(i, elem){ sum *= parseInt(elem); });
-                sum_elem.val(sum);
-              }).trigger('change');
-            });
+            price_elem.on('change', function () {
+              this.price = discount_dict[price_elem.val()];
+              this.updateSumColumn();
+            }.bind(this)).trigger('change');
+
+            count_elem.on('change', function () {
+              this.count = count_elem.val();
+              this.updateSumColumn();
+            }.bind(this)).trigger('change');
           };
         };
         columnManager.initColumns({{ columns | json_encode | raw }});

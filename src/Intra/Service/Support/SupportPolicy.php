@@ -339,9 +339,10 @@ class SupportPolicy
                 '인사팀 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
                 '인사팀 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
                 '인사팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
-                '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000'], [9500, 46500]))->defaultValue('10,000'),
+                '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000']))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
-                '신청금액' => (new SupportColumnSum('req_sum', ['giftcard_category', 'req_count']))->readonly(),
+                '신청금액' => (new SupportColumnSum('req_sum', 'giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500]))
+                    ->readonly(),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
                 '입금예정일시(24시간 내)' => new SupportColumnDate('deposit_date', date('Y/m/d H:i', strtotime('+0 day')), true),
                 '사용용도' => new SupportColumnText('purpose', ''),
