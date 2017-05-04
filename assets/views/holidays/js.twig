@@ -34,10 +34,20 @@
 
     $('#js_type').on('change', function () {
       var type_str = $(this).val();
-      if (type_str != '오전반차' && type_str != '오후반차' && type_str != 'PWT')
-        $('#js_cost').show();
-      else
+
+      var hiddenCostTypes = ['오전반차', '오후반차', 'PWT'];
+      if (hiddenCostTypes.indexOf(type_str) !== -1) {
         $('#js_cost').hide();
+      } else {
+        $('#js_cost').show();
+      }
+
+      var notPermittedPastTypes = ['연차', '오전반차', '오후반차', '무급휴가', '무급오전반차', '무급오후반차', 'PWT'];
+      if (notPermittedPastTypes.indexOf(type_str) !== -1) {
+        start_date.datepicker( "option", "minDate", new Date() );
+      } else {
+        start_date.datepicker( "option", "minDate", null );
+      }
     }).trigger('change');
 
     {% if editable %}
