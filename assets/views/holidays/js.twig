@@ -1,7 +1,12 @@
 <script>
   var uid = {{ target_user_dto.uid }};
 
-  require(["jquery", "jquery.jeditable", "bootstrap"], function ($) {
+  require(["jquery", "jquery.jeditable", "jquery-ui", "bootstrap"], function ($) {
+
+    var dateFormat = "yy-mm-dd";
+    var start_date = $( 'input[name="date"]' ).datepicker();
+    start_date.datepicker( "option", "dateFormat", dateFormat );
+
     $('select.js_superedit')
       .val({{ target_user_dto.uid }})
       .trigger("change")
