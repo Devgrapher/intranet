@@ -42,9 +42,11 @@
         $('#js_cost').show();
       }
 
-      var notPermittedPastTypes = ['연차', '오전반차', '오후반차', '무급휴가', '무급오전반차', '무급오후반차', 'PWT'];
-      if (notPermittedPastTypes.indexOf(type_str) !== -1) {
-        start_date.datepicker( "option", "minDate", new Date() );
+      var notPermittedPastMonthTypes = ['연차', '오전반차', '오후반차', '무급휴가', '무급오전반차', '무급오후반차'];
+      if (notPermittedPastMonthTypes.indexOf(type_str) !== -1) {
+        var firstDayOfMonth = new Date();
+        firstDayOfMonth.setDate(1);
+        start_date.datepicker( "option", "minDate", firstDayOfMonth);
       } else {
         start_date.datepicker( "option", "minDate", null );
       }
