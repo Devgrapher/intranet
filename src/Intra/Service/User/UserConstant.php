@@ -13,8 +13,10 @@ class UserConstant
     const TEAM_PM = '공통 / PM';
 
     const TEAM_HUMAN_MANAGE = '공통 / 경영지원그룹 / CO팀';
-    const TEAM_BI = '공통 / 경영지원그룹 / 사업분석팀';
     const TEAM_CASH_FLOW = '공통 / 경영지원그룹 / 재무팀';
+
+    const TEAM_BI = '공통 / PM / 사업분석팀';
+    const TEAM_GROWTH = '공통 / PM / Growth팀';
 
     const TEAM_HUMAN_PLANNING = '공통 / 인사기획팀';
     const TEAM_PRODUCT_PLANNING = '공통 / 상품기획팀';
@@ -33,8 +35,8 @@ class UserConstant
     const TEAM_STORE_OP = '리디북스 / 사업그룹 / 운영지원팀';
     const TEAM_NORMAL = '리디북스 / 사업그룹 / 일반사업부';
     const TEAM_DEVICE = '리디북스 / 사업그룹 / 일반사업부 / 디바이스팀';
-    const TEAM_GROWTH = '리디북스 / 사업그룹 / 일반사업부 / 일반Growth팀';
     const TEAM_NORMAL_BOOK = '리디북스 / 사업그룹 / 일반사업부 / 일반도서팀';
+    const TEAM_CONTENTS_DB = '리디북스 / 사업그룹 / 콘텐츠DB팀';
     const TEAM_GENRE = '리디북스 / 사업그룹 / 장르사업부';
     const TEAM_GENRE_BL = '리디북스 / 사업그룹 / 장르사업부 / 로맨스/BL팀';
     const TEAM_GENRE_FANTASY = '리디북스 / 사업그룹 / 장르사업부 / 판타지팀';
@@ -58,8 +60,9 @@ class UserConstant
             self::TEAM_CTO,
             self::TEAM_PM,
             self::TEAM_HUMAN_MANAGE,
-            self::TEAM_BI,
             self::TEAM_CASH_FLOW,
+            self::TEAM_BI,
+            self::TEAM_GROWTH,
             self::TEAM_HUMAN_PLANNING,
             self::TEAM_PRODUCT_PLANNING,
             self::TEAM_DEV,
@@ -75,8 +78,8 @@ class UserConstant
             self::TEAM_STORE_OP,
             self::TEAM_NORMAL,
             self::TEAM_DEVICE,
-            self::TEAM_GROWTH,
             self::TEAM_NORMAL_BOOK,
+            self::TEAM_CONTENTS_DB,
             self::TEAM_GENRE,
             self::TEAM_GENRE_BL,
             self::TEAM_GENRE_FANTASY,
