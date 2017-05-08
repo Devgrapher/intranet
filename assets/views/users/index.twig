@@ -333,7 +333,7 @@
           $('.js_user').setContextMenu({
             menuSelector: "#userMenu",
             menuSelected: function (invokedOn, selectedMenu) {
-              var userId = invokedOn.attr('data-userid');
+              var userId = invokedOn.closest('.js_user').attr('data-userid');
               var menuIndex = selectedMenu.attr('tabindex');
 
               if (menuIndex == '0') {
