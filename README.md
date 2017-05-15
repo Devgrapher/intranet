@@ -38,6 +38,9 @@
 
 
 ## 배포 방법
+
+### 소스 배포
+
 1. deployer설치 (https://deployer.org/)
 
 2. deployer파일은 프로젝트 docs/deployer에 존재한다.
@@ -66,4 +69,21 @@ dev:
 
 ```
 dep deploy [deploy할 stage]
+```
+
+### DB 배포
+
+1. phinx설치 (https://phinx.org/)
+
+2. phinx 설정파일 생성. testing및 production에 적절한 계정 정보를 세팅한다.
+
+```
+cp phinx.sample.yml phinx.yml
+$EDITOR phinx.yml
+```
+
+3. 라이브 배포
+
+```
+vendor/bin/phinx migrate -e production
 ```
