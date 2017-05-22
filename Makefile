@@ -1,13 +1,13 @@
 .PHONY: all composer build config deploy deploy-db
 
-all: build composer config
+all: build composer
 
 composer:
 	composer install
 
 build:
 	cd assets && npm install && npm run build
-	cd assets && bower install
+	cd assets && bower install --allow-root
 
 config:
 	cp docs/config.sample.env .env
