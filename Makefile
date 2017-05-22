@@ -1,6 +1,6 @@
 .PHONY: all composer build config deploy rollback deploy-db rollback-db
 
-all: build composer config
+all: build composer
 
 composer:
 	composer install --no-dev --optimize-autoloader
@@ -10,7 +10,7 @@ composer-dev:
 
 build:
 	cd assets && npm install && npm run build
-	cd assets && bower install
+	cd assets && bower install --allow-root
 
 config:
 	cp docs/config.sample.env .env

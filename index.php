@@ -5,9 +5,11 @@ use Intra\Service\Ridi;
 
 $autoloader = require_once __DIR__ . "/vendor/autoload.php";
 
-$dotenv = new Dotenv\Dotenv(__DIR__, '.env');
-$dotenv->load();
-$dotenv->required(['mysql_host', 'mysql_user', 'mysql_password', 'mysql_db']);
+if (is_readable(__DIR__ . '/.env')) {
+    $dotenv = new Dotenv\Dotenv(__DIR__, '.env');
+    $dotenv->load();
+    $dotenv->required(['mysql_host', 'mysql_user', 'mysql_password', 'mysql_db']);
+}
 
 date_default_timezone_set('Asia/Seoul');
 
