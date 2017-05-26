@@ -58,8 +58,8 @@ class UserPaymentMailService
      */
     private static function sendMailRaw($receivers, $title, $html)
     {
-        if ($_ENV['recipients.payment']) {
-            $receivers = array_merge($receivers, explode(',', $_ENV['recipients.payment']));
+        if ($_ENV['recipients_payment']) {
+            $receivers = array_merge($receivers, explode(',', $_ENV['recipients_payment']));
         }
 
         if ($_ENV['is_dev']) {

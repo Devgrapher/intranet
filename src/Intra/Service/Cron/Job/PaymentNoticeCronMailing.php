@@ -42,8 +42,8 @@ class PaymentNoticeCronMailing extends CronMailingInterface
     {
         $dto_template = new MailingDto();
         $dto_template->replyTo = [];
-        if ($_ENV['recipients.payment_admin']) {
-            $dto_template->replyTo = explode(',', $_ENV['recipients.payment_admin']);
+        if ($_ENV['recipients_payment_admin']) {
+            $dto_template->replyTo = explode(',', $_ENV['recipients_payment_admin']);
         }
         $dto_template->title = '[확인요청] ' . date('Y-m-d') . ' 결제 예정 내역';
         $dto_template->body_header = date('Y-m-d') . "에 아래 결제가 완료될 예정입니다.<br/>
@@ -63,8 +63,8 @@ class PaymentNoticeCronMailing extends CronMailingInterface
             $dto->CC = [
                 UserJoinService::getEmailByUidSafe($first_payment->manager_uid)
             ];
-            if ($_ENV['recipients.payment_admin']) {
-                $dto->CC = array_merge($dto->CC, explode(',', $_ENV['recipients.payment_admin']));
+            if ($_ENV['recipients_payment_admin']) {
+                $dto->CC = array_merge($dto->CC, explode(',', $_ENV['recipients_payment_admin']));
             }
             $dto->dicts = [];
             foreach ($payments as $payment) {

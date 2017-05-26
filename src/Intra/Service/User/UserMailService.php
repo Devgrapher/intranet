@@ -19,7 +19,7 @@ class UserMailService
         $html = $app['twig']->render('users/template/join_mail.twig', ['item' => $user_dto]);
 
         $receivers = [];
-        $user_manager_all = $_ENV['user_policy.user_manager'];
+        $user_manager_all = $_ENV['user_policy_user_manager'];
         if ($user_manager_all) {
             $receivers = array_merge($receivers, explode(',', $user_manager_all));
         }
