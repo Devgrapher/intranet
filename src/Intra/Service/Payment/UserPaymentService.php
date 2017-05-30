@@ -182,7 +182,7 @@ class UserPaymentService
             }
         } else {
             $payment_dicts = $this->payment_model->getPayments($uid, $month);
-            if ($self->team == Organization::getTeamName(Organization::ALIAS_HUMAN_MANAGE)
+            if ($self->team == Organization::getTeamName(Organization::ALIAS_CO)
                 && !UserPolicy::isTa($self)) {
                 $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_ASSETS, UserPaymentConst::CATEGORY_WELFARE_EXPENSE]]);
                 $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);

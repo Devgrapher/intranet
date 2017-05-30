@@ -186,10 +186,10 @@ class SupportPolicy
         ];
 
         $is_human_manage_team = function (UserDto $user_dto) {
-            return $user_dto->team == Organization::getTeamName(Organization::ALIAS_HUMAN_MANAGE);
+            return $user_dto->team == Organization::getTeamName(Organization::ALIAS_CO);
         };
         $is_cash_flow_team = function (UserDto $user_dto) {
-            return $user_dto->team == Organization::getTeamName(Organization::ALIAS_CASH_FLOW);
+            return $user_dto->team == Organization::getTeamName(Organization::ALIAS_FINANCE);
         };
         $get_team_by_uid = function (SupportDto $support_dto) {
             $uid = $support_dto->dict['uid'];

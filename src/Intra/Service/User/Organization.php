@@ -7,8 +7,8 @@ class Organization
     const MAX_TEAM_ID = 50;
 
     // Predefined aliases
-    const ALIAS_HUMAN_MANAGE = 'human_manage';
-    const ALIAS_CASH_FLOW = 'cash_flow';
+    const ALIAS_CO = 'co';
+    const ALIAS_FINANCE = 'finance';
     const ALIAS_DEVICE = 'device';
     const ALIAS_CCPQ = 'ccpq';
 
