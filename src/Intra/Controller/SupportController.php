@@ -11,7 +11,7 @@ use Intra\Service\Support\SupportFileService;
 use Intra\Service\Support\SupportPolicy;
 use Intra\Service\Support\SupportRowService;
 use Intra\Service\Support\SupportViewDtoFactory;
-use Intra\Service\User\UserConstant;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
@@ -75,7 +75,7 @@ class SupportController implements ControllerProviderInterface
         $columns = SupportPolicy::getColumnFieldsTestUserDto($target, $self);
         $title = SupportPolicy::getColumnTitle($target);
         $const = [
-            'teams' => UserConstant::$jeditable_key_list['team'],
+            'teams' => Organization::readTeamNames(),
             'managers' => UserDtoFactory::createManagerUserDtos(),
             'users' => UserDtoFactory::createAvailableUserDtos(),
         ];
@@ -127,7 +127,7 @@ class SupportController implements ControllerProviderInterface
         foreach ($columns as $column) {
             if ($key == $column->key) {
                 if ($column instanceof SupportColumnTeam) {
-                    foreach (UserConstant::$jeditable_key_list['team'] as $team) {
+                    foreach (Organization::readTeamNames() as $team) {
                         $return[$team] = $team;
                     }
                 } elseif ($column instanceof SupportColumnWorker) {

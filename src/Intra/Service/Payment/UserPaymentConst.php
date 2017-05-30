@@ -1,7 +1,7 @@
 <?php
 namespace Intra\Service\Payment;
 
-use Intra\Service\User\UserConstant;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
@@ -36,7 +36,7 @@ class UserPaymentConst
     public static function get()
     {
         $const = [];
-        $const['team'] = UserConstant::$jeditable_key_list['team'];
+        $const['team'] = Organization::readTeamNames();
         $const['product'] = ['리디북스', '리디스토리', '페이퍼샵', '공통'];
         $const['tax'] = ['Y', 'N/A'];
         $const['is_account_book_registered'] = ['N', 'Y'];

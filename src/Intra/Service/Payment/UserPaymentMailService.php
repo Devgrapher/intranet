@@ -1,7 +1,7 @@
 <?php
 namespace Intra\Service\Payment;
 
-use Intra\Service\User\UserConstant;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserJoinService;
 use Mailgun\Mailgun;
 
@@ -37,12 +37,12 @@ class UserPaymentMailService
             UserJoinService::getEmailByUidSafe($dto->manager_uid)
         ];
         if ($dto->category == UserPaymentConst::CATEGORY_USER_BOOK_CANCELMENT) {
-            $receivers_append = UserJoinService::getEmailsByTeam(UserConstant::TEAM_CCPQ);
+            $receivers_append = UserJoinService::getEmailsByTeam(Organization::TEAM_CCPQ);
             $receivers = array_merge($receivers, $receivers_append);
             $receivers = array_unique($receivers);
         }
         if ($dto->category == UserPaymentConst::CATEGORY_USER_DEVICE_CANCELMENT) {
-            $receivers_append = UserJoinService::getEmailsByTeam(UserConstant::TEAM_DEVICE);
+            $receivers_append = UserJoinService::getEmailsByTeam(Organization::TEAM_DEVICE);
             $receivers = array_merge($receivers, $receivers_append);
             $receivers = array_unique($receivers);
         }

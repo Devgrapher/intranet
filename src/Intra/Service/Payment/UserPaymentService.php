@@ -3,7 +3,7 @@ namespace Intra\Service\Payment;
 
 use Intra\Core\MsgException;
 use Intra\Model\PaymentModel;
-use Intra\Service\User\UserConstant;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserPolicy;
@@ -182,17 +182,18 @@ class UserPaymentService
             }
         } else {
             $payment_dicts = $this->payment_model->getPayments($uid, $month);
-            if ($self->team == UserConstant::TEAM_HUMAN_MANAGE && !UserPolicy::isTa($self)) {
+            if ($self->team == Organization::getTeamName(Organization::ALIAS_HUMAN_MANAGE)
+                && !UserPolicy::isTa($self)) {
                 $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_ASSETS, UserPaymentConst::CATEGORY_WELFARE_EXPENSE]]);
                 $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);
                 $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);
             }
-            if ($self->team == UserConstant::TEAM_CCPQ) {
+            if ($self->team == Organization::getTeamName(Organization::ALIAS_CCPQ)) {
                 $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_USER_BOOK_CANCELMENT]]);
                 $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);
                 $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);
             }
-            if ($self->team == UserConstant::TEAM_DEVICE) {
+            if ($self->team == Organization::getTeamName(Organization::ALIAS_DEVICE)) {
                 $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_USER_DEVICE_CANCELMENT]]);
                 $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);
                 $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);

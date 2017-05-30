@@ -23,7 +23,7 @@ use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
 use Intra\Service\Support\Column\SupportColumnWorker;
-use Intra\Service\User\UserConstant;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserJoinService;
 
@@ -186,10 +186,10 @@ class SupportPolicy
         ];
 
         $is_human_manage_team = function (UserDto $user_dto) {
-            return $user_dto->team == UserConstant::TEAM_HUMAN_MANAGE;
+            return $user_dto->team == Organization::getTeamName(Organization::ALIAS_HUMAN_MANAGE);
         };
         $is_cash_flow_team = function (UserDto $user_dto) {
-            return $user_dto->team == UserConstant::TEAM_CASH_FLOW;
+            return $user_dto->team == Organization::getTeamName(Organization::ALIAS_CASH_FLOW);
         };
         $get_team_by_uid = function (SupportDto $support_dto) {
             $uid = $support_dto->dict['uid'];
