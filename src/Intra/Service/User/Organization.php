@@ -16,8 +16,8 @@ class Organization
     {
         $team_names = [];
         foreach (range(1, self::MAX_TEAM_ID) as $id) {
-            if (!empty($_ENV["teams.$id"])) {
-                array_push($team_names, $_ENV["teams.$id"]);
+            if (!empty($_ENV["teams_$id"])) {
+                array_push($team_names, $_ENV["teams_$id"]);
             }
         }
         return $team_names;
@@ -25,9 +25,9 @@ class Organization
 
     public static function getTeamName($alias)
     {
-        if (!empty($_ENV["teams.aliases.$alias"])) {
-            $id = $_ENV["teams.aliases.$alias"];
-            return $_ENV["teams.$id"];
+        if (!empty($_ENV["teams_aliases_$alias"])) {
+            $id = $_ENV["teams_aliases_$alias"];
+            return $_ENV["teams_$id"];
         } else {
             return "";
         }
