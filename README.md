@@ -71,6 +71,37 @@ dev:
 dep deploy [deploy할 stage]
 ```
 
+### .env 파일 배포
+
+위에서 설치한 deployer를 이용해 배포한다
+
+1. 서버의 `.env` 파일 다운로드
+
+```
+cd docs/deployer
+dep env:pull [stage파일 이름]
+```
+
+2. 아래 이름으로 다운로드된 파일의 내용을 수정한다
+
+```
+.env_[서버이름]
+```
+
+3. 서버에 배포
+
+```
+dep env:push [stage파일 이름]
+```
+
+업로드된 내용 복구
+
+```
+dep env:rollback [stage파일 이름]
+```
+
+복구는 마지막으로 백업된 1개의 내용에 대해서만 가능하다.
+
 ### DB 배포
 
 1. phinx설치 (https://phinx.org/)
