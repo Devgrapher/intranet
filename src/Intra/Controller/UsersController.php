@@ -3,7 +3,7 @@
 namespace Intra\Controller;
 
 use Intra\Model\HolidayModel;
-use Intra\Service\User\UserConstant;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserDtoHandler;
@@ -206,8 +206,8 @@ class UsersController implements ControllerProviderInterface
     public function jeditableKey(Request $request, Application $app)
     {
         $key = $request->get('key');
-        if (UserConstant::$jeditable_key_list[$key]) {
-            $values = UserConstant::$jeditable_key_list[$key];
+        if ($key == 'team') {
+            $values = Organization::readTeamNames();
             $dicts = [];
             foreach ($values as $value) {
                 $dicts[$value] = $value;
