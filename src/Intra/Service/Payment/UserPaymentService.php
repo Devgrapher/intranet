@@ -204,7 +204,7 @@ class UserPaymentService
 
         if (UserPolicy::isPaymentAdmin($self)) {
             $return['isSuperAdmin'] = 1;
-            $return['editable'] |= 1;
+            $return['editable'] = 1;
         }
 
         $return['allCurrentUsers'] = UserDtoFactory::createAvailableUserDtos();
