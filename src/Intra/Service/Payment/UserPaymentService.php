@@ -182,19 +182,20 @@ class UserPaymentService
             }
         } else {
             $payment_dicts = $this->payment_model->getPayments($uid, $month);
+            $extra_access = [];
             if ($self->team == Organization::getTeamName(Organization::ALIAS_CO)
                 && !UserPolicy::isTa($self)) {
-                $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_ASSETS, UserPaymentConst::CATEGORY_WELFARE_EXPENSE]]);
-                $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);
-                $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);
+                $extra_access = [UserPaymentConst::CATEGORY_ASSETS, UserPaymentConst::CATEGORY_WELFARE_EXPENSE];
+            } elseif ($self->team == Organization::getTeamName(Organization::ALIAS_CCPQ)) {
+                $extra_access = [UserPaymentConst::CATEGORY_USER_BOOK_CANCELMENT];
+            } elseif ($self->team == Organization::getTeamName(Organization::ALIAS_DEVICE)) {
+                $extra_access = [UserPaymentConst::CATEGORY_USER_DEVICE_CANCELMENT];
+            } elseif ($self->team == Organization::getTeamName(Organization::ALIAS_STORY_OP)) {
+                $extra_access = [UserPaymentConst::CATEGORY_USER_STORY_CANCELMENT];
             }
-            if ($self->team == Organization::getTeamName(Organization::ALIAS_CCPQ)) {
-                $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_USER_BOOK_CANCELMENT]]);
-                $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);
-                $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);
-            }
-            if ($self->team == Organization::getTeamName(Organization::ALIAS_DEVICE)) {
-                $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => [UserPaymentConst::CATEGORY_USER_DEVICE_CANCELMENT]]);
+
+            if ($extra_access) {
+                $payment_dicts_append = $this->payment_model->getPaymentsWithOption($month, ['category' => $extra_access]);
                 $payment_dicts = array_merge($payment_dicts, $payment_dicts_append);
                 $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);
             }
@@ -202,10 +203,8 @@ class UserPaymentService
         $payments = PaymentDtoFactory::importFromDatabaseDicts($payment_dicts);
         $return['payments'] = $payments;
 
-        if (UserPolicy::isPaymentAdmin($self)) {
-            $return['isSuperAdmin'] = 1;
-            $return['editable'] |= 1;
-        }
+        $return['isSuperAdmin'] = UserPolicy::isPaymentAdmin($self) ? 1 : 0;
+        $return['editable'] = $return['isSuperAdmin'];
 
         $return['allCurrentUsers'] = UserDtoFactory::createAvailableUserDtos();
         $return['managerUsers'] = UserDtoFactory::createManagerUserDtos();

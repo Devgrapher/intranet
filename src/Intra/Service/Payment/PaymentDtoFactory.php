@@ -41,12 +41,18 @@ class PaymentDtoFactory
         $return = [];
         foreach ($payment_dicts as $payment_dict) {
             $paymentid = $payment_dict['paymentid'];
+            $payment_accept_dtos = [];
+            $payment_files_dtos = [];
 
-            $payment_accepts_dicts = $payment_accept_dicts_by_payment_id[$paymentid];
-            $payment_accept_dtos = PaymentAcceptDtoFactory::createFromDatabaseDicts($payment_accepts_dicts);
+            if (isset($payment_accept_dicts_by_payment_id[$paymentid])) {
+                $payment_accepts_dicts = $payment_accept_dicts_by_payment_id[$paymentid];
+                $payment_accept_dtos = PaymentAcceptDtoFactory::createFromDatabaseDicts($payment_accepts_dicts);
+            }
 
-            $payment_files_dicts = $payment_files_dicts_by_payment_id[$paymentid];
-            $payment_files_dtos = FileUploadDtoFactory::createFromDatabaseDicts($payment_files_dicts);
+            if (isset($payment_files_dicts_by_payment_id[$paymentid])) {
+                $payment_files_dicts = $payment_files_dicts_by_payment_id[$paymentid];
+                $payment_files_dtos = FileUploadDtoFactory::createFromDatabaseDicts($payment_files_dicts);
+            }
 
             $return[] = PaymentDto::importFromDatabase($payment_dict, $payment_accept_dtos, $payment_files_dtos);
         }
