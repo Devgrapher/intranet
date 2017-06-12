@@ -3,17 +3,18 @@
 
   require(["jquery", "jquery.jeditable", "jquery-ui", "bootstrap"], function ($) {
 
-    var dateFormat = "yy-mm-dd";
+    var dateFormat = 'yy-mm-dd';
     var start_date = $( 'input[name="date"]' ).datepicker();
-    start_date.datepicker( "option", "dateFormat", dateFormat );
+    start_date.datepicker('option', 'dateFormat', dateFormat);
+    start_date.datepicker('setDate', new Date());
 
     $('select.js_superedit')
       .val({{ target_user_dto.uid }})
-      .trigger("change")
+      .trigger('change')
       .change(function () {
         location.href = '/holidays/uid/' + $(this).val();
       });
-    $("input").on("keypress", function (e) {
+    $('input').on('keypress', function (e) {
       return e.which != 13;
     });
     $('[data-toggle="popover"]').popover({'trigger': 'focus'});
@@ -46,9 +47,9 @@
       if (notPermittedPastMonthTypes.indexOf(type_str) !== -1) {
         var firstDayOfMonth = new Date();
         firstDayOfMonth.setDate(1);
-        start_date.datepicker( "option", "minDate", firstDayOfMonth);
+        start_date.datepicker('option', 'minDate', firstDayOfMonth);
       } else {
-        start_date.datepicker( "option", "minDate", null );
+        start_date.datepicker('option', 'minDate', null);
       }
     }).trigger('change');
 
@@ -63,7 +64,7 @@
       if (isSelectInput) {
         args['type'] = 'select';
         args['loadurl'] = '/holidays/const/key/' + key;
-        args['submit'] = "OK";
+        args['submit'] = 'OK';
       }
 
       $(this).editable('/holidays/uid/' + uid, args);
