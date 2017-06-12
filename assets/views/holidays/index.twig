@@ -83,12 +83,12 @@
             <td>{{ index + 1 }}</td>
             <td>{{ holiday.request_date [:10] }}</td>
             <td>{{ holiday.uid_name }}</td>
-            <td data-key="manager_uid_name">{{ holiday.manager_uid_name }}</td>
+            <td>{{ holiday.manager_uid_name }}</td>
             <td data-key="type">{{ holiday.type }}</td>
             <td>{{ holiday.date }}</td>
             <td></td>
             <td data-key="cost">{{ holiday.cost }}</td>
-            <td data-key="keeper_uid_name">{{ holiday.keeper_uid_name }}</td>
+            <td>{{ holiday.keeper_uid_name }}</td>
             <td data-key="phone_emergency">{{ holiday.phone_emergency }}</td>
             <td data-key="memo">{{ holiday.memo }}</td>
             <td>
@@ -116,7 +116,7 @@
             <label>
               <select name='manager_uid' js_data_chosen>
                 {% for managerUser in managerUsers %}
-                  <option value='{{ managerUser.uid }}' {% if (holidays|last).manager_uid_name == managerUser.name %}selected{% endif %}>{{ managerUser.name }}</option>
+                  <option value='{{ managerUser.uid }}' {% if holidays|length > 0 and (holidays|last).manager_uid_name == managerUser.name %}selected{% endif %}>{{ managerUser.name }}</option>
                 {% endfor %}
               </select>
             </label>
@@ -158,7 +158,7 @@
             <label>
               <select name='keeper_uid' js_data_chosen>
                 {% for availableUser in availableUsers %}
-                  <option value='{{ availableUser.uid }}' {% if (holidays|last).keeper_uid_name == availableUser.name %}selected{% endif %}>{{ availableUser.name }}</option>
+                  <option value='{{ availableUser.uid }}' {% if holidays|length > 0 and (holidays|last).keeper_uid_name == availableUser.name %}selected{% endif %}>{{ availableUser.name }}</option>
                 {% endfor %}
               </select>
             </label>
