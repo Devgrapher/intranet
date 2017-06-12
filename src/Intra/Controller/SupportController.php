@@ -6,6 +6,7 @@ use Intra\Core\MsgException;
 use Intra\Service\Support\Column\SupportColumnCategory;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnWorker;
+use Intra\Service\Support\SupportDinnerService;
 use Intra\Service\Support\SupportDto;
 use Intra\Service\Support\SupportFileService;
 use Intra\Service\Support\SupportPolicy;
@@ -32,6 +33,8 @@ class SupportController implements ControllerProviderInterface
          * @var ControllerCollection
          */
         $controller_collection = $app['controllers_factory'];
+
+        $controller_collection->get('/dinner', [$this, 'orderDinner']);
 
         $controller_collection->get('/{target}', [$this, 'index']);
         $controller_collection->get('/{target}/{type}', [$this, 'index']);
@@ -308,5 +311,10 @@ class SupportController implements ControllerProviderInterface
             $csv_row[] = $csv_row['제작(예정)일'];
         }
         return $csv_row;
+    }
+
+    public function orderDinner()
+    {
+        return SupportDinnerService::getResponse();
     }
 }

@@ -88,7 +88,7 @@ task('deploy:set_slack', function () {
     set('slack', $slack);
 });
 
-desc('Build web-font');
+desc('Build web-front');
 task('deploy:build', 'make -C {{release_path}} build');
 
 desc('Deploy your project');

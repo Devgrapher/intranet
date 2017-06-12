@@ -14,6 +14,8 @@ use Twig_Environment;
 
 class MenuService
 {
+    const RIDI_GUIDE_URL = 'https://ridicorp.sharepoint.com/intranet/SitePages/%EB%A6%AC%EB%94%94%20%EC%83%9D%ED%99%9C%20%EA%B0%80%EC%9D%B4%EB%93%9C.aspx';
+
     public static function addToSilexTwig(Application $app)
     {
         list($left_menu_list, $right_menu_list) = self::getMenuLinkList();
@@ -37,12 +39,7 @@ class MenuService
             if ($_ENV['domain'] == 'ridi.com') {
                 $left_menu_list = [
                     new Link('직원찾기', '/users/', new PublicAuth()),
-                    new Link(
-                        '리디 생활 가이드',
-                        'https://ridicorp.sharepoint.com/intranet/SitePages/%EB%A6%AC%EB%94%94%20%EC%83%9D%ED%99%9C%20%EA%B0%80%EC%9D%B4%EB%93%9C.aspx',
-                        null,
-                        '_blank'
-                    ),
+                    new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptTaAuth(), '_blank'),
                     new Link('회의실', '/rooms/', new PublicAuth()),
                     new Link('포커스룸', '/focus/'),
@@ -57,7 +54,7 @@ class MenuService
                         new Link('명함 신청', '/support/' . SupportPolicy::TYPE_BUSINESS_CARD),
                         new Link('구매 요청', '/support/' . SupportPolicy::TYPE_DEPOT, (new ExceptTaAuth())->accept(['hr.ta'])),
                         new Link('상품권 구매', '/support/' . SupportPolicy::TYPE_GIFT_CARD_PURCHASE),
-                        new Link('저녁 주문', 'https://ridi.typeform.com/to/VpjZON', new PublicAuth(), '_blank'),
+                        new Link('저녁 주문', '/support/dinner', new PublicAuth(), '_blank'),
                     ],
                     new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3'])),
                     new Link('비용정산', '/receipts/', new PublicAuth()),
@@ -75,7 +72,7 @@ class MenuService
                         new Link('명함 신청', '/support/' . SupportPolicy::TYPE_BUSINESS_CARD),
                         new Link('구매 요청', '/support/' . SupportPolicy::TYPE_DEPOT, (new ExceptTaAuth())->accept(['hr.ta'])),
                         new Link('상품권 구매', '/support/' . SupportPolicy::TYPE_GIFT_CARD_PURCHASE),
-                        new Link('저녁 주문', 'https://ridi.typeform.com/to/VpjZON', new PublicAuth(), '_blank'),
+                        new Link('저녁 주문', '/support/dinner', new PublicAuth(), '_blank'),
                     ],
                     new Link('비용정산', '/receipts/', new PublicAuth()),
                     new Link('회의실', '/rooms/', new PublicAuth()),
