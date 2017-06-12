@@ -119,7 +119,7 @@ class UserModel extends BaseModel
         $where = [];
         $where['on_date'] = sqlLesserEqual(sqlNow());
         $where['off_date'] = sqlGreaterEqual(sqlNow());
-        $where['team'] = $team;
+        $where['team'] = sqlLike($team);
 
         return self::getDb()->sqlDicts('select * from users where ? order by name', sqlWhere($where));
     }
