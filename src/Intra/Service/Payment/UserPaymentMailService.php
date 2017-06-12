@@ -37,12 +37,14 @@ class UserPaymentMailService
             UserJoinService::getEmailByUidSafe($dto->manager_uid)
         ];
         if ($dto->category == UserPaymentConst::CATEGORY_USER_BOOK_CANCELMENT) {
-            $receivers_append = UserJoinService::getEmailsByTeam(Organization::ALIAS_CCPQ);
+            $team = Organization::getTeamName(Organization::ALIAS_CCPQ);
+            $receivers_append = UserJoinService::getEmailsByTeam($team);
             $receivers = array_merge($receivers, $receivers_append);
             $receivers = array_unique($receivers);
         }
         if ($dto->category == UserPaymentConst::CATEGORY_USER_DEVICE_CANCELMENT) {
-            $receivers_append = UserJoinService::getEmailsByTeam(Organization::ALIAS_DEVICE);
+            $team = Organization::getTeamName(Organization::ALIAS_DEVICE);
+            $receivers_append = UserJoinService::getEmailsByTeam($team);
             $receivers = array_merge($receivers, $receivers_append);
             $receivers = array_unique($receivers);
         }
