@@ -84,8 +84,19 @@ task('deploy:set_slack', function () {
     } else {
         $slack = [];
     }
-    $slack['message'] = "`{{host}}`에  *{{stage}}* 배포가 완료되었습니다. (서버 이름: $server_name)\n*Release path*: _{{release_path}}_\n*Latest commit*: _" . $git_last_log . "_";
+    $message = "`{{host}}`에  *{{stage}}* 배포가 완료되었습니다. (서버 이름: $server_name)\n*Release path*: _{{release_path}}_\n*Latest commit*: _" . $git_last_log . "_";
+    if (has('comment')) {
+        $message = $message . "\n*Comment*: " . get('comment');
+    }
+    $slack['message'] = $message;
     set('slack', $slack);
+});
+
+task('deploy:comment', function () {
+    $comment = ask("변경사항 코멘트:");
+    if (!empty($comment)) {
+        set('comment', $comment);
+    }
 });
 
 desc('Build web-front');
@@ -94,6 +105,7 @@ task('deploy:build', 'make -C {{release_path}} build');
 desc('Deploy your project');
 task('deploy', [
     'deploy:prepare',
+    'deploy:comment',
     'deploy:lock',
     'deploy:release',
     'deploy:update_code',
