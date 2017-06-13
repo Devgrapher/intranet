@@ -1,11 +1,12 @@
 <?php
 namespace Deployer;
 
-require 'recipe/common.php';
-require 'vendor/deployer/recipes/slack.php';
+require_once 'recipe/common.php';
+require_once 'vendor/deployer/recipes/slack.php';
+
+
 
 // Configuration
-
 set('shared_files', [
     '.env'
 ]);
@@ -19,14 +20,16 @@ set('default_stage', 'dev');
 
 $comment='';
 
-// Servers
 
+
+// Servers
 foreach (glob(__DIR__ . '/stage/*.yml') as $filename) {
-    serverList($filename);
+    inventory($filename);
 }
 
-// Tasks
 
+
+// Tasks
 task('test', function () {
     writeln("deploy_path: " . get('deploy_path'));
     writeln("current_path: " . get("current_path"));

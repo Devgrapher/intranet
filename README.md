@@ -39,15 +39,9 @@
 
 ## 배포 방법
 
-### 소스 배포
+### 소스 배포 (deployer)
 
-1. deployer설치 (https://deployer.org/)
-
-2. deployer파일은 프로젝트 docs/deployer에 존재한다.
-docs/deployer/stage에 deploy할 서버 설정 yml파일을 넣는다.
-한 파일에 여러 서버를 적거나, 여러 파일로 나누어 적어도 된다.
-(https://deployer.org/docs/servers 참고)
-
+1. docs/deployer/stage에 deployer 서버 설정 파일 작성
 ```
 prod:
     repository: https://github.com/ridibooks/intranet
@@ -65,10 +59,10 @@ dev:
     deploy_path: <deploy위치>
 ```
 
-3. deploy.php가 있는 경로상에서 아래 명령을 실행한다.
+2. 아래 명령을 실행
 
 ```
-dep deploy [deploy할 stage]
+make deploy stage=<deploy할 stage>
 ```
 
 ### .env 파일 배포
@@ -102,19 +96,17 @@ dep env:rollback [stage파일 이름]
 
 복구는 마지막으로 백업된 1개의 내용에 대해서만 가능하다.
 
-### DB 배포
+### DB 배포 (phinx)
 
-1. phinx설치 (https://phinx.org/)
-
-2. phinx 설정파일 생성. testing및 production에 적절한 계정 정보를 세팅한다.
+1. phinx 설정파일 생성. testing및 production에 적절한 계정 정보를 세팅한다.
 
 ```
 cp phinx.sample.yml phinx.yml
 $EDITOR phinx.yml
 ```
 
-3. 라이브 배포
+2. 아래 명령 실행
 
 ```
-vendor/bin/phinx migrate -e production
+make deploy-db env=<deploy할 environment>
 ```
