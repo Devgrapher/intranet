@@ -114,18 +114,18 @@
           <td>{{ target_user_dto.name }}</td>
           <td>
             <label>
-              <select name='manager_uid' js_cookie_save js_data_chosen>
+              <select name='manager_uid' js_data_chosen>
                 {% for managerUser in managerUsers %}
-                  <option value='{{ managerUser.uid }}'>{{ managerUser.name }}</option>
+                  <option value='{{ managerUser.uid }}' {% if holidays|length > 0 and (holidays|last).manager_uid_name == managerUser.name %}selected{% endif %}>{{ managerUser.name }}</option>
                 {% endfor %}
               </select>
             </label>
           </td>
           <td>
             <label>
-              <select name='type' id="js_type" js_cookie_save>
+              <select name='type' id="js_type">
                 {% for type in holidayConst.types %}
-                  <option value='{{ type }}'>{{ type }}</option>
+                  <option value='{{ type }}' {% if type == '연차' %} selected {% endif %}>{{ type }}</option>
                 {% endfor %}
               </select>
             </label>
@@ -156,20 +156,24 @@
           </td>
           <td>
             <label>
-              <select name='keeper_uid' js_cookie_save js_data_chosen>
+              <select name='keeper_uid' js_data_chosen>
                 {% for availableUser in availableUsers %}
-                  <option value='{{ availableUser.uid }}'>{{ availableUser.name }}</option>
+                  <option value='{{ availableUser.uid }}' {% if holidays|length > 0 and (holidays|last).keeper_uid_name == availableUser.name %}selected{% endif %}>{{ availableUser.name }}</option>
                 {% endfor %}
               </select>
             </label>
           </td>
-          <td><input type='text' name='phone_emergency' style='width:100px' placeholder='010-0000-0000'
-                     js_cookie_save/></td>
+          <td>
+            <input
+                type='text' name='phone_emergency' style='width:100px' placeholder='010-0000-0000'
+                {% if holidays|length > 0 %} value={{ (holidays|last).phone_emergency }} {% endif %}
+            />
+          </td>
           <td>
             <label>
               <select name='memo' id="js_memo">
                 {% for type in holidayConst.memos %}
-                  <option value='{{ type }}'>{{ type }}</option>
+                  <option value='{{ type }}' {% if type == '개인용무' %} selected {% endif %}>{{ type }}</option>
                 {% endfor %}
               </select>
             </label>
