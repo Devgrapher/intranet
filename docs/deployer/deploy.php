@@ -17,6 +17,8 @@ set('writable_dirs', []);
 set('use_relative_symlink', false);
 set('default_stage', 'dev');
 
+$comment='';
+
 // Servers
 
 foreach (glob(__DIR__ . '/stage/*.yml') as $filename) {
@@ -85,8 +87,9 @@ task('deploy:set_slack', function () {
         $slack = [];
     }
     $message = "`{{host}}`에  *{{stage}}* 배포가 완료되었습니다. (서버 이름: $server_name)\n*Release path*: _{{release_path}}_\n*Latest commit*: _" . $git_last_log . "_";
-    if (has('comment')) {
-        $message = $message . "\n*Comment*: " . get('comment');
+    global $comment;
+    if (!empty($comment)) {
+        $message = $message . "\n*Comment*: " . $comment;
     }
     $slack['message'] = $message;
     set('slack', $slack);
@@ -94,20 +97,17 @@ task('deploy:set_slack', function () {
 
 task('deploy:comment', function () {
     if (isQuiet()) return;
-
+    global $comment;
     $comment = ask("변경사항 코멘트:");
-    if (!empty($comment)) {
-        set('comment', $comment);
-    }
-});
+})->once();
 
 desc('Build web-front');
 task('deploy:build', 'make -C {{release_path}} build');
 
 desc('Deploy your project');
 task('deploy', [
-    'deploy:prepare',
     'deploy:comment',
+    'deploy:prepare',
     'deploy:lock',
     'deploy:release',
     'deploy:update_code',
