@@ -93,6 +93,8 @@ task('deploy:set_slack', function () {
 });
 
 task('deploy:comment', function () {
+    if (isQuiet()) return;
+
     $comment = ask("변경사항 코멘트:");
     if (!empty($comment)) {
         set('comment', $comment);
