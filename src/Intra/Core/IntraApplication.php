@@ -29,6 +29,11 @@ class IntraApplication extends Application
     {
         parent::__construct($values);
 
+        if (!empty($_ENV['trusted_proxies'])) {
+            $trusted_proxies = explode($_ENV['trusted_proxies'], '|');
+            Request::setTrustedProxies($trusted_proxies);
+        }
+
         $this->register(new TwigServiceProvider(), [
             'twig.path' => $values['twig.path']
         ]);

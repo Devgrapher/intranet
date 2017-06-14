@@ -8,6 +8,7 @@ use Intra\Service\Ridi;
 use Intra\Service\User\UserSession;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Writer_HTML;
+use Symfony\Component\HttpFoundation\Request;
 
 class Weekly
 {
@@ -20,9 +21,9 @@ class Weekly
         $writer->save($outfile);
     }
 
-    public function assertPermission()
+    public function assertPermission(Request $req)
     {
-        if (!Ridi::isRidiIP() || UserSession::isTa()) {
+        if (!Ridi::isRidiIP($req->getClientIp()) || UserSession::isTa()) {
             throw new Exception('권한이 없습니다.');
         }
 

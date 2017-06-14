@@ -23,7 +23,7 @@ class OrganizationController implements ControllerProviderInterface
 
     public function getChart(Request $request, Application $app)
     {
-        if (!Ridi::isRidiIP() || UserSession::isTa()) {
+        if (!Ridi::isRidiIP($request->getClientIp()) || UserSession::isTa()) {
             return Response::create('권한이 없습니다.', Response::HTTP_UNAUTHORIZED);
         }
 

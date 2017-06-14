@@ -12,13 +12,9 @@ class Ridi
      */
     private static $raven_client;
 
-    public static function isRidiIP()
+    public static function isRidiIP($client_ip)
     {
-        if (preg_match($_ENV['ridi_ips'], $_SERVER['REMOTE_ADDR'])) {
-            return true;
-        }
-
-        return false;
+        return preg_match($_ENV['ridi_ips'], $client_ip);
     }
 
     public static function enableSentry()

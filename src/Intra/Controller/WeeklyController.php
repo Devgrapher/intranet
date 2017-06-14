@@ -24,7 +24,7 @@ class WeeklyController implements ControllerProviderInterface
         $weekly = new Weekly();
 
         try {
-            $weekly->assertPermission();
+            $weekly->assertPermission($request);
             return $app['twig']->render('weekly/index.twig', ['html' => $weekly->getContents()]);
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
