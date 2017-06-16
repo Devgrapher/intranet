@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Intra\Service\Support;
 
 use Intra\Model\DinnerOrderModel;
+use Intra\Service\Util\Util;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,12 +18,12 @@ class SupportDinnerService
     public static function getResponse(): Response
     {
         if (!self::isDinnerOrderTime()) {
-            return new Response(self::printAlert(self::MSG_DINNER_ORDER_NOT_AVAILABLE));
+            return new Response(Util::printAlert(self::MSG_DINNER_ORDER_NOT_AVAILABLE));
         }
 
         $dinner_order = DinnerOrderModel::find(date('w'));
         if (!$dinner_order) {
-            return new Response(self::printAlert(self::MSG_DINNER_ORDER_NOT_EXISTS));
+            return new Response(Util::printAlert(self::MSG_DINNER_ORDER_NOT_EXISTS));
         }
 
         return new RedirectResponse($dinner_order['order_url']);
@@ -34,17 +35,5 @@ class SupportDinnerService
         $dinner_start = new \DateTime(self::TIME_DINNER_ORDER_START);
         $dinner_end = new \DateTime(self::TIME_DINNER_ORDER_END);
         return $dinner_start <= $now && $now <= $dinner_end;
-    }
-
-    private static function printAlert(string $msg): string
-    {
-        $html = '<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"></head><body><script>';
-        if (!empty($msg)) {
-            $html .= "alert(" . json_encode($msg) . ");";
-        }
-        $html .= "close();";
-        $html .= "</script></body></html>\n";
-
-        return $html;
     }
 }

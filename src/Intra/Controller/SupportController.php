@@ -16,17 +16,21 @@ use Intra\Service\User\Organization;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
+use Intra\Service\Util\Util;
 use Ridibooks\Platform\Common\CsvResponse;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SupportController implements ControllerProviderInterface
 {
+    const MSG_URL_NOT_EXISTS = '연결된 링크가 없습니다. 관리자에게 문의해주세요.';
+
     public function connect(Application $app)
     {
         /**
@@ -35,6 +39,8 @@ class SupportController implements ControllerProviderInterface
         $controller_collection = $app['controllers_factory'];
 
         $controller_collection->get('/dinner', [$this, 'orderDinner']);
+        $controller_collection->get('/delivery', [$this, 'orderDelivery']);
+        $controller_collection->get('/present', [$this, 'orderGuestPresent']);
 
         $controller_collection->get('/{target}', [$this, 'index']);
         $controller_collection->get('/{target}/{type}', [$this, 'index']);
@@ -316,5 +322,21 @@ class SupportController implements ControllerProviderInterface
     public function orderDinner()
     {
         return SupportDinnerService::getResponse();
+    }
+
+    public function orderDelivery()
+    {
+        if (empty($_ENV['delivery_order_url'])) {
+            return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
+        }
+        return new RedirectResponse($_ENV['delivery_order_url']);
+    }
+
+    public function orderGuestPresent()
+    {
+        if (empty($_ENV['guest_present_order_url'])) {
+            return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
+        }
+        return new RedirectResponse($_ENV['guest_present_order_url']);
     }
 }
