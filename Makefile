@@ -13,7 +13,14 @@ config:
 	cp docs/config.sample.env .env
 
 deploy:
-	vendor/bin/dep --file=docs/deployer/deploy.php deploy $$stage -p
+ifndef stage
+	$(eval stage := $(shell read -p "Enter deployer stage: " REPLY; echo $$REPLY))
+endif
+	vendor/bin/dep --file=docs/deployer/deploy.php deploy $(stage) -p
+
 
 deploy-db:
-	vendor/bin/phinx migrate -e $$env
+ifndef env
+	$(eval env := $(shell read -p "Enter phinx environment: " REPLY; echo $$REPLY))
+endif
+	vendor/bin/phinx migrate -e $(env)
