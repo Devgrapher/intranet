@@ -18,7 +18,6 @@ ifndef stage
 endif
 	vendor/bin/dep --file=docs/deployer/deploy.php deploy $(stage) -p
 
-
 deploy-db:
 ifndef env
 	$(eval env := $(shell read -p "Enter phinx environment: " REPLY; echo $$REPLY))
