@@ -62,7 +62,7 @@ dev:
 2. 아래 명령을 실행
 
 ```
-make deploy stage=<deploy할 stage>
+make deploy
 ```
 
 ### .env 파일 배포
@@ -108,5 +108,5 @@ $EDITOR phinx.yml
 2. 아래 명령 실행
 
 ```
-make deploy-db env=<deploy할 environment>
+make deploy-db
 ```
