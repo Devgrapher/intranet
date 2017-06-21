@@ -7,7 +7,6 @@
 /assets/bower_components
 /upload/*
 /vendor
-composer.lock
 ConfigDevelop.php
 ConfigRelease.php
 *.env
