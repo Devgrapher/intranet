@@ -10,11 +10,11 @@ interface RepositoryInterface
 
     public function create(array $data);
 
-    public function update(array $data, $id);
+    public function update(array $data, $condition);
 
     public function delete($id);
 
-    public function find($id, $columns = ['*']);
+    public function find($condition, $columns = ['*']);
 
     public function count();
 }

@@ -3,6 +3,7 @@
 namespace Intra\Controller;
 
 use Intra\Model\PaymentModel;
+use Intra\Service\File\PaymentFileService;
 use Intra\Service\Payment\PaymentDto;
 use Intra\Service\Payment\PaymentDtoFactory;
 use Intra\Service\Payment\UserPaymentConst;
@@ -17,6 +18,7 @@ use Intra\Service\User\UserSession;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -172,7 +174,7 @@ class PaymentsController implements ControllerProviderInterface
         }
     }
 
-    public function getConst(Request $request, Application $app)
+    public function getConst(Request $request)
     {
         $key = $request->get('key');
         return JsonResponse::create(UserPaymentConst::getConstValueByKey($key), Response::HTTP_OK);
@@ -185,7 +187,7 @@ class PaymentsController implements ControllerProviderInterface
         return $payment_service->getCsvRespose($payments);
     }
 
-    public function download(Request $request, Application $app)
+    public function download(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", Response::HTTP_UNAUTHORIZED);
@@ -198,7 +200,7 @@ class PaymentsController implements ControllerProviderInterface
         return $this->getCsvResponse($user_payment_model->getAllPayments($month));
     }
 
-    public function downloadActiveCategory(Request $request, Application $app)
+    public function downloadActiveCategory(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", Response::HTTP_UNAUTHORIZED);
@@ -209,7 +211,7 @@ class PaymentsController implements ControllerProviderInterface
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveCategory($category));
     }
 
-    public function downloadActiveMonth(Request $request, Application $app)
+    public function downloadActiveMonth(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", Response::HTTP_UNAUTHORIZED);
@@ -222,7 +224,7 @@ class PaymentsController implements ControllerProviderInterface
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveMonth($month));
     }
 
-    public function downloadActiveRequestDate(Request $request, Application $app)
+    public function downloadActiveRequestDate(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", Response::HTTP_UNAUTHORIZED);
@@ -237,7 +239,7 @@ class PaymentsController implements ControllerProviderInterface
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveRequestDate($requestDateStart, $requestDateEnd));
     }
 
-    public function downloadActiveTeam(Request $request, Application $app)
+    public function downloadActiveTeam(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", Response::HTTP_UNAUTHORIZED);
@@ -248,20 +250,17 @@ class PaymentsController implements ControllerProviderInterface
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveTeam($team));
     }
 
-    public function downloadRemain(Request $request, Application $app)
+    public function downloadRemain()
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", 403);
         }
 
-        $month = $request->get('month');
-        $month = UserPaymentRequestFilter::parseMonth($month);
-        $month = date('Y/m/1', strtotime($month));
         $user_payment_model = new PaymentModel();
         return $this->getCsvResponse($user_payment_model->queuedPayments());
     }
 
-    public function downloadTaxDate(Request $request, Application $app)
+    public function downloadTaxDate(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             return new Response("권한이 없습니다", 403);
@@ -274,18 +273,15 @@ class PaymentsController implements ControllerProviderInterface
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByTaxDate($month));
     }
 
-    public function downloadFile(Request $request, Application $app)
+    public function downloadFile(Request $request)
     {
         $fileid = $request->get('fileid');
-        if (!intval($fileid)) {
-            return Response::create("invalid fileid", Response::HTTP_BAD_REQUEST);
-        }
-
-        $self = UserSession::getSelfDto();
-        return UserPaymentService::downloadFile($self, $fileid);
+        $file_service = new PaymentFileService();
+        $file_info = $file_service->getFileWithId($fileid);
+        return new RedirectResponse($file_info['location']);
     }
 
-    public function deleteFile(Request $request, Application $app)
+    public function deleteFile(Request $request)
     {
         try {
             $fileid = $request->get('fileid');
@@ -294,6 +290,7 @@ class PaymentsController implements ControllerProviderInterface
             }
 
             $self = UserSession::getSelfDto();
+
             if (UserPaymentService::deleteFile($self, $fileid)) {
                 return Response::create('success', Response::HTTP_OK);
             } else {
@@ -304,7 +301,7 @@ class PaymentsController implements ControllerProviderInterface
         }
     }
 
-    public function uploadFile(Request $request, Application $app)
+    public function uploadFile(Request $request)
     {
         try {
             $paymentid = $request->get('paymentid');
@@ -323,7 +320,7 @@ class PaymentsController implements ControllerProviderInterface
         }
     }
 
-    public function getPayDateByStr(Request $request, Application $app)
+    public function getPayDateByStr(Request $request)
     {
         $pay_type_str = $request->get('pay_type_str');
         $paydate = UserPaymentRequestFilter::getPayDateByStr($pay_type_str);
