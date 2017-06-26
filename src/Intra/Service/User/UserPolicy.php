@@ -9,6 +9,10 @@ class UserPolicy
 {
     private static function checkUserPolicy($email, $target)
     {
+        if (empty($_ENV["user_policy.$target"])) {
+            return false;
+        }
+
         $policy_list = $_ENV["user_policy.$target"];
         if ($policy_list && in_array($email, explode(',', $policy_list))) {
             return true;

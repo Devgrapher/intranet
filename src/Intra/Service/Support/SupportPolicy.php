@@ -201,9 +201,9 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                'CO팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                'CO팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                'CO팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '귀속부서' => new SupportColumnTeam('team'),
                 '구분' => new SupportColumnCategory('category', ['사내 전산 H/W 장애문의', 'SW 설치문의', '기타 장애문의']),
                 '상세내용' => new SupportColumnText('detail', '', '상세내용'),
@@ -218,9 +218,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                'CO팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                'CO팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                'CO팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
                     'receiver_area',
                     [
@@ -266,9 +266,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                'CO팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                'CO팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                'CO팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
                     'receiver_area',
                     [
@@ -300,9 +300,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                '인사팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                'CO팀 구매' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                'CO팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                'CO팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '사용자(직원)' => new SupportColumnWorker('receiver_uid'),
                 '분류' => new SupportColumnCategory(
                     'category',
@@ -317,11 +317,12 @@ class SupportPolicy
                 ),
                 '품목/수량' => new SupportColumnText('detail'),
                 '구매사유' => new SupportColumnText('reason'),
-                '수령희망일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '파일첨부' => new SupportColumnFile('file'),
-                '보유여부' => (new SupportColumnCategory('is_exist', ['재고', '신규구매']))->isVisibleIf($is_human_manage_team),
-                '라벨번호' => (new SupportColumnText('label'))->isVisibleIf($is_human_manage_team),
+                '구매예정일' => new SupportColumnDate('request_date', date('Y/m/d', strtotime('+7 day')), true),
+                'CO팀 의견' => (new SupportColumnText('comment', '', '의견'))
+                    ->readonly()
+                    ->addEditableUserPred($is_human_manage_team),
             ],
             self::TYPE_GIFT_CARD_PURCHASE => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
@@ -336,9 +337,9 @@ class SupportPolicy
                     ->readonly()
                     ->addEditableUserPred($is_cash_flow_team)
                     ->defaultValue('N'),
-                '인사팀 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
-                '인사팀 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
-                '인사팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
+                'CO팀 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
+                'CO팀 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
+                'CO팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
                 '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000']))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
                 '신청금액' => (new SupportColumnSum('req_sum', 'giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500]))

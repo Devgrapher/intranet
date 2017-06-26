@@ -427,11 +427,11 @@
             </label>
           {% elseif column.class_name == 'SupportColumnText' %}
             <input style='width:150px'
-                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}"
+                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnTextDetail' %}
             <input style='width:150px'
-                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}"
+                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnDate' %}
             <input style='width:150px'
