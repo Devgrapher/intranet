@@ -2,12 +2,13 @@
 
 namespace Intra\Controller;
 
-use Intra\Model\LightFileModel;
+use DateTime;
+use Intra\Service\File\OrganizationFileService;
 use Intra\Service\Ridi;
 use Intra\Service\User\UserSession;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -21,36 +22,34 @@ class OrganizationController implements ControllerProviderInterface
         return $controller_collection;
     }
 
-    public function getChart(Request $request, Application $app)
+    public function getChart(Request $request)
     {
         if (!Ridi::isRidiIP($request->getClientIp()) || UserSession::isTa()) {
             return Response::create('권한이 없습니다.', Response::HTTP_UNAUTHORIZED);
         }
 
-        $filebag = new LightFileModel('organization');
+        $now = new DateTime();
+        $file_service = new OrganizationFileService();
+        $file_info = $file_service->getLastFile($now->format('W'));
 
-        return BinaryFileResponse::create($filebag->getLocation('recent'));
+        return new RedirectResponse($file_info['location']);
     }
 
     public function upload(Request $request, Application $app)
     {
         if ($request->files && $request->files->get("fileToUpload")) {
             $uploadedFile = $request->files->get("fileToUpload");
-            $infile = $uploadedFile->getRealPath();
 
-            if ($infile) {
-                $filebag = new LightFileModel('organization');
-                $outfile = $filebag->getLocation(date("Y-m-d") . ".pdf");
-
-                if (!move_uploaded_file($infile, $outfile)) {
-                    return Response::create('파일을 업로드 하지 못했습니다.', Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
-
-                $recent = $filebag->getLocation('recent');
-
-                unlink($recent);
-                symlink($outfile, $recent);
-            }
+            $self = UserSession::getSelfDto();
+            $now = new DateTime();
+            $file_service = new OrganizationFileService();
+            $file_service->uploadFile(
+                $self->uid,
+                $now->format('W'),
+                $uploadedFile->getClientOriginalName(),
+                file_get_contents($uploadedFile->getRealPath()),
+                'application/pdf'
+            );
         }
 
         return $app['twig']->render('organization/upload.twig', []);

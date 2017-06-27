@@ -3,12 +3,12 @@
 namespace Intra\Controller;
 
 use Intra\Core\MsgException;
+use Intra\Service\File\SupportFileService;
 use Intra\Service\Support\Column\SupportColumnCategory;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\Support\SupportDinnerService;
 use Intra\Service\Support\SupportDto;
-use Intra\Service\Support\SupportFileService;
 use Intra\Service\Support\SupportPolicy;
 use Intra\Service\Support\SupportRowService;
 use Intra\Service\Support\SupportViewDtoFactory;
@@ -54,7 +54,7 @@ class SupportController implements ControllerProviderInterface
         $controller_collection->get('/{target}/const/{key}', [$this, 'constVaules']);
 
         $controller_collection->post('/{target}/file_upload', [$this, 'fileUpload']);
-        $controller_collection->get('/{target}/file/{fileid}', [$this, 'fileDownload']);
+        $controller_collection->get('/{target}/{column}/file/{fileid}', [$this, 'fileDownload']);
         $controller_collection->delete('/{target}/file/{fileid}', [$this, 'fileDelete']);
 
         $controller_collection->get('/{target}/download/{type}/{yearmonth}', [$this, 'excelDownload']);
@@ -126,7 +126,7 @@ class SupportController implements ControllerProviderInterface
         return SupportRowService::add($target_user_dto, $support_dto, $app);
     }
 
-    public function constVaules(Request $request, Application $app)
+    public function constVaules(Request $request)
     {
         $target = $request->get('target');
         $key = $request->get('key');
@@ -175,7 +175,7 @@ class SupportController implements ControllerProviderInterface
         return SupportRowService::edit($target, $id, $key, $value, $app);
     }
 
-    public function excelDownload(Request $request, Application $app)
+    public function excelDownload(Request $request)
     {
         $self = UserSession::getSelfDto();
 
@@ -216,55 +216,60 @@ class SupportController implements ControllerProviderInterface
         return CsvResponse::create($csvs);
     }
 
-    public function fileDelete(Request $request, Application $app)
+    public function fileDelete(Request $request)
     {
-        $self = UserSession::getSelfDto();
-
         $target = $request->get('target');
+        $column_key = $request->get('column_key');
         $fileid = $request->get('fileid');
         if (!intval($fileid)) {
             throw new MsgException("invalid fileid");
         }
 
-        if (SupportFileService::deleteFile($self, $target, $fileid)) {
-            return Response::create('1');
+        $file_service = new SupportFileService($target, $column_key);
+        if ($file_service->deleteFile($fileid) === 1) {
+            return Response::create('success');
         } else {
             return Response::create('삭제실패했습니다.');
         }
     }
 
-    public function fileDownload(Request $request, Application $app)
-    {
-        $self = UserSession::getSelfDto();
-
-        $target = $request->get('target');
-        $fileid = $request->get('fileid');
-        if (!intval($fileid)) {
-            throw new MsgException("invalid fileid");
-        }
-
-        return SupportFileService::downloadFile($self, $target, $fileid);
-    }
-
-    public function fileUpload(Request $request, Application $app)
+    public function fileUpload(Request $request)
     {
         $target = $request->get('target');
-        $id = $request->get('id');
         $column_key = $request->get('column_key');
-
+        $id = $request->get('id');
         if (!intval($id)) {
             throw new MsgException("invalid paymentid");
         }
-        /**
-         * @var UploadedFile
-         */
+
+        /* @var UploadedFile $file */
         $file = $request->files->get('files')[0];
 
-        if (SupportFileService::addFiles($target, $id, $column_key, $file)) {
-            return JsonResponse::create('success');
-        } else {
+        $self = UserSession::getSelfDto();
+        $file_service = new SupportFileService($target, $column_key);
+        $file = $file_service->uploadFile(
+            $self->uid,
+            $id,
+            $file->getClientOriginalName(),
+            file_get_contents($file->getRealPath())
+        );
+
+        if (!$file) {
             return JsonResponse::create('file upload failed', 500);
         }
+
+        return JsonResponse::create('success');
+    }
+
+    public function fileDownload(Request $request)
+    {
+        $target = $request->get('target');
+        $column_key = $request->get('column');
+        $id = $request->get('fileid');
+
+        $file_service = new SupportFileService($target, $column_key);
+        $file = $file_service->getFileWithId($id);
+        return RedirectResponse::create($file['location']);
     }
 
     private function excelPostworkHeader($csv_header, $target)

@@ -3,6 +3,7 @@ namespace Intra\Service\Payment;
 
 use Intra\Core\MsgException;
 use Intra\Model\PaymentModel;
+use Intra\Service\File\PaymentFileService;
 use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
@@ -38,8 +39,13 @@ class UserPaymentService
         $payment = PaymentDtoFactory::createFromDatabaseByPk($payment_id);
         self::assertAddFiles($payment, $self);
 
-        $file_upload_service = new FileUploadService('payment_files');
-        return $file_upload_service->upload($self->uid, $payment_id, $file);
+        $file_service = new PaymentFileService();
+        return $file_service->uploadFile(
+            $self->uid,
+            $payment_id,
+            $file->getClientOriginalName(),
+            file_get_contents($file->getRealPath())
+        );
     }
 
     /**
@@ -100,9 +106,14 @@ class UserPaymentService
         $payment_dto = PaymentDtoFactory::createFromDatabaseByPk($file_upload_dto->key);
         self::assertAccessFile($self, $file_upload_dto, $payment_dto);
         self::assertDeleteFile($self, $file_upload_dto, $payment_dto);
+        try {
+            $file_service = new PaymentFileService();
+            $file_service->deleteFile($fileid);
+        } catch (\Exception $e) {
+            return false;
+        }
 
-        $file_upload_service = new FileUploadService('payment_files');
-        return $file_upload_service->remove($file_upload_dto);
+        return true;
     }
 
     private static function assertDeleteFile($self, $file_upload_dto, $payment_dto)
