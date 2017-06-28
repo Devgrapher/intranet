@@ -106,7 +106,7 @@ class SupportDtoFilter
                 $support_dto->dict[$columns['제작(예정)일']->key] = date("Y-m-t");
             }
         } elseif ($support_dto->target == SupportPolicy::TYPE_DEPOT) {
-            $request_date = $support_dto->dict[$columns['수령희망일']->key];
+            $request_date = $support_dto->dict[$columns['구매예정일']->key];
             $request_datetime = date_create($request_date);
             if ($request_datetime === false) {
                 throw new MsgException('날짜입력을 다시 확인해주세요');
