@@ -63,7 +63,7 @@ class Press
     public function edit($id, $key, $value)
     {
         try {
-            $this->press->update([$key => $value], $id);
+            $this->press->update([$key => $value], ['id' => $id]);
             return $value;
         } catch (\Exception $e) {
             return '수정을 실패했습니다!';
@@ -73,7 +73,7 @@ class Press
     public function getAll()
     {
         try {
-            return $this->press->all();
+            return $this->press->all(['*'], 'date');
         } catch (\Exception $e) {
             return '데이터 불러오기를 실패했습니다!';
         }

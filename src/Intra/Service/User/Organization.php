@@ -2,6 +2,8 @@
 
 namespace Intra\Service\User;
 
+use Intra\Repository\TeamRepository;
+
 class Organization
 {
     const DEFAULT_MAX_TEAM_ID = 50;
@@ -15,23 +17,15 @@ class Organization
 
     public static function readTeamNames()
     {
-        $max_team_id = $_ENV["teams_max_team_id"] ?? self::DEFAULT_MAX_TEAM_ID;
-        $team_names = [];
-        foreach (range(1, $max_team_id) as $id) {
-            if (!empty($_ENV["teams_$id"])) {
-                array_push($team_names, $_ENV["teams_$id"]);
-            }
-        }
-        return $team_names;
+        $team_repo = new TeamRepository();
+        $names = $team_repo->all(['name'], 'id', 'asc')->pluck('name')->toArray();
+        return $names;
     }
 
     public static function getTeamName($alias)
     {
-        if (!empty($_ENV["teams_aliases_$alias"])) {
-            $id = $_ENV["teams_aliases_$alias"];
-            return $_ENV["teams_$id"];
-        } else {
-            return "";
-        }
+        $team_repo = new TeamRepository();
+        $team = $team_repo->first(['alias' => $alias])->toArray();
+        return $team['name'];
     }
 }
