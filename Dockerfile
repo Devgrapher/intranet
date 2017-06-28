@@ -1,6 +1,8 @@
 FROM php:7.1-apache
 MAINTAINER Kang Ki Tae <kt.kang@ridi.com>
 
+VOLUME ["/var/www/html"]
+
 RUN docker-php-source extract \
 
 # install common
@@ -38,6 +40,7 @@ RUN a2enmod rewrite \
 
 EXPOSE 80 443
 
-COPY . /var/www/html
+ADD . /var/www/html
+
 WORKDIR /var/www/html
 RUN make
