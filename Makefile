@@ -2,12 +2,12 @@
 
 all: build composer
 
-composer:
-	composer install
-
 build:
 	cd assets && npm install && npm run build
 	cd assets && bower install --allow-root
+
+composer:
+	composer install --no-dev --optimize-autoloader
 
 config:
 	cp docs/config.sample.env .env
