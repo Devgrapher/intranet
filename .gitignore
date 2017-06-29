@@ -7,8 +7,8 @@
 /assets/bower_components
 /upload/*
 /vendor
+.env
+.php_cs.cache
 ConfigDevelop.php
 ConfigRelease.php
-*.env
 phinx.yml
-.php_cs.cache
