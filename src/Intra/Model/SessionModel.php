@@ -13,7 +13,7 @@ class SessionModel
         if (!isset($_SESSION)) {
             $session_lifetime = 60 * 60 * 24 * 14; //14일
             ini_set("session.gc_maxlifetime", $session_lifetime);
-            session_set_cookie_params($session_lifetime, '/', $_SERVER['SERVER_NAME']);
+            session_set_cookie_params($session_lifetime, '/');
             session_start();
             // http://php.net/session_set_cookie_params
             // As PHP's Session Control does not handle session lifetimes correctly when using session_set_cookie_params(),
