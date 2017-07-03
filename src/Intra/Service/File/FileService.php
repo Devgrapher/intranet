@@ -61,7 +61,7 @@ abstract class FileService
     {
         $pathinfo = explode('/', $path);
         $group = str_replace('.', '/', $pathinfo[0]);
-        return 'https://s3.amazonaws.com/' . $_ENV['aws_s3_bucket'] . '/' . $group . '/' . $pathinfo[1];
+        return 'https://' . $_ENV['aws_s3_bucket'] . '.s3.amazonaws.com/' . $group . '/' . $pathinfo[1];
     }
 
     private function makeS3Prefix(string $group): string
