@@ -3,8 +3,8 @@
 namespace Intra\Service\Support;
 
 use Intra\Core\MsgException;
+use Intra\Service\File\SupportFileService as SupportS3FileService;
 use Intra\Service\Payment\FileUploadDtoFactory;
-use Intra\Service\Payment\FileUploadService;
 use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAccept;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
@@ -13,6 +13,7 @@ use Intra\Service\User\UserDto;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SupportFileService
 {
@@ -31,8 +32,13 @@ class SupportFileService
         $support_dto = SupportDtoFactory::get($target, $id);
         self::assertAccessFiles($support_dto, $self, $target, $columns);
 
-        $file_upload_service = new FileUploadService('support.' . $target . '.' . $column_key);
-        return $file_upload_service->upload($self->uid, $id, $file);
+        $file_service = new SupportS3FileService($target, $column_key);
+        return $file_service->uploadFile(
+            $self->uid,
+            $id,
+            $file->getClientOriginalName(),
+            file_get_contents($file->getRealPath())
+        );
     }
 
     /**
@@ -72,27 +78,29 @@ class SupportFileService
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public static function downloadFile($self, $target, $fileid)
+    public static function downloadFile($self, $target, $column_key, $file_id)
     {
-        $file_upload_dto = FileUploadDtoFactory::importDtoByPk($fileid);
+        $file_upload_dto = FileUploadDtoFactory::importDtoByPk($file_id);
         $support_dto = SupportDtoFactory::get($target, $file_upload_dto->key);
         $columns = SupportPolicy::getColumnFields($target);
         self::assertAccessFiles($support_dto, $self, $target, $columns);
 
-        $file_upload_service = new FileUploadService($file_upload_dto->group);
-        return $file_upload_service->getBinaryFileResponseWithDto($file_upload_dto);
+        $file_service = new SupportS3FileService($target, $column_key);
+        $file_location = $file_service->getFileLocation($file_id);
+        return RedirectResponse::create($file_location);
     }
 
-    public static function deleteFile($self, $target, $fileid)
+    public static function deleteFile($self, $target, $column_key, $file_id)
     {
-        $file_upload_dto = FileUploadDtoFactory::importDtoByPk($fileid);
+        $file_upload_dto = FileUploadDtoFactory::importDtoByPk($file_id);
         $support_dto = SupportDtoFactory::get($target, $file_upload_dto->key);
         $columns = SupportPolicy::getColumnFields($target);
         self::assertAccessFiles($support_dto, $self, $target, $columns);
         self::assertDeleteFile($support_dto, $self, $target, $columns);
 
-        $file_upload_service = new FileUploadService('payment_files');
-        return $file_upload_service->remove($file_upload_dto);
+        $file_service = new SupportS3FileService($target, $column_key);
+        $deleted_num = $file_service->deleteFile($file_id);
+        return $deleted_num === 1;
     }
 
     private static function assertDeleteFile($support_dto, $self, $target, $columns)
@@ -105,7 +113,11 @@ class SupportFileService
             if ($column instanceof SupportColumnAccept ||
                 $column instanceof SupportColumnComplete
             ) {
-                $is_accepted = $support_dto->columns[$column->key];
+                if (!isset($support_dto->columns)) {
+                    $is_accepted = false;
+                } else {
+                    $is_accepted = $support_dto->columns[$column->key];
+                }
                 if (!$is_accepted) {
                     $is_not_done = true;
                 }

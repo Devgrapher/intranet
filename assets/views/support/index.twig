@@ -334,10 +334,11 @@
                       {% for file in support_view_dto.files[key] %}
                         <div style="clear: both;padding-right: 5px;">
                           <button attrajax
-                                  data-aa-url='/support/{{ target }}/file/{{ file.id }}'
+                                  data-aa-url='/support/{{ target }}/file/{{ file.id }}?column_key={{ column.key }}'
                                   data-aa-method='DELETE'
                                   data-aa-confirm='{{ file.original_filename }} 파일을 정말 삭제하시겠습니까?'
                                   data-aa-datatype="text"
+                                  data-aa-success-if-result-is="success"
                                   data-aa-onsuccess-msg="삭제되었습니다"
                                   data-aa-onsuccess="refresh"
                                   data-aa-onfail-alert="true"
@@ -345,7 +346,7 @@
                                   style="margin:3px;"
                           >
                           </button>
-                          <a href="/support/{{ target }}/file/{{ file.id }}" title="{{ file.reg_date }}">
+                          <a href="/support/{{ target }}/{{ column.key }}/file/{{ file.id }}" title="{{ file.reg_date }}">
                             {{ file.original_filename }}
                           </a>
                         </div>

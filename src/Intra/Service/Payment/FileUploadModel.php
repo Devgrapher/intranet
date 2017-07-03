@@ -22,13 +22,13 @@ class FileUploadModel extends BaseModel
 
     public static function getDictsByGroupAndKeys($group, $keys)
     {
-        $where = ['group' => $group, 'key' => $keys, 'is_delete' => 0];
+        $where = ['group' => $group, 'key' => $keys, 'del_date' => null];
         return self::getDb()->sqlDicts('select * from files where ?', sqlWhere($where));
     }
 
     public static function getDictByPk($id)
     {
-        $where = ['id' => $id, 'is_delete' => 0];
+        $where = ['id' => $id, 'del_date' => null];
         return self::getDb()->sqlDict('select * from files where ?', sqlWhere($where));
     }
 

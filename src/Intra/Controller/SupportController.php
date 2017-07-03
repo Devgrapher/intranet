@@ -54,7 +54,7 @@ class SupportController implements ControllerProviderInterface
         $controller_collection->get('/{target}/const/{key}', [$this, 'constVaules']);
 
         $controller_collection->post('/{target}/file_upload', [$this, 'fileUpload']);
-        $controller_collection->get('/{target}/file/{fileid}', [$this, 'fileDownload']);
+        $controller_collection->get('/{target}/{column}/file/{fileid}', [$this, 'fileDownload']);
         $controller_collection->delete('/{target}/file/{fileid}', [$this, 'fileDelete']);
 
         $controller_collection->get('/{target}/download/{type}/{yearmonth}', [$this, 'excelDownload']);
@@ -126,7 +126,7 @@ class SupportController implements ControllerProviderInterface
         return SupportRowService::add($target_user_dto, $support_dto, $app);
     }
 
-    public function constVaules(Request $request, Application $app)
+    public function constVaules(Request $request)
     {
         $target = $request->get('target');
         $key = $request->get('key');
@@ -175,7 +175,7 @@ class SupportController implements ControllerProviderInterface
         return SupportRowService::edit($target, $id, $key, $value, $app);
     }
 
-    public function excelDownload(Request $request, Application $app)
+    public function excelDownload(Request $request)
     {
         $self = UserSession::getSelfDto();
 
@@ -216,48 +216,33 @@ class SupportController implements ControllerProviderInterface
         return CsvResponse::create($csvs);
     }
 
-    public function fileDelete(Request $request, Application $app)
+    public function fileDelete(Request $request)
     {
         $self = UserSession::getSelfDto();
-
         $target = $request->get('target');
-        $fileid = $request->get('fileid');
-        if (!intval($fileid)) {
-            throw new MsgException("invalid fileid");
+        $column_key = $request->get('column_key');
+        $file_id = $request->get('fileid');
+        if (!intval($file_id)) {
+            throw new MsgException("invalid file_id");
         }
 
-        if (SupportFileService::deleteFile($self, $target, $fileid)) {
-            return Response::create('1');
+        if (SupportFileService::deleteFile($self, $target, $column_key, $file_id)) {
+            return Response::create('success');
         } else {
             return Response::create('삭제실패했습니다.');
         }
     }
 
-    public function fileDownload(Request $request, Application $app)
-    {
-        $self = UserSession::getSelfDto();
-
-        $target = $request->get('target');
-        $fileid = $request->get('fileid');
-        if (!intval($fileid)) {
-            throw new MsgException("invalid fileid");
-        }
-
-        return SupportFileService::downloadFile($self, $target, $fileid);
-    }
-
-    public function fileUpload(Request $request, Application $app)
+    public function fileUpload(Request $request)
     {
         $target = $request->get('target');
-        $id = $request->get('id');
         $column_key = $request->get('column_key');
-
+        $id = $request->get('id');
         if (!intval($id)) {
             throw new MsgException("invalid paymentid");
         }
-        /**
-         * @var UploadedFile
-         */
+
+        /* @var UploadedFile $file */
         $file = $request->files->get('files')[0];
 
         if (SupportFileService::addFiles($target, $id, $column_key, $file)) {
@@ -265,6 +250,16 @@ class SupportController implements ControllerProviderInterface
         } else {
             return JsonResponse::create('file upload failed', 500);
         }
+    }
+
+    public function fileDownload(Request $request)
+    {
+        $self = UserSession::getSelfDto();
+        $target = $request->get('target');
+        $column_key = $request->get('column');
+        $file_id = $request->get('fileid');
+
+        return SupportFileService::downloadFile($self, $target, $column_key, $file_id);
     }
 
     private function excelPostworkHeader($csv_header, $target)

@@ -2,17 +2,19 @@
 
 namespace Intra\Service\Weekly;
 
+use DateTime;
 use Exception;
-use Intra\Model\LightFileModel;
+use Intra\Service\File\WeeklyScheduleFileService;
 use Intra\Service\Ridi;
 use Intra\Service\User\UserSession;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Writer_HTML;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class Weekly
 {
-    public static function dumpToHtml($infile, $outfile)
+    private static function dumpToHtml($infile, $outfile)
     {
         $reader = new PHPExcel_Reader_Excel2007();
         $excel = $reader->load($infile);
@@ -21,7 +23,24 @@ class Weekly
         $writer->save($outfile);
     }
 
-    public function assertPermission(Request $req)
+    public static function upload($uploaded_file)
+    {
+        $file_path = $uploaded_file->getRealPath();
+        self::dumpToHtml($file_path, $file_path);
+
+        $self = UserSession::getSelfDto();
+        $now = new DateTime();
+        $file_service = new WeeklyScheduleFileService();
+        $file_service->uploadFile(
+            $self->uid,
+            $now->format('W'),
+            pathinfo($file_path, PATHINFO_BASENAME),
+            file_get_contents($file_path),
+            'text/html'
+        );
+    }
+
+    public static function assertPermission(Request $req)
     {
         if (!Ridi::isRidiIP($req->getClientIp()) || UserSession::isTa()) {
             throw new Exception('권한이 없습니다.');
@@ -33,30 +52,15 @@ class Weekly
         }
     }
 
-    public function getContents()
+    public static function getContents()
     {
-        $filebag = new LightFileModel('weekly');
-
-        $filename = self::getFilename();
-        if (!$filebag->isExist($filename)) {
-            // 지난주 데이터라도
-            $fallback_date = mktime(0, 0, 0, date("m"), date("d") - 7, date("Y"));
-            $filename = self::getFilename($fallback_date);
-            if (!$filebag->isExist($filename)) {
-                throw new Exception('내용이 준비되지 않았습니다.');
-            }
+        $now = new DateTime();
+        $file_service = new WeeklyScheduleFileService();
+        $file_location = $file_service->getLastFileLocation($now->format('W'));
+        if (empty($file_location)) {
+            throw new Exception('내용이 준비되지 않았습니다.');
         }
-        $html = file_get_contents($filebag->getLocation($filename));
-        $html = str_replace(
-            '#FF0000',
-            '#888888',
-            $html
-        );
-        return $html;
-    }
 
-    public static function getFilename($timestamp = null)
-    {
-        return date("Ym", $timestamp) . '-' . floor((date('d', $timestamp) - 1) / 7 + 1) . ".html";
+        return new RedirectResponse($file_location);
     }
 }

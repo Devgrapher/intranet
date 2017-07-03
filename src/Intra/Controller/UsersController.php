@@ -3,6 +3,7 @@
 namespace Intra\Controller;
 
 use Intra\Model\HolidayModel;
+use Intra\Service\File\UserImageFileService;
 use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UsersController implements ControllerProviderInterface
 {
@@ -41,7 +43,7 @@ class UsersController implements ControllerProviderInterface
         return $controller_collection;
     }
 
-    public function index(Request $request, Application $app)
+    public function index(Application $app)
     {
         $self = UserSession::getSelfDto();
         $replaceable = UserPolicy::isFirstPageEditable($self);
@@ -120,13 +122,18 @@ class UsersController implements ControllerProviderInterface
         ]);
     }
 
-    public function myInfo(Request $request, Application $app)
+    public function myInfo(Application $app)
     {
         $dto = UserSession::getSelfDto();
+
+        $service = new UserImageFileService();
+        $image_location = $service->getLastFileLocation($dto->uid);
+        $dto->image = $image_location ? $image_location : 'http://placehold.it/300x300';
+
         return $app['twig']->render('users/myinfo.twig', ['info' => $dto]);
     }
 
-    public function edit(Request $request, Application $app)
+    public function edit(Request $request)
     {
         $uid = $request->get('uid');
         $key = $request->get('key');
@@ -162,8 +169,9 @@ class UsersController implements ControllerProviderInterface
         ]);
     }
 
-    public function uploadImage(Request $request, Application $app)
+    public function uploadImage(Request $request)
     {
+        /* @var UploadedFile $uploadedFile */
         $uploadedFile = $request->files->get('files')[0];
         $self = UserSession::getSelfDto();
         if (!$self) {
@@ -174,20 +182,25 @@ class UsersController implements ControllerProviderInterface
         if (!$uid) {
             return JsonResponse::create('no uid', JsonResponse::HTTP_BAD_REQUEST);
         }
-        $savedFile = UserEditService::saveImage($uid, $uploadedFile);
-        if ($savedFile != null) {
-            $thumbFile = UserEditService::createThumb($uid, 180, 180);
-            if ($thumbFile != null) {
-                if (UserEditService::updateInfo($uid, 'image', '/users/' . $uid . '/image') != null) {
-                    return JsonResponse::create('success');
-                }
-            }
+
+        try {
+            $service = new UserImageFileService();
+            $img_thumb = $service->createThumbFromFile($uploadedFile->getRealPath(), 180, 180);
+            $service->uploadFile(
+                $uid,
+                $uid,
+                $uploadedFile->getClientOriginalName(),
+                $img_thumb,
+                'image/jpg'
+            );
+        } catch (\Exception $e) {
+            return new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
 
-        return JsonResponse::create('file upload failed', JsonResponse::HTTP_SERVICE_UNAVAILABLE);
+        return JsonResponse::create('success');
     }
 
-    public function updateExtraAjax(Request $request, Application $app)
+    public function updateExtraAjax(Request $request)
     {
         $uid = $request->get('userid');
         $key = $request->get('key');
@@ -203,20 +216,21 @@ class UsersController implements ControllerProviderInterface
         return Response::create('success', Response::HTTP_OK);
     }
 
-    public function jeditableKey(Request $request, Application $app)
+    public function jeditableKey(Request $request)
     {
         $key = $request->get('key');
+        $dicts = [];
         if ($key == 'team') {
             $values = Organization::readTeamNames();
-            $dicts = [];
             foreach ($values as $value) {
                 $dicts[$value] = $value;
             }
-            return JsonResponse::create($dicts);
         }
+
+        return JsonResponse::create($dicts);
     }
 
-    public function join(Request $request, Application $app)
+    public function join(Application $app)
     {
         return $app['twig']->render('users/join.twig', []);
     }
@@ -236,7 +250,7 @@ class UsersController implements ControllerProviderInterface
         }
     }
 
-    public function image(Request $request, Application $app)
+    public function image(Request $request)
     {
         $uid = $request->get('uid');
         $file = UserEditService::getImageLocation($uid);
@@ -247,7 +261,7 @@ class UsersController implements ControllerProviderInterface
         }
     }
 
-    public function thumb(Request $request, Application $app)
+    public function thumb(Request $request)
     {
         $uid = $request->get('uid');
         $file = UserEditService::getThumbLocation($uid);

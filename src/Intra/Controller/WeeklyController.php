@@ -2,7 +2,6 @@
 
 namespace Intra\Controller;
 
-use Intra\Model\LightFileModel;
 use Intra\Service\Weekly\Weekly;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
@@ -19,13 +18,11 @@ class WeeklyController implements ControllerProviderInterface
         return $controller_collection;
     }
 
-    public function index(Request $request, Application $app)
+    public function index(Request $request)
     {
-        $weekly = new Weekly();
-
         try {
-            $weekly->assertPermission($request);
-            return $app['twig']->render('weekly/index.twig', ['html' => $weekly->getContents()]);
+            Weekly::assertPermission($request);
+            return Weekly::getContents();
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -33,15 +30,13 @@ class WeeklyController implements ControllerProviderInterface
 
     public function upload(Request $request, Application $app)
     {
-        $infile = $_FILES["fileToUpload"]["tmp_name"];
-        $filebag = new LightFileModel('weekly');
-        $filename = Weekly::getFilename();
-        $outfile = $filebag->getLocation($filename);
-
-        if ($infile) {
-            Weekly::dumpToHtml($infile, $outfile);
+        if ($request->files && $request->files->get("fileToUpload")) {
+            $uploadedFile = $request->files->get("fileToUpload");
+            if ($uploadedFile) {
+                Weekly::upload($uploadedFile);
+            }
         }
 
-        return $app['twig']->render('weekly/upload.twig', []);
+        return $app['twig']->render('weekly/upload.twig');
     }
 }
