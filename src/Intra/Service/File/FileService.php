@@ -18,7 +18,7 @@ abstract class FileService
             return '';
         }
 
-        return $this->convertPathToS3($file['location']);
+        return $this->convertPathToS3($file['location'], $file['original_filename']);
     }
 
     public function getFileLocation(int $file_id): string
@@ -31,7 +31,7 @@ abstract class FileService
             return '';
         }
 
-        return $this->convertPathToS3($file['location']);
+        return $this->convertPathToS3($file['location'], $file['original_filename']);
     }
 
     public function deleteFile(int $id)
@@ -57,11 +57,20 @@ abstract class FileService
         return $repo->createFile($uploader_uid, $group, $key, $file_name, $group . '/' . $s3_filename);
     }
 
-    private function convertPathToS3(string $path): string
+    public function convertPathToS3(string $path, string $filename = null): string
     {
         $pathinfo = explode('/', $path);
         $group = str_replace('.', '/', $pathinfo[0]);
-        return 'https://' . $_ENV['aws_s3_bucket'] . '.s3.amazonaws.com/' . $group . '/' . $pathinfo[1];
+
+        $s3_service = new Aws\S3();
+        $s3_bucket = $_ENV['aws_s3_bucket'];
+        $s3_bucket_key = $group . '/' . $pathinfo[1];
+        $options = [];
+        if (!empty($filename)) {
+            $options['ResponseContentDisposition'] = "filename={$filename}";
+        }
+
+        return $s3_service->getPreSignedUrl($s3_bucket, $s3_bucket_key, $options);
     }
 
     private function makeS3Prefix(string $group): string

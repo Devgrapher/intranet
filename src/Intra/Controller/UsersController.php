@@ -16,7 +16,6 @@ use Intra\Service\User\UserSession;
 use Intra\Service\User\UserType;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,8 +37,6 @@ class UsersController implements ControllerProviderInterface
         $controller_collection->get('/jeditable_key/{key}', [$this, 'jeditableKey']);
         $controller_collection->get('/join', [$this, 'join']);
         $controller_collection->post('/join', [$this, 'joinAjax']);
-        $controller_collection->get('/{uid}/image', [$this, 'image']);
-        $controller_collection->get('/{uid}/thumb', [$this, 'thumb']);
         return $controller_collection;
     }
 
@@ -52,12 +49,13 @@ class UsersController implements ControllerProviderInterface
         $today_holidays = $holiday_model->getsToday();
         $users = UserDtoFactory::createAvailableUserDtos();
 
+        $file_service = new UserImageFileService();
         $users_ret = [];
         foreach ($users as $user) {
             $user_arr = [];
             $user_arr['uid'] = $user->uid;
             $user_arr['name'] = $user->name;
-            $user_arr['image'] = $user->image;
+            $user_arr['image'] = $user->image ? $file_service->convertPathToS3($user->image) : $user->image;
             $user_arr['team'] = $user->team;
             $user_arr['email'] = $user->email;
             $user_arr['inner_call'] = $user->inner_call;
@@ -159,6 +157,10 @@ class UsersController implements ControllerProviderInterface
             $dto = UserDtoFactory::createByUid($uid);
         }
 
+        $service = new UserImageFileService();
+        $image_location = $service->getLastFileLocation($dto->uid);
+        $dto->image = $image_location ? $image_location : 'http://placehold.it/300x300';
+
         $users = UserDtoFactory::createAvailableUserDtos();
 
         return $app['twig']->render('users/image_upload.twig', [
@@ -185,14 +187,15 @@ class UsersController implements ControllerProviderInterface
 
         try {
             $service = new UserImageFileService();
-            $img_thumb = $service->createThumbFromFile($uploadedFile->getRealPath(), 180, 180);
-            $service->uploadFile(
+            $img_thumb = $service->createThumbFromFile($uploadedFile->getRealPath());
+            $new_file = $service->uploadFile(
                 $uid,
                 $uid,
-                $uploadedFile->getClientOriginalName(),
+                $uid . '.jpg',
                 $img_thumb,
                 'image/jpg'
             );
+            UserEditService::updateInfo($uid, 'image', $new_file['location']);
         } catch (\Exception $e) {
             return new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
@@ -247,28 +250,6 @@ class UsersController implements ControllerProviderInterface
             }
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_OK);
-        }
-    }
-
-    public function image(Request $request)
-    {
-        $uid = $request->get('uid');
-        $file = UserEditService::getImageLocation($uid);
-        if ($file !== null) {
-            return BinaryFileResponse::create($file, Response::HTTP_OK);
-        } else {
-            return Response::create('file not exist', Response::HTTP_NOT_FOUND);
-        }
-    }
-
-    public function thumb(Request $request)
-    {
-        $uid = $request->get('uid');
-        $file = UserEditService::getThumbLocation($uid);
-        if ($file !== null) {
-            return BinaryFileResponse::create($file, Response::HTTP_OK);
-        } else {
-            return Response::create('file not exist', Response::HTTP_NOT_FOUND);
         }
     }
 }

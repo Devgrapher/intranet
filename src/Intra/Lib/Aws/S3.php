@@ -46,4 +46,19 @@ class S3
             echo $e->getMessage() . "\n";
         }
     }
+
+    public function getPreSignedUrl(string $bucket, string $key, array $options = null, $expires = '+3 minutes'): string
+    {
+        $cmd_arg = [
+            'Bucket' => $bucket,
+            'Key' => $key,
+        ];
+        if (!empty($options)) {
+            $cmd_arg = array_merge($cmd_arg, $options);
+        }
+
+        $cmd = $this->client->getCommand('GetObject', $cmd_arg);
+        $request = $this->client->createPresignedRequest($cmd, $expires);
+        return (string)$request->getUri();
+    }
 }
