@@ -67,7 +67,7 @@ abstract class FileService
         $s3_bucket_key = $group . '/' . $pathinfo[1];
         $options = [];
         if (!empty($filename)) {
-            $options['ResponseContentDisposition'] = "filename={$filename}";
+            $options['ResponseContentDisposition'] = 'filename=' . urlencode($filename);
         }
 
         return $s3_service->getPreSignedUrl($s3_bucket, $s3_bucket_key, $options);
