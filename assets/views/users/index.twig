@@ -170,7 +170,7 @@
           userInfos[{{ user.uid }}] = {
             name: '{{ user.name }}',
             {% if user.image %}
-              image: '{{ user.image }}',
+              image: '{{ user.image|raw }}',
             {% endif %}
             team: '{{ user.team }}',
             email: '{{ user.email }}',
