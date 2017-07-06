@@ -73,7 +73,7 @@ class Press
     public function getAll()
     {
         try {
-            return $this->press->all(['*'], 'date');
+            return $this->press->all(['*'], 'date', 'desc');
         } catch (\Exception $e) {
             return '데이터 불러오기를 실패했습니다!';
         }
@@ -82,18 +82,14 @@ class Press
     public function getAllPress()
     {
         $press = $this->getAll();
-
         return $this->makeJsonResponse($press);
     }
 
     public function getPressByPage($page, $take)
     {
         $skip = ($page - 1) * $take;
-
-        $press = $this->press->paginate($take, $skip);
-
+        $press = $this->press->paginate($take, $skip, ['*'], 'date', 'desc');
         $count = $this->press->count();
-
         return $this->makeJsonResponse($press, $count);
     }
 

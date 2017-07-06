@@ -39,8 +39,8 @@ class PressController implements ControllerProviderInterface
 
     public function getList(Request $request, Application $app)
     {
-        $page = $request->get('page');
-        $items_per_page = $request->get('items_per_page');
+        $page = $request->get('page', 1);
+        $items_per_page = $request->get('items_per_page', 8);
         $user = UserSession::getSelfDto();
         $press_service = new Press($user);
         return $request->query->get('callback') . '(' . $press_service->getPressByPage($page, $items_per_page) . ')';
