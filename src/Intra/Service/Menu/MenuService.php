@@ -68,6 +68,7 @@ class MenuService
                 $left_menu_list = [
                     new Link('공지사항', '/posts/notice', new PublicAuth()),
                     new Link('휴가신청', '/holidays/', new PublicAuth()),
+                    new Link('휴가조정(관리자)', '/holidayadmin/', new OnlyHolidayEditable()),
                     '지원요청' => [
                         new Link('업무환경 불편사항 문의', '/support/' . SupportPolicy::TYPE_DEVICE, new PublicAuth()),
                         new Link('경조 지원', '/support/' . SupportPolicy::TYPE_FAMILY_EVENT),
