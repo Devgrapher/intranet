@@ -55,7 +55,7 @@ class UsersController implements ControllerProviderInterface
             $user_arr = [];
             $user_arr['uid'] = $user->uid;
             $user_arr['name'] = $user->name;
-            $user_arr['image'] = $user->image ? $file_service->convertPathToS3($user->image) : $user->image;
+            $user_arr['image'] = $user->image ? $file_service->convertPathToS3Url($user->image) : $user->image;
             $user_arr['team'] = $user->team;
             $user_arr['email'] = $user->email;
             $user_arr['inner_call'] = $user->inner_call;
