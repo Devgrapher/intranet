@@ -42,8 +42,8 @@ class PaymentRemainCronMailing extends CronMailingInterface
     {
         $dto_template = new MailingDto();
         $dto_template->replyTo = [];
-        if ($_ENV['recipients.payment_admin']) {
-            $dto_template->replyTo = explode(',', $_ENV['recipients.payment_admin']);
+        if ($_ENV['recipients_payment_admin']) {
+            $dto_template->replyTo = explode(',', $_ENV['recipients_payment_admin']);
         }
         $dto_template->title = '[승인요청] ' . date('Y-m-d') . ' 결제 미승인 내역';
         $dto_template->body_header = date('Y-m-d') . " 현재, 아래 결제 요청이 승인되지 않았습니다.<br/>
@@ -63,8 +63,8 @@ class PaymentRemainCronMailing extends CronMailingInterface
                 UserJoinService::getEmailByUidSafe($first_payment->manager_uid),
             ];
             $dto->CC = [];
-            if ($_ENV['recipients.payment_admin']) {
-                $dto->CC = explode(',', $_ENV['recipients.payment_admin']);
+            if ($_ENV['recipients_payment_admin']) {
+                $dto->CC = explode(',', $_ENV['recipients_payment_admin']);
             }
             $dto->dicts = [];
             foreach ($payments as $payment) {

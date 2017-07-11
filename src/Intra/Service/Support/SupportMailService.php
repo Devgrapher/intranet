@@ -65,11 +65,11 @@ class SupportMailService
                 $receivers[] = UserJoinService::getEmailByUidSafe($uid);
             }
         }
-        $support_all = $_ENV['recipients.support_admin.all'];
+        $support_all = $_ENV['recipients_support_admin_all'];
         if ($support_all) {
             $receivers = array_merge($receivers, explode(',', $support_all));
         }
-        $support_target = $_ENV["recipients.support_admin.$target"];
+        $support_target = $_ENV["recipients_support_admin_$target"];
         if ($support_target) {
             $receivers = array_merge($receivers, explode(',', $support_target));
         }

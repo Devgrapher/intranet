@@ -21,8 +21,8 @@ class FlexTimeMailService
         foreach ($users as $user) {
             $emails[] = $user->id . '@' . $_ENV['domain'];
         }
-        if ($_ENV['recipients.holiday']) {
-            $emails = array_merge($emails, explode(',', $_ENV['recipients.holiday']));
+        if ($_ENV['recipients_holiday']) {
+            $emails = array_merge($emails, explode(',', $_ENV['recipients_holiday']));
         }
 
         return array_unique(array_filter($emails));

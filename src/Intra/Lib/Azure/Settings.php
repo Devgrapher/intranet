@@ -6,50 +6,31 @@ class Settings
 {
     public static function getClientId()
     {
-        $domain = self::getDomain();
-        return $_ENV["azure.$domain.clientId"];
-    }
-
-    /**
-     * @return string
-     */
-    private static function getDomain()
-    {
-        $domain = $_ENV['domain'];
-        if ($domain == 'ridi.com') {
-            return 'ridi';
-        } else {
-            return 'studiod';
-        }
+        return $_ENV["azure_clientId"];
     }
 
     public static function getPassword()
     {
-        $domain = self::getDomain();
-        return $_ENV["azure.$domain.password"];
+        return $_ENV["azure_password"];
     }
 
     public static function getRediectURI()
     {
-        $domain = self::getDomain();
-        return $_ENV["azure.$domain.redirectURI"];
+        return $_ENV["azure_redirectURI"];
     }
 
     public static function getResourceURI()
     {
-        $domain = self::getDomain();
-        return $_ENV["azure.$domain.resourceURI"];
+        return $_ENV["azure_resourceURI"];
     }
 
     public static function getAppTenantDomainName()
     {
-        $domain = self::getDomain();
-        return $_ENV["azure.$domain.appTenantDomainName"];
+        return $_ENV["azure_appTenantDomainName"];
     }
 
     public static function getApiVersion()
     {
-        $domain = self::getDomain();
-        return $_ENV["azure.$domain.apiVersion"];
+        return $_ENV["azure_apiVersion"];
     }
 }

@@ -9,11 +9,11 @@ class UserPolicy
 {
     private static function checkUserPolicy($email, $target)
     {
-        if (empty($_ENV["user_policy.$target"])) {
+        if (empty($_ENV["user_policy_$target"])) {
             return false;
         }
 
-        $policy_list = $_ENV["user_policy.$target"];
+        $policy_list = $_ENV["user_policy_$target"];
         if ($policy_list && in_array($email, explode(',', $policy_list))) {
             return true;
         }
@@ -75,12 +75,12 @@ class UserPolicy
 
     public static function isSupportAdmin(UserDto $self, $target = 'all')
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'support_admin.all')) {
+        if ($self->is_admin || self::checkUserPolicy($self->email, 'support_admin_all')) {
             return true;
         }
 
         $target = strtolower($target);
-        if ($target != 'all' && self::checkUserPolicy($self->email, "support_admin.$target")) {
+        if ($target != 'all' && self::checkUserPolicy($self->email, "support_admin_$target")) {
             return true;
         }
 
