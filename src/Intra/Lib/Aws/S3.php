@@ -61,4 +61,9 @@ class S3
         $request = $this->client->createPresignedRequest($cmd, $expires);
         return (string)$request->getUri();
     }
+
+    public function getUrl(string $bucket, string $key): string
+    {
+        return $this->client->getObjectUrl($bucket, $key);
+    }
 }
