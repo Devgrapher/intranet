@@ -53,7 +53,7 @@ task('deploy:slack_prepare', function () {
             'color' => '#7CD197',
             'fallback' => "${host}에 ${stage} 배포가 완료되었습니다.",
             'title' => "배포가 완료되었습니다.",
-            'text' => "Rivision ${git_last_log}",
+            'text' => "Revision ${git_last_log}",
             'fields' => $fields,
         ],
     ];
