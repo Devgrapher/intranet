@@ -435,7 +435,7 @@
                    name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnDate' %}
-            <input style='width:150px'
+            <input style='width:150px' js_datepicker
                    name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnDatetime' %}
