@@ -67,11 +67,10 @@ task('deploy:set_slack_fail', function () {
     $slack = get('slack');
     $host = get('hostname');
     $stage = has('stage') ? get('stage') : 'local';
-    $attachment = $slack['attachments'];
 
-    $attachment['color'] = '#F35A00';
-    $attachment['fallback'] = "${host}에 ${stage} 배포가 실패했습니다.";
-    $attachment['title'] = "배포가 실패했습니다.";
+    $slack['attachments'][0]['color'] = '#F35A00';
+    $slack['attachments'][0]['fallback'] = "${host}에 ${stage} 배포가 실패했습니다.";
+    $slack['attachments'][0]['title'] = "배포가 실패했습니다.";
 
     set('slack', $slack);
 });
