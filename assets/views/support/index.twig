@@ -168,9 +168,6 @@
               if (column.class_name == 'SupportColumnTextDetail') {
                 columnManager.initSupportColumnTextDetail(column);
               }
-              if (column.class_name == 'SupportColumnSum') {
-                columnManager.initSupportColumnSum(column);
-              }
             }
           };
           this.initSupportColumnMutual = function (column) {
@@ -209,26 +206,6 @@
               target_object = $this.parentsUntil('table').find('input[name=' + key + ']');
               target_object.attr('disabled', !is_visible).trigger("change")
             })).trigger('change');
-          };
-          this.initSupportColumnSum = function (column) {
-            var sum_elem = $('tr.add input[name=' + column.key + ']');
-            var price_elem = $('tr.add [name=' + column.priceColumn + ']');
-            var count_elem = $('tr.add [name=' + column.countColumn + ']');
-            var discount_dict = column.discountDict;
-
-            this.updateSumColumn = function () {
-              sum_elem.val(this.price * this.count);
-            };
-
-            price_elem.on('change', function () {
-              this.price = discount_dict[price_elem.val()];
-              this.updateSumColumn();
-            }.bind(this)).trigger('change');
-
-            count_elem.on('change', function () {
-              this.count = count_elem.val();
-              this.updateSumColumn();
-            }.bind(this)).trigger('change');
           };
         };
         columnManager.initColumns({{ columns | json_encode | raw }});
@@ -278,11 +255,7 @@
           {% set key = column.key %}
           <td data-key="{{ column.key }}">
             {% if column.readonly %}
-              {% if column.class_name == 'SupportColumnSum' %}
-                {{ display_dict[key] | number_format }}
-              {% else %}
-                {{ display_dict[key] }}
-              {% endif %}
+              {{ display_dict[key] }}
             {% elseif column.class_name == 'SupportColumnTeam' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnCategory' %}
@@ -451,10 +424,6 @@
                    name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}"
             />
           {% elseif column.class_name == 'SupportColumnFile' %}
-          {% elseif column.class_name == 'SupportColumnSum' %}
-            <input style='width:120px' js_number_format
-                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
-            />
           {% else %}
             {{ column.class_name }}
           {% endif %}

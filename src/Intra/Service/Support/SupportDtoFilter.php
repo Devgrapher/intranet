@@ -112,8 +112,7 @@ class SupportDtoFilter
                 throw new MsgException('날짜입력을 다시 확인해주세요');
             }
         } elseif ($support_dto->target == SupportPolicy::TYPE_GIFT_CARD_PURCHASE) {
-            if ($support_dto->dict[$columns['신청매수']->key] <= 0 ||
-                $support_dto->dict[$columns['신청금액']->key] <= 0) {
+            if ($support_dto->dict[$columns['신청매수']->key] <= 0) {
                 throw new MsgException('신청 매수와 금액을 확인해주세요');
             }
             if (empty($support_dto->dict[$columns['입금자명']->key])) {

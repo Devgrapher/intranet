@@ -18,7 +18,6 @@ use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\Support\Column\SupportColumnReadonly;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
-use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
@@ -208,6 +207,14 @@ class SupportPolicy
             $uid = $support_dto->dict['uid'];
             return UserJoinService::getTeamByUidSafe($uid);
         };
+        $category_cost_multiplier = function ($category_column, $multiplier_column, $category_value_table) {
+            return function(SupportDto $support_dto) use($category_column, $multiplier_column, $category_value_table) {
+                $multiplier = $support_dto->dict[$multiplier_column];
+                $category_name = $support_dto->dict[$category_column];
+                $category_value = $category_value_table[$category_name];
+                return number_format($category_value * $multiplier);
+            };
+        };
 
         self::$column_fields = [
             self::TYPE_DEVICE => [
@@ -359,8 +366,8 @@ class SupportPolicy
                 'CO팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
                 '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000']))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
-                '신청금액' => (new SupportColumnSum('req_sum', 'giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500]))
-                    ->readonly(),
+                '신청금액' => new SupportColumnByValueCallback('req_sum',
+                    $category_cost_multiplier('giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500])),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
                 '입금예정일시(24시간 내)' => (new SupportColumnDate('deposit_date', date('Y-m-d H:i', strtotime('+0 day'))))
                     ->setOrderingColumn(),
@@ -380,6 +387,8 @@ class SupportPolicy
                     ->readonly()
                     ->addEditableUserPred($is_team_manager)
                     ->defaultValue('-'),
+                '지원금액' => new SupportColumnByValueCallback('support_cost',
+                    $category_cost_multiplier('support_rate', 'cost', ['-' => 0, '75%' => 0.75, '100%' => 1.0])),
                 '수강료' => new SupportColumnMoney('cost'),
                 '기관' => new SupportColumnText('provider', '', ''),
                 '강의명' => new SupportColumnText('training_name', '', ''),
