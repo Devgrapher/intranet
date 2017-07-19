@@ -38,7 +38,7 @@ class SupportMailService
                 $column_field instanceof SupportColumnCompleteUser
             ) {
                 $uids[] = $support_dto->dict[$column_field->key];
-            } elseif ($column_field instanceof SupportColumnDate && $column_field->is_ordering_column) {
+            } elseif ($column_field->is_ordering_column) {
                 $working_date = $support_dto->dict[$column_field->key];
             }
         }

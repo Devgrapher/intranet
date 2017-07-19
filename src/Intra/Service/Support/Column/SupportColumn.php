@@ -2,7 +2,6 @@
 
 namespace Intra\Service\Support\Column;
 
-use Intra\Service\Support\SupportDto;
 use Intra\Service\User\UserDto;
 
 class SupportColumn
@@ -16,6 +15,7 @@ class SupportColumn
     public $placeholder = '';
     public $default = '';
     public $noDbColumn = false;
+    public $is_ordering_column = false;
     private $isVisiblePreds;
     private $editableUserPreds = [];
 
@@ -98,6 +98,12 @@ class SupportColumn
     public function setTextInputType($type)
     {
         $this->textInputType = $type;
+        return $this;
+    }
+
+    public function setOrderingColumn()
+    {
+        $this->is_ordering_column = true;
         return $this;
     }
 }

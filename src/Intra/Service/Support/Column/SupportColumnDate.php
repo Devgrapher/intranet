@@ -5,10 +5,6 @@ namespace Intra\Service\Support\Column;
 class SupportColumnDate extends SupportColumn
 {
     /**
-     * @var
-     */
-    public $is_ordering_column;
-    /**
      * @var string
      */
     private $string;
@@ -18,13 +14,11 @@ class SupportColumnDate extends SupportColumn
      *
      * @param string $string
      * @param string $default
-     * @param bool   $is_ordering_column
      */
-    public function __construct($string, $default = '', $is_ordering_column = false)
+    public function __construct($string, $default = '')
     {
         parent::__construct($string);
         $this->default = $default;
-        $this->is_ordering_column = $is_ordering_column;
         $this->string = $string;
     }
 }

@@ -221,7 +221,7 @@ class SupportPolicy
                 '귀속부서' => new SupportColumnTeam('team'),
                 '구분' => new SupportColumnCategory('category', ['사내 전산 H/W 장애문의', 'SW 설치문의', '기타 장애문의']),
                 '상세내용' => new SupportColumnText('detail', '', '상세내용'),
-                '조치희망일' => new SupportColumnDate('request_date', date('Y-m-d'), true),
+                '조치희망일' => (new SupportColumnDate('request_date', date('Y-m-d')))->setOrderingColumn(),
                 '비고' => new SupportColumnText('note', '', '비고'),
             ],
             self::TYPE_FAMILY_EVENT => [
@@ -262,7 +262,7 @@ class SupportPolicy
                 ),
                 '분류 상세' => (new SupportColumnText('category_detail'))->placeholder('나리디님 결혼'),
                 '경조금' => (new SupportColumnMoney('cash'))->placeholder('미입력시 자동입력')->isVisibleIf($is_human_manage_team),
-                '경조일자' => new SupportColumnDate('request_date', date('Y-m-d'), true),
+                '경조일자' => (new SupportColumnDate('request_date', date('Y-m-d')))->setOrderingColumn(),
                 '화환 종류' => new SupportColumnCategory('flower_category', ['자동선택', '화환', '과일바구니', '조화', '기타']),
                 '화환 상세' => new SupportColumnTextDetail('flower_category_detail', 'flower_category', ['기타', '화환']),
                 '화환 수령자' => (new SupportColumnText('flower_receiver', '', '홍길동'))->isRequired(),
@@ -304,7 +304,9 @@ class SupportPolicy
                 '주소' => new SupportColumnCategory('address', ['어반벤치빌딩 10층', '어반벤치빌딩 11층']),
                 '수량' => new SupportColumnCategory('count', [50, 100, 150, 200, '기타 - 50매 단위']),
                 '수량(기타)' => (new SupportColumnTextDetail('count_detail', 'count', ['기타 - 50매 단위']))->setTextInputType('number'),
-                '제작(예정)일' => (new SupportColumnDate('date', '', true))->placeholder('미입력시 월말진행'),
+                '제작(예정)일' => (new SupportColumnDate('date', ''))
+                    ->placeholder('미입력시 월말진행')
+                    ->setOrderingColumn(),
             ],
             self::TYPE_DEPOT => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
@@ -333,7 +335,8 @@ class SupportPolicy
                 '구매사유' => new SupportColumnText('reason'),
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '파일첨부' => new SupportColumnFile('file'),
-                '구매예정일' => new SupportColumnDate('request_date', date('Y-m-d', strtotime('+7 day')), true),
+                '구매예정일' => (new SupportColumnDate('request_date', date('Y-m-d', strtotime('+7 day'))))
+                    ->setOrderingColumn(),
                 'CO팀 의견' => (new SupportColumnText('comment', '', '의견'))
                     ->readonly()
                     ->addEditableUserPred($is_human_manage_team),
@@ -359,14 +362,15 @@ class SupportPolicy
                 '신청금액' => (new SupportColumnSum('req_sum', 'giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500]))
                     ->readonly(),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
-                '입금예정일시(24시간 내)' => new SupportColumnDate('deposit_date', date('Y-m-d H:i', strtotime('+0 day')), true),
+                '입금예정일시(24시간 내)' => (new SupportColumnDate('deposit_date', date('Y-m-d H:i', strtotime('+0 day'))))
+                    ->setOrderingColumn(),
                 '사용용도' => new SupportColumnText('purpose', ''),
                 '봉투수량' => (new SupportColumnMoney('num_envelops'))->defaultValue('1'),
             ],
             self::TYPE_TRAINING => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
                 '일련번호2' => new SupportColumnReadonly('id'),
-                '요청일' => new SupportColumnReadonly('reg_date'),
+                '요청일' => (new SupportColumnReadonly('reg_date'))->setOrderingColumn(),
                 '요청자' => new SupportColumnRegisterUser('uid'),
                 '부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
                 '승인' => new SupportColumnAccept('is_accepted'),
@@ -382,7 +386,6 @@ class SupportPolicy
                 '일시' => new SupportColumnText('training_date', '', '2017/6/21, 6/25 11:00~18:00'),
                 '수강목적' => new SupportColumnText('purpose', '', ''),
                 '링크' => new SupportColumnText('link', '', ''),
-                '예정일' => new SupportColumnDate('date', '', true),
             ]
         ];
     }
