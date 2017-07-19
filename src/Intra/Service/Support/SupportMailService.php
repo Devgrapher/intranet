@@ -6,7 +6,6 @@ use Intra\Service\Mail\MailingDto;
 use Intra\Service\Mail\MailSendService;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
-use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\User\UserJoinService;
 
 class SupportMailService

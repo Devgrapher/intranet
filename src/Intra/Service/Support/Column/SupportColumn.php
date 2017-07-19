@@ -48,7 +48,7 @@ class SupportColumn
         }
     }
 
-    public function testEditableForUser(UserDto $login_user)
+    public function isEditableForUser(UserDto $login_user)
     {
         foreach ($this->editableUserPreds as $predicate) {
             if ($predicate($login_user)) {

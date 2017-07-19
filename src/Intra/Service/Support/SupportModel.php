@@ -6,7 +6,6 @@ use Intra\Core\BaseModel;
 use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnComplete;
-use Intra\Service\Support\Column\SupportColumnDate;
 
 class SupportModel extends BaseModel
 {

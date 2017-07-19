@@ -78,7 +78,7 @@ class SupportRowService
                     $column instanceof SupportColumnTeam
                 ) {
                     $hasAuth = ($support_dto->uid == $user->uid
-                        || $column->testEditableForUser($user));
+                        || $column->isEditableForUser($user));
                     return $hasAuth;
                 }
                 break;
