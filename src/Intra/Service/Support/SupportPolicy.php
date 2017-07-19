@@ -24,6 +24,7 @@ use Intra\Service\Support\Column\SupportColumnTextDetail;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
+use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserJoinService;
 
 class SupportPolicy
@@ -200,8 +201,11 @@ class SupportPolicy
         $is_cash_flow_team = function (UserDto $user_dto) {
             return $user_dto->team == Organization::getTeamName(Organization::ALIAS_FINANCE);
         };
-        $is_team_manager = function (UserDto $self) {
-            return $self->position === '팀장';
+        $is_manager = function (UserDto $self) {
+            $filtered = array_filter(UserDtoFactory::createManagerUserDtos(), function($user) use($self) {
+                return ($user->uid == $self->uid);
+            });
+            return !empty($filtered);
         };
         $get_team_by_uid = function (SupportDto $support_dto) {
             $uid = $support_dto->dict['uid'];
@@ -385,7 +389,7 @@ class SupportPolicy
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
                 '승인지원율' => (new SupportColumnCategory('support_rate', ['-', '75%', '100%']))
                     ->readonly()
-                    ->addEditableUserPred($is_team_manager)
+                    ->addEditableUserPred($is_manager)
                     ->defaultValue('-'),
                 '지원금액' => new SupportColumnByValueCallback('support_cost',
                     $category_cost_multiplier('support_rate', 'cost', ['-' => 0, '75%' => 0.75, '100%' => 1.0])),
