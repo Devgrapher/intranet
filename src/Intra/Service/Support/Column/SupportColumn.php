@@ -15,6 +15,7 @@ class SupportColumn
     public $placeholder = '';
     public $default = '';
     public $noDbColumn = false;
+    public $is_ordering_column = false;
     private $isVisiblePreds;
     private $editableUserPreds = [];
 
@@ -45,6 +46,16 @@ class SupportColumn
                 break;
             }
         }
+    }
+
+    public function isEditableForUser(UserDto $login_user)
+    {
+        foreach ($this->editableUserPreds as $predicate) {
+            if ($predicate($login_user)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function placeholder($placeholder)
@@ -87,6 +98,12 @@ class SupportColumn
     public function setTextInputType($type)
     {
         $this->textInputType = $type;
+        return $this;
+    }
+
+    public function setOrderingColumn()
+    {
+        $this->is_ordering_column = true;
         return $this;
     }
 }

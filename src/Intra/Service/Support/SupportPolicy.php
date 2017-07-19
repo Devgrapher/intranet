@@ -18,13 +18,13 @@ use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\Support\Column\SupportColumnReadonly;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
-use Intra\Service\Support\Column\SupportColumnSum;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
 use Intra\Service\Support\Column\SupportColumnWorker;
 use Intra\Service\User\Organization;
 use Intra\Service\User\UserDto;
+use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserJoinService;
 
 class SupportPolicy
@@ -34,6 +34,7 @@ class SupportPolicy
     const TYPE_BUSINESS_CARD = 'businesscard';
     const TYPE_DEPOT = 'depot';
     const TYPE_GIFT_CARD_PURCHASE = 'giftcard_purchase';
+    const TYPE_TRAINING = 'training';
 
     const DB_TABLE = [
         self::TYPE_DEVICE => 'device',
@@ -41,6 +42,7 @@ class SupportPolicy
         self::TYPE_BUSINESS_CARD => 'business_card',
         self::TYPE_DEPOT => 'depot',
         self::TYPE_GIFT_CARD_PURCHASE => 'gift_card_purchase',
+        self::TYPE_TRAINING => 'training',
     ];
 
     /**
@@ -69,7 +71,7 @@ class SupportPolicy
             if (!$return_column->isVisible($self)) {
                 unset($return_columns[$key]);
             }
-            $return_column->updateEditableForUser($self);
+            $return_column->updateEditableForUser($self, []);
         }
 
         return $return_columns;
@@ -170,6 +172,13 @@ class SupportPolicy
    2) 리디캐시 상품권은 유가증권으로 분류되어 신용카드나 휴대폰 등의 결제 수단으로는 구매가 불가능하며, 세법상 현금영수증 및 세금계산서가 발급되지 않습니다.
    3) 임직원(수습 및 정직원)께서 리디북스 서점에서 본인 아이디로 리디캐시 충전 시 충전금액의 30%를 비용 지원 받으실 수 있으나, 실물의 리디캐시 상품권 구매 시에는 적용되지 않음을 참고 부탁 드립니다.
 ';
+        } elseif ($target == self::TYPE_TRAINING) {
+            return
+'업무와 직접적인 연관이 있는 사외수강만 신청 가능합니다.			
+수강료의 75% or 100%를 15만원 한도로 지원해드립니다.			
+수습기간 종료 후부터 신청하실 수 있습니다.			
+1회초과하여 수강할 경우 출석률은 2/3 이상이어야 지원 가능합니다.			
+수강종료일이 포함된 월에 비용정산을 진행해주세요.';
         } else {
             return "";
         }
@@ -183,6 +192,7 @@ class SupportPolicy
             self::TYPE_BUSINESS_CARD => '명함 신청',
             self::TYPE_DEPOT => '구매 요청',
             self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
+            self::TYPE_TRAINING => '사외수강',
         ];
 
         $is_human_manage_team = function (UserDto $user_dto) {
@@ -191,10 +201,25 @@ class SupportPolicy
         $is_cash_flow_team = function (UserDto $user_dto) {
             return $user_dto->team == Organization::getTeamName(Organization::ALIAS_FINANCE);
         };
+        $is_manager = function (UserDto $self) {
+            $filtered = array_filter(UserDtoFactory::createManagerUserDtos(), function($user) use($self) {
+                return ($user->uid == $self->uid);
+            });
+            return !empty($filtered);
+        };
         $get_team_by_uid = function (SupportDto $support_dto) {
             $uid = $support_dto->dict['uid'];
             return UserJoinService::getTeamByUidSafe($uid);
         };
+        $category_cost_multiplier = function ($category_column, $multiplier_column, $category_value_table) {
+            return function(SupportDto $support_dto) use($category_column, $multiplier_column, $category_value_table) {
+                $multiplier = $support_dto->dict[$multiplier_column];
+                $category_name = $support_dto->dict[$category_column];
+                $category_value = $category_value_table[$category_name];
+                return number_format($category_value * $multiplier);
+            };
+        };
+
         self::$column_fields = [
             self::TYPE_DEVICE => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
@@ -207,7 +232,7 @@ class SupportPolicy
                 '귀속부서' => new SupportColumnTeam('team'),
                 '구분' => new SupportColumnCategory('category', ['사내 전산 H/W 장애문의', 'SW 설치문의', '기타 장애문의']),
                 '상세내용' => new SupportColumnText('detail', '', '상세내용'),
-                '조치희망일' => new SupportColumnDate('request_date', date('Y-m-d'), true),
+                '조치희망일' => (new SupportColumnDate('request_date', date('Y-m-d')))->setOrderingColumn(),
                 '비고' => new SupportColumnText('note', '', '비고'),
             ],
             self::TYPE_FAMILY_EVENT => [
@@ -248,7 +273,7 @@ class SupportPolicy
                 ),
                 '분류 상세' => (new SupportColumnText('category_detail'))->placeholder('나리디님 결혼'),
                 '경조금' => (new SupportColumnMoney('cash'))->placeholder('미입력시 자동입력')->isVisibleIf($is_human_manage_team),
-                '경조일자' => new SupportColumnDate('request_date', date('Y-m-d'), true),
+                '경조일자' => (new SupportColumnDate('request_date', date('Y-m-d')))->setOrderingColumn(),
                 '화환 종류' => new SupportColumnCategory('flower_category', ['자동선택', '화환', '과일바구니', '조화', '기타']),
                 '화환 상세' => new SupportColumnTextDetail('flower_category_detail', 'flower_category', ['기타', '화환']),
                 '화환 수령자' => (new SupportColumnText('flower_receiver', '', '홍길동'))->isRequired(),
@@ -290,7 +315,9 @@ class SupportPolicy
                 '주소' => new SupportColumnCategory('address', ['어반벤치빌딩 10층', '어반벤치빌딩 11층']),
                 '수량' => new SupportColumnCategory('count', [50, 100, 150, 200, '기타 - 50매 단위']),
                 '수량(기타)' => (new SupportColumnTextDetail('count_detail', 'count', ['기타 - 50매 단위']))->setTextInputType('number'),
-                '제작(예정)일' => (new SupportColumnDate('date', '', true))->placeholder('미입력시 월말진행'),
+                '제작(예정)일' => (new SupportColumnDate('date', ''))
+                    ->placeholder('미입력시 월말진행')
+                    ->setOrderingColumn(),
             ],
             self::TYPE_DEPOT => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
@@ -319,7 +346,8 @@ class SupportPolicy
                 '구매사유' => new SupportColumnText('reason'),
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '파일첨부' => new SupportColumnFile('file'),
-                '구매예정일' => new SupportColumnDate('request_date', date('Y-m-d', strtotime('+7 day')), true),
+                '구매예정일' => (new SupportColumnDate('request_date', date('Y-m-d', strtotime('+7 day'))))
+                    ->setOrderingColumn(),
                 'CO팀 의견' => (new SupportColumnText('comment', '', '의견'))
                     ->readonly()
                     ->addEditableUserPred($is_human_manage_team),
@@ -342,13 +370,36 @@ class SupportPolicy
                 'CO팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
                 '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000']))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
-                '신청금액' => (new SupportColumnSum('req_sum', 'giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500]))
-                    ->readonly(),
+                '신청금액' => new SupportColumnByValueCallback('req_sum',
+                    $category_cost_multiplier('giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500])),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
-                '입금예정일시(24시간 내)' => new SupportColumnDate('deposit_date', date('Y-m-d H:i', strtotime('+0 day')), true),
+                '입금예정일시(24시간 내)' => (new SupportColumnDate('deposit_date', date('Y-m-d H:i', strtotime('+0 day'))))
+                    ->setOrderingColumn(),
                 '사용용도' => new SupportColumnText('purpose', ''),
                 '봉투수량' => (new SupportColumnMoney('num_envelops'))->defaultValue('1'),
             ],
+            self::TYPE_TRAINING => [
+                '일련번호' => new SupportColumnReadonly('uuid'),
+                '일련번호2' => new SupportColumnReadonly('id'),
+                '요청일' => (new SupportColumnReadonly('reg_date'))->setOrderingColumn(),
+                '요청자' => new SupportColumnRegisterUser('uid'),
+                '부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
+                '승인' => new SupportColumnAccept('is_accepted'),
+                '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
+                '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
+                '승인지원율' => (new SupportColumnCategory('support_rate', ['-', '75%', '100%']))
+                    ->readonly()
+                    ->addEditableUserPred($is_manager)
+                    ->defaultValue('-'),
+                '지원금액' => new SupportColumnByValueCallback('support_cost',
+                    $category_cost_multiplier('support_rate', 'cost', ['-' => 0, '75%' => 0.75, '100%' => 1.0])),
+                '수강료' => new SupportColumnMoney('cost'),
+                '기관' => new SupportColumnText('provider', '', ''),
+                '강의명' => new SupportColumnText('training_name', '', ''),
+                '일시' => new SupportColumnText('training_date', '', '2017/6/21, 6/25 11:00~18:00'),
+                '수강목적' => new SupportColumnText('purpose', '', ''),
+                '링크' => new SupportColumnText('link', '', ''),
+            ]
         ];
     }
 }

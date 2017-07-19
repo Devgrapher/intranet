@@ -6,7 +6,6 @@ use Intra\Core\BaseModel;
 use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnComplete;
-use Intra\Service\Support\Column\SupportColumnDate;
 
 class SupportModel extends BaseModel
 {
@@ -37,10 +36,8 @@ class SupportModel extends BaseModel
     {
         $order_column = null;
         foreach ($columns as $column) {
-            if ($column instanceof SupportColumnDate) {
-                if ($column->is_ordering_column) {
-                    $order_column = $column->key;
-                }
+            if ($column->is_ordering_column) {
+                $order_column = $column->key;
             }
         }
         if ($order_column == null) {
@@ -75,10 +72,8 @@ class SupportModel extends BaseModel
     {
         $order_column = null;
         foreach ($columns as $column) {
-            if ($column instanceof SupportColumnDate) {
-                if ($column->is_ordering_column) {
-                    $order_column = $column->key;
-                }
+            if ($column->is_ordering_column) {
+                $order_column = $column->key;
             }
         }
         if ($order_column == null) {
@@ -105,10 +100,8 @@ class SupportModel extends BaseModel
         $order_column = null;
         $complete_columns = [];
         foreach ($columns as $column) {
-            if ($column instanceof SupportColumnDate) {
-                if ($column->is_ordering_column) {
-                    $order_column = $column->key;
-                }
+            if ($column->is_ordering_column) {
+                $order_column = $column->key;
             }
             if ($column instanceof SupportColumnComplete) {
                 $complete_columns[] = $column->key;
@@ -145,10 +138,8 @@ class SupportModel extends BaseModel
         $order_column = null;
         $accept_columns = [];
         foreach ($columns as $column) {
-            if ($column instanceof SupportColumnDate) {
-                if ($column->is_ordering_column) {
-                    $order_column = $column->key;
-                }
+            if ($column->is_ordering_column) {
+                $order_column = $column->key;
             }
             if ($column instanceof SupportColumnAcceptUser) {
                 $accept_columns[] = $column->key;
@@ -232,10 +223,8 @@ class SupportModel extends BaseModel
     {
         $order_column = null;
         foreach ($columns as $column) {
-            if ($column instanceof SupportColumnDate) {
-                if ($column->is_ordering_column) {
-                    $order_column = $column->key;
-                }
+            if ($column->is_ordering_column) {
+                $order_column = $column->key;
             }
         }
         if ($order_column == null) {

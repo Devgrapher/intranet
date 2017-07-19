@@ -112,8 +112,7 @@ class SupportDtoFilter
                 throw new MsgException('날짜입력을 다시 확인해주세요');
             }
         } elseif ($support_dto->target == SupportPolicy::TYPE_GIFT_CARD_PURCHASE) {
-            if ($support_dto->dict[$columns['신청매수']->key] <= 0 ||
-                $support_dto->dict[$columns['신청금액']->key] <= 0) {
+            if ($support_dto->dict[$columns['신청매수']->key] <= 0) {
                 throw new MsgException('신청 매수와 금액을 확인해주세요');
             }
             if (empty($support_dto->dict[$columns['입금자명']->key])) {
@@ -126,6 +125,10 @@ class SupportDtoFilter
             $max_due = date('Y/m/d H:i', strtotime('+1 day'));
             if ($input_due > $max_due) {
                 throw new MsgException('입금예정일시는 24시간내로 설정하여 주세요');
+            }
+        } elseif ($support_dto->target == SupportPolicy::TYPE_TRAINING) {
+            if (empty($support_dto->dict[$columns['수강료']->key])) {
+                throw new MsgException('수강료를 입력해주세요');
             }
         }
 
@@ -143,6 +146,7 @@ class SupportDtoFilter
             SupportPolicy::TYPE_FAMILY_EVENT => 'bt',
             SupportPolicy::TYPE_GIFT_CARD_PURCHASE => 'gp',
             SupportPolicy::TYPE_DEVICE => 'hp',
+            SupportPolicy::TYPE_TRAINING => 'tr',
         ];
         $code = $codes[$target];
 

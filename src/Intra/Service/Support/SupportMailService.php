@@ -6,7 +6,6 @@ use Intra\Service\Mail\MailingDto;
 use Intra\Service\Mail\MailSendService;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
-use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\User\UserJoinService;
 
 class SupportMailService
@@ -38,7 +37,7 @@ class SupportMailService
                 $column_field instanceof SupportColumnCompleteUser
             ) {
                 $uids[] = $support_dto->dict[$column_field->key];
-            } elseif ($column_field instanceof SupportColumnDate && $column_field->is_ordering_column) {
+            } elseif ($column_field->is_ordering_column) {
                 $working_date = $support_dto->dict[$column_field->key];
             }
         }
