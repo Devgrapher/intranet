@@ -127,6 +127,10 @@ class SupportDtoFilter
             if ($input_due > $max_due) {
                 throw new MsgException('입금예정일시는 24시간내로 설정하여 주세요');
             }
+        } elseif ($support_dto->target == SupportPolicy::TYPE_TRAINING) {
+            if (empty($support_dto->dict[$columns['수강료']->key])) {
+                throw new MsgException('수강료를 입력해주세요');
+            }
         }
 
         $support_dto->dict['uuid'] = self::getUuidHeader($support_dto->target);
@@ -143,6 +147,7 @@ class SupportDtoFilter
             SupportPolicy::TYPE_FAMILY_EVENT => 'bt',
             SupportPolicy::TYPE_GIFT_CARD_PURCHASE => 'gp',
             SupportPolicy::TYPE_DEVICE => 'hp',
+            SupportPolicy::TYPE_TRAINING => 'tr',
         ];
         $code = $codes[$target];
 

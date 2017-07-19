@@ -2,6 +2,7 @@
 
 namespace Intra\Service\Support\Column;
 
+use Intra\Service\Support\SupportDto;
 use Intra\Service\User\UserDto;
 
 class SupportColumn
@@ -45,6 +46,16 @@ class SupportColumn
                 break;
             }
         }
+    }
+
+    public function testEditableForUser(UserDto $login_user)
+    {
+        foreach ($this->editableUserPreds as $predicate) {
+            if ($predicate($login_user)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function placeholder($placeholder)

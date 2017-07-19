@@ -286,11 +286,15 @@
             {% elseif column.class_name == 'SupportColumnTeam' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnCategory' %}
-              {% for name, value in column.category_items %}
-                {% if value == display_dict[key]  %}
-                  <span data-editable='{{ key }}' data-keyselect>{{ name }}</span>
-                {% endif %}
-              {% endfor %}
+              {% if display_dict[key] == '-' %}
+                <span data-editable='{{ key }}' data-keyselect>선택하세요.</span>
+              {% else %}
+                {% for name, value in column.category_items %}
+                  {% if value == display_dict[key]  %}
+                    <span data-editable='{{ key }}' data-keyselect>{{ name }}</span>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
             {% elseif column.class_name == 'SupportColumnWorker' %}
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnText' %}

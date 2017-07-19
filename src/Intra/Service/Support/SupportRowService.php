@@ -70,18 +70,18 @@ class SupportRowService
             return true;
         }
 
-        if ($support_dto->uid == $user->uid) {
-            foreach ($columns as $column) {
-                if ($column->key == $key) {
-                    if ($column instanceof SupportColumnCategory ||
-                        $column instanceof SupportColumnText ||
-                        $column instanceof SupportColumnDate ||
-                        $column instanceof SupportColumnTeam
-                    ) {
-                        return true;
-                    }
-                    break;
+        foreach ($columns as $column) {
+            if ($column->key == $key) {
+                if ($column instanceof SupportColumnCategory ||
+                    $column instanceof SupportColumnText ||
+                    $column instanceof SupportColumnDate ||
+                    $column instanceof SupportColumnTeam
+                ) {
+                    $hasAuth = ($support_dto->uid == $user->uid
+                        || $column->testEditableForUser($user));
+                    return $hasAuth;
                 }
+                break;
             }
         }
 
