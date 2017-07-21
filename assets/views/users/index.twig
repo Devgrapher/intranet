@@ -333,7 +333,8 @@
           $('.js_user').setContextMenu({
             menuSelector: "#userMenu",
             menuSelected: function (invokedOn, selectedMenu) {
-              var userId = invokedOn.closest('.js_user').attr('data-userid');
+              var userObj = invokedOn.closest('.js_user');
+              var userId = userObj.attr('data-userid');
               var menuIndex = selectedMenu.attr('tabindex');
 
               if (menuIndex == '0') {
@@ -343,7 +344,7 @@
                 setUserArea(userId, 'floor11');
 
               } else if (menuIndex == '7') {
-                var isShow = invokedOn.css('opacity');
+                var isShow = userObj.css('opacity');
                 setUserHideShow(userId, isShow!=1);
 
               } else {
