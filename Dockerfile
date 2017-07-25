@@ -5,7 +5,7 @@ RUN docker-php-source extract \
 
 # install common
 && apt-get update \
-&& apt-get install wget software-properties-common vim git zlib1g-dev libmcrypt-dev libldap2-dev -y \
+&& apt-get install wget software-properties-common vim git zlib1g-dev libmcrypt-dev libldap2-dev cron -y \
 && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
 && docker-php-ext-install ldap pdo zip pdo_mysql \
 
@@ -30,8 +30,11 @@ RUN docker-php-source extract \
 && apt-get autoclean -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* \
 && docker-php-source delete
 
+# set cron
+ADD docs/docker/cron.d/intranet_crontab /etc/cron.d/
+
 # enable apache mod and site
-COPY docs/docker/apache/*.conf /etc/apache2/sites-available/
+ADD docs/docker/apache/*.conf /etc/apache2/sites-available/
 RUN a2enmod rewrite \
 && a2dissite 000-default \
 && a2ensite intranet
