@@ -35,6 +35,23 @@ class SupportPolicy
     const TYPE_DEPOT = 'depot';
     const TYPE_GIFT_CARD_PURCHASE = 'giftcard_purchase';
     const TYPE_TRAINING = 'training';
+    const TYPE_DINNER = 'dinner';
+    const TYPE_DELIVERY = 'delivery';
+    const TYPE_PRESENT = 'present';
+    const TYPE_VPN = 'vpn';
+
+    const COLUMN_TITLES = [
+        self::TYPE_DEVICE => '업무환경 불편사항 문의',
+        self::TYPE_FAMILY_EVENT => '경조 지원',
+        self::TYPE_BUSINESS_CARD => '명함 신청',
+        self::TYPE_DEPOT => '구매 요청',
+        self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
+        self::TYPE_TRAINING => '사외수강',
+        self::TYPE_DINNER => '저녁 주문',
+        self::TYPE_DELIVERY => '등기우편/퀵/해외배송',
+        self::TYPE_PRESENT => '외부손님선물',
+        self::TYPE_VPN => 'VPN 신청',
+    ];
 
     const DB_TABLE = [
         self::TYPE_DEVICE => 'device',
@@ -43,13 +60,23 @@ class SupportPolicy
         self::TYPE_DEPOT => 'depot',
         self::TYPE_GIFT_CARD_PURCHASE => 'gift_card_purchase',
         self::TYPE_TRAINING => 'training',
+        self::TYPE_VPN => 'vpn',
+    ];
+
+    const CODES = [
+        self::TYPE_BUSINESS_CARD => 'bs',
+        self::TYPE_DEPOT => 'pe',
+        self::TYPE_FAMILY_EVENT => 'bt',
+        self::TYPE_GIFT_CARD_PURCHASE => 'gp',
+        self::TYPE_DEVICE => 'hp',
+        self::TYPE_TRAINING => 'tr',
+        self::TYPE_VPN => 'vn',
     ];
 
     /**
      * @var SupportColumn[][]
      */
     private static $column_fields;
-    private static $column_titles;
 
     /**
      * @param $target
@@ -59,7 +86,6 @@ class SupportPolicy
     public static function getColumnFields($target)
     {
         self::initColumnFields();
-
         return self::$column_fields[$target];
     }
 
@@ -84,9 +110,7 @@ class SupportPolicy
      */
     public static function getColumnTitle($target)
     {
-        self::initColumnFields();
-
-        return self::$column_titles[$target];
+        return self::COLUMN_TITLES[$target];
     }
 
     public static function getColumn($target, $key)
@@ -179,22 +203,15 @@ class SupportPolicy
 수습기간 종료 후부터 신청하실 수 있습니다.			
 1회초과하여 수강할 경우 출석률은 2/3 이상이어야 지원 가능합니다.			
 수강종료일이 포함된 월에 비용정산을 진행해주세요.';
+        } elseif ($target == self::TYPE_VPN) {
+            return '';
         } else {
-            return "";
+            return '';
         }
     }
 
     private static function initColumnFields()
     {
-        self::$column_titles = [
-            self::TYPE_DEVICE => '업무환경 불편사항 문의',
-            self::TYPE_FAMILY_EVENT => '경조 지원',
-            self::TYPE_BUSINESS_CARD => '명함 신청',
-            self::TYPE_DEPOT => '구매 요청',
-            self::TYPE_GIFT_CARD_PURCHASE => '상품권 구매',
-            self::TYPE_TRAINING => '사외수강',
-        ];
-
         $is_human_manage_team = function (UserDto $user_dto) {
             return $user_dto->team == Organization::getTeamName(Organization::ALIAS_CO);
         };
@@ -202,8 +219,8 @@ class SupportPolicy
             return $user_dto->team == Organization::getTeamName(Organization::ALIAS_FINANCE);
         };
         $is_manager = function (UserDto $self) {
-            $filtered = array_filter(UserDtoFactory::createManagerUserDtos(), function($user) use($self) {
-                return ($user->uid == $self->uid);
+            $filtered = array_filter(UserDtoFactory::createManagerUserDtos(), function ($user) use ($self) {
+                return $user->uid == $self->uid;
             });
             return !empty($filtered);
         };
@@ -212,7 +229,7 @@ class SupportPolicy
             return UserJoinService::getTeamByUidSafe($uid);
         };
         $category_cost_multiplier = function ($category_column, $multiplier_column, $category_value_table) {
-            return function(SupportDto $support_dto) use($category_column, $multiplier_column, $category_value_table) {
+            return function (SupportDto $support_dto) use ($category_column, $multiplier_column, $category_value_table) {
                 $multiplier = $support_dto->dict[$multiplier_column];
                 $category_name = $support_dto->dict[$category_column];
                 $category_value = $category_value_table[$category_name];
@@ -399,6 +416,28 @@ class SupportPolicy
                 '일시' => new SupportColumnText('training_date', '', '2017/6/21, 6/25 11:00~18:00'),
                 '수강목적' => new SupportColumnText('purpose', '', ''),
                 '링크' => new SupportColumnText('link', '', ''),
+            ],
+            self::TYPE_VPN => [
+                '일련번호' => new SupportColumnReadonly('uuid'),
+                '일련번호2' => new SupportColumnReadonly('id'),
+                '요청일' => (new SupportColumnReadonly('reg_date'))->setOrderingColumn(),
+                '요청자' => new SupportColumnRegisterUser('uid'),
+                '부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
+                '승인' => new SupportColumnAccept('is_accepted'),
+                '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
+                '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
+                'CO팀 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                'CO팀 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                'CO팀 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                '사용기간' => new SupportColumnMutual(
+                    'vpn_usage_type',
+                    [
+                        '종료일 지정' => ['사용종료일'],
+                        '지속' => [],
+                    ]
+                ),
+                '사용시작일' => new SupportColumnDate('vpn_start_date', date('Y-m-d')),
+                '사용종료일' => new SupportColumnDate('vpn_end_date', date('Y-m-d')),
             ]
         ];
     }

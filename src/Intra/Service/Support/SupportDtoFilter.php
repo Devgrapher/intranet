@@ -140,15 +140,7 @@ class SupportDtoFilter
     private static function getUuidHeader($target)
     {
         $year = substr(date('Y'), 2, 2);
-        $codes = [
-            SupportPolicy::TYPE_BUSINESS_CARD => 'bs',
-            SupportPolicy::TYPE_DEPOT => 'pe',
-            SupportPolicy::TYPE_FAMILY_EVENT => 'bt',
-            SupportPolicy::TYPE_GIFT_CARD_PURCHASE => 'gp',
-            SupportPolicy::TYPE_DEVICE => 'hp',
-            SupportPolicy::TYPE_TRAINING => 'tr',
-        ];
-        $code = $codes[$target];
+        $code = SupportPolicy::CODES[$target];
 
         return "ridi-{$code}-{$year}";
     }
