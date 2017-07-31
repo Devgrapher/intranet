@@ -29,26 +29,34 @@
         width: 60px;
         height: 60px;
         color: #e0e0e0;
-        border: 1px solid;
-        border-color: #fff;
-        background-color: #2d2d2d;
-        overflow: hidden;
         text-align: center;
         cursor: pointer;
-        box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
-        border-radius: 4px;
-        transition: all .15s;
       }
 
-      .js_user:hover {
-        transform: scale(1.05);
-        z-index: 5;
-      }
 
       .js_user .content {
         position: relative;
         top: 50%;
         transform: translateY(-50%);
+        z-index: 5;
+      }
+      .js_user figure {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        border: 1px solid;
+        border-color: #fff;
+        background-color: #2d2d2d;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+        border-radius: 4px;
+        transition: transform .15s;
+        z-index: 2;
+      }
+      .js_user:hover figure {
+        transform: scale(1.05);
+        z-index: 4;
       }
       .js_user:after {
         position: absolute;
@@ -59,6 +67,8 @@
         width: 5px;
         height: 5px;
         border-radius: 50%;
+        z-index: 5;
+        transition: all .15s;
       }
 
       .js_user.morning-off:after,
@@ -72,7 +82,7 @@
         background-color: #676767;
       }
       .js_user.long-absence {
-        opacity:0.4;
+        opacity: 0.4;
       }
 
       .js_user .name {
