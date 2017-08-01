@@ -172,6 +172,13 @@ class SupportRowService
                         $is_complete = true;
                         break;
                     }
+                    if ($column instanceof SupportColumnAccept) {
+                        if (!$column->isAcceptReady($support_dto->dict)) {
+                            throw new MsgException('승인 조건을 확인해주세요.');
+                        }
+                        $is_complete = true;
+                        break;
+                    }
                 }
             }
 
