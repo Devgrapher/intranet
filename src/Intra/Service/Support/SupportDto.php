@@ -11,11 +11,13 @@ use Intra\Service\Support\Column\SupportColumnDate;
 use Intra\Service\Support\Column\SupportColumnDatetime;
 use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
+use Intra\Service\Support\Column\SupportColumnRegisterEmail;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
 use Intra\Service\Support\Column\SupportColumnTextDetail;
 use Intra\Service\Support\Column\SupportColumnWorker;
+use Intra\Service\User\UserJoinService;
 use Symfony\Component\HttpFoundation\Request;
 
 class SupportDto
@@ -67,6 +69,10 @@ class SupportDto
             } elseif ($column instanceof SupportColumnRegisterUser) {
                 $key = $column->key;
                 $value = $uid;
+                $dto->dict[$key] = $value;
+            } elseif ($column instanceof SupportColumnRegisterEmail) {
+                $key = $column->key;
+                $value = UserJoinService::getEmailByUidSafe($uid);
                 $dto->dict[$key] = $value;
             }
         }
