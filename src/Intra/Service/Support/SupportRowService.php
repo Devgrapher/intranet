@@ -36,7 +36,7 @@ class SupportRowService
     public static function add($target_user_dto, $support_dto, $app)
     {
         return JsonDtoWrapper::create(function () use ($target_user_dto, $support_dto, $app) {
-            $support_dto = SupportDtoFilter::filterAddingDto($target_user_dto, $support_dto);
+            $support_dto = SupportDtoValidator::validateAddingDto($target_user_dto, $support_dto);
             $insert_id = SupportModel::add($support_dto);
             if (!$insert_id) {
                 throw new MsgException('자료추가 실패했습니다');
@@ -173,10 +173,7 @@ class SupportRowService
                         break;
                     }
                     if ($column instanceof SupportColumnAccept) {
-                        if (!$column->isAcceptReady($support_dto->dict)) {
-                            throw new MsgException('승인 조건을 확인해주세요.');
-                        }
-                        $is_complete = true;
+                        SupportDtoValidator::validateAcceptingDto($support_dto);
                         break;
                     }
                 }

@@ -7,8 +7,13 @@ use Intra\Service\Support\Column\SupportColumnCategory;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\User\UserDto;
 
-class SupportDtoFilter
+class SupportDtoValidator
 {
+    public static function validateAcceptingDto($support_dto)
+    {
+        SupportPolicy::validateFieldsOnAccept($support_dto);
+    }
+
     /**
      * @param UserDto $target_user_dto
      * @param SupportDto $support_dto
@@ -16,7 +21,7 @@ class SupportDtoFilter
      * @return SupportDto
      * @throws MsgException
      */
-    public static function filterAddingDto($target_user_dto, $support_dto)
+    public static function validateAddingDto($target_user_dto, $support_dto)
     {
         $columns = SupportPolicy::getColumnFields($support_dto->target);
 

@@ -256,12 +256,6 @@ class SupportPolicy
                 return number_format($category_value * $multiplier);
             };
         };
-        $training_accept_filter = function ($row_dict) {
-            if ($row_dict['support_rate'] == '-') {
-                throw new MsgException('승인지원율을 선택해 주세요.');
-            }
-            return true;
-        };
 
         self::$column_fields = [
             self::TYPE_DEVICE => [
@@ -427,7 +421,7 @@ class SupportPolicy
                 '요청일' => (new SupportColumnReadonly('reg_date'))->setOrderingColumn(),
                 '요청자' => new SupportColumnRegisterUser('uid'),
                 '부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
-                '승인' => new SupportColumnAccept('is_accepted', $training_accept_filter),
+                '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
                 '승인지원율' => (new SupportColumnCategory('support_rate', ['-', '75%', '100%']))
@@ -545,7 +539,12 @@ class SupportPolicy
         ];
 
         self::$validations_on_accept = [
-
+            self::TYPE_TRAINING => function ($row_dict) {
+                if ($row_dict['support_rate'] == '-') {
+                    throw new MsgException('승인지원율을 선택해 주세요.');
+                }
+                return true;
+            },
         ];
     }
 }
