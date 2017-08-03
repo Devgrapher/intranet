@@ -72,7 +72,7 @@
 {% block body %}
   <select id='uid' style="width:120px;" js_data_chosen>
     {% for user in users %}
-      <option value='{{ user.uid }}'>{{ user.name }}</option>
+      <option value='{{ user.uid }}'{% if uid == user.uid %} selected{% endif %}>{{ user.name }}</option>
     {% endfor %}
   </select>
   <input id="select-btn" type="button" value="선택" />
