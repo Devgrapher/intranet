@@ -2,6 +2,7 @@
 
 namespace Intra\Service\Support;
 
+use Intra\Core\MsgException;
 use Intra\Service\Support\Column\SupportColumn;
 use Intra\Service\Support\Column\SupportColumnAccept;
 use Intra\Service\Support\Column\SupportColumnAcceptDatetime;
@@ -79,6 +80,9 @@ class SupportPolicy
      */
     private static $column_fields;
 
+    private static $validations_on_add;
+    private static $validations_on_accept;
+
     /**
      * @param $target
      *
@@ -122,6 +126,22 @@ class SupportPolicy
             }
         }
         throw new \Exception('invalid column ' . $target . ', ' . $key);
+    }
+
+    public static function validateFieldsOnAdd($support_dto)
+    {
+        $fields = self::$column_fields[$support_dto->target];
+        if (isset(self::$validations_on_add[$support_dto->target])) {
+            (self::$validations_on_add[$support_dto->target])($support_dto, $fields);
+        }
+    }
+
+    public static function validateFieldsOnAccept($support_dto)
+    {
+        $fields = self::$column_fields[$support_dto->target];
+        if (isset(self::$validations_on_accept[$support_dto->target])) {
+            (self::$validations_on_accept[$support_dto->target])($support_dto->dict, $fields);
+        }
     }
 
     public static function getExplain($target)
@@ -441,6 +461,92 @@ class SupportPolicy
                 '사용시작일' => new SupportColumnDate('vpn_start_date', date('Y-m-d')),
                 '사용종료일' => new SupportColumnDate('vpn_end_date', date('Y-m-d')),
             ]
+        ];
+
+        self::$validations_on_add = [
+            self::TYPE_FAMILY_EVENT => function ($support_dto, $columns) {
+                $category = $support_dto->dict[$columns['분류']->key];
+
+                if ($category == '결혼') {
+                    $flower_type_column = '화환';
+                } elseif (in_array($category, ['자녀출생', '졸업', '장기근속(3년)'])) {
+                    $flower_type_column = '과일바구니';
+                } elseif (in_array($category, ['사망-형제자매 (배우자 형제자매포함)', '사망-부모 (배우자 부모 포함)', '사망-조부모 (배우자 조부모 포함)'])) {
+                    $flower_type_column = '조화';
+                } else {
+                    $flower_type_column = '기타';
+                }
+
+                if ($support_dto->dict[$columns['대상자']->key] == '외부') {
+                    if ($support_dto->dict[$columns['화환 종류']->key] != '기타') {
+                        throw new MsgException('대상자가 외부일 경우, 화환 종류를 기타로 선택 후 직접 입력해주세요.');
+                    }
+                } else {
+                    if ($support_dto->dict[$columns['화환 종류']->key] == '자동선택') {
+                        $support_dto->dict[$columns['화환 종류']->key] = $flower_type_column;
+                    }
+                }
+
+                if (in_array(
+                    $category,
+                    [
+                        '결혼',
+                        '자녀출생',
+                        '사망-부모 (배우자 부모 포함)',
+                    ]
+                )) {
+                    $cash = '1000000';
+                    $support_dto->dict[$columns['경조금']->key] = $cash;
+                }
+
+                $flower_datetime = trim($support_dto->dict[$columns['화환 도착일시']->key]);
+                $flower_datetime_parsed = date_create($flower_datetime . ':00');
+                if ($flower_datetime_parsed === false) {
+                    throw new MsgException('화환 도착일시를 다시 확인해주세요');
+                }
+            },
+            self::TYPE_BUSINESS_CARD => function ($support_dto, $columns) {
+                if ($support_dto->dict[$columns['제작(예정)일']->key] == '') {
+                    $support_dto->dict[$columns['제작(예정)일']->key] = date("Y-m-t");
+                }
+            },
+            self::TYPE_DEPOT => function ($support_dto, $columns) {
+                $request_date = $support_dto->dict[$columns['구매예정일']->key];
+                $request_datetime = date_create($request_date);
+                if ($request_datetime === false) {
+                    throw new MsgException('날짜입력을 다시 확인해주세요');
+                }
+            },
+            self::TYPE_GIFT_CARD_PURCHASE => function ($support_dto, $columns) {
+                if ($support_dto->dict[$columns['신청매수']->key] <= 0) {
+                    throw new MsgException('신청 매수와 금액을 확인해주세요');
+                }
+                if (empty($support_dto->dict[$columns['입금자명']->key])) {
+                    throw new MsgException('입금자명을 입력해주세요');
+                }
+                if ($support_dto->dict[$columns['신청매수']->key] < $support_dto->dict[$columns['봉투수량']->key]) {
+                    throw new MsgException('봉투수량은 최대 신청매수까지 입력할 수 있습니다.');
+                }
+                $input_due = $support_dto->dict[$columns['입금예정일시(24시간 내)']->key];
+                $max_due = date('Y/m/d H:i', strtotime('+1 day'));
+                if ($input_due > $max_due) {
+                    throw new MsgException('입금예정일시는 24시간내로 설정하여 주세요');
+                }
+            },
+            self::TYPE_TRAINING => function ($support_dto, $columns) {
+                if (empty($support_dto->dict[$columns['수강료']->key])) {
+                    throw new MsgException('수강료를 입력해주세요');
+                }
+            },
+        ];
+
+        self::$validations_on_accept = [
+            self::TYPE_TRAINING => function ($row_dict) {
+                if ($row_dict['support_rate'] == '-') {
+                    throw new MsgException('승인지원율을 선택해 주세요.');
+                }
+                return true;
+            },
         ];
     }
 }
