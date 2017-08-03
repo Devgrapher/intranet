@@ -17,6 +17,7 @@ use Intra\Service\Support\Column\SupportColumnFile;
 use Intra\Service\Support\Column\SupportColumnMoney;
 use Intra\Service\Support\Column\SupportColumnMutual;
 use Intra\Service\Support\Column\SupportColumnReadonly;
+use Intra\Service\Support\Column\SupportColumnRegisterEmail;
 use Intra\Service\Support\Column\SupportColumnRegisterUser;
 use Intra\Service\Support\Column\SupportColumnTeam;
 use Intra\Service\Support\Column\SupportColumnText;
@@ -422,6 +423,7 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => (new SupportColumnReadonly('reg_date'))->setOrderingColumn(),
                 '요청자' => new SupportColumnRegisterUser('uid'),
+                '요청자 메일' => new SupportColumnRegisterEmail('email'),
                 '부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
