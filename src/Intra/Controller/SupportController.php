@@ -184,7 +184,7 @@ class SupportController implements ControllerProviderInterface
         $yearmonth = $request->get('yearmonth');
         if ($type == 'year') {
             $date = date_create($yearmonth . '-01');
-            $begin_datetime = (clone $date)->modify("first day of this year");
+            $begin_datetime = (clone $date)->modify("first day of january this year");
             $end_datetime = (clone $begin_datetime)->modify("first day of next year");
         } elseif ($type == 'yearmonth') {
             $begin_datetime = date_create($yearmonth . '-01');
@@ -207,7 +207,7 @@ class SupportController implements ControllerProviderInterface
         foreach ($support_view_dtos as $support_view_dto) {
             $csv_row = [];
             foreach ($columns as $column_name => $column) {
-                $csv_row[$column_name] = $support_view_dto->display_dict[$column->key];
+                $csv_row[$column_name] = $support_view_dto->display_dict[$column->key] ?? '';
             }
             $csv_row = $this->excelPostworkBody($csv_row, $target);
             $csvs[] = $csv_row;
