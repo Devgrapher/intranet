@@ -425,6 +425,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
+                'CO팀 승인' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                'CO팀 승인자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                'CO팀 승인시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '승인지원율' => (new SupportColumnCategory('support_rate', ['-', '75%', '100%']))
                     ->readonly()
                     ->addEditableUserPred($is_manager)
