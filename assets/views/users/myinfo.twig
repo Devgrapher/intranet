@@ -30,7 +30,7 @@
         $.ajax({
           url: "/users/edit",
           type: "post",
-          data: {uid: {{ info.uid }}, key:key, value:value},
+          data: {pk: {{ info.uid }}, name:key, value:value},
           success: function (data) {
             let result = data;
             if (key=='comment' && !result) {

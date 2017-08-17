@@ -11,141 +11,139 @@
       height: 20px;
     }
 
-    tbody tr.js_exited_user {
-      /*display: none;*/
-    }
-
-    tbody tr.js_exited_user td {
-      background: #ddaaaa;
-    }
-
-    tbody tr.joined_user td {
-      background: #ddffdd;
-    }
-
-    td.hidden_column {
-      display: none;
-    }
-
     .popover-content {
       color: #333;
     }
+
+    a.editable-click, a.editable-click:hover {
+      border-bottom: 0;
+    }
+
+    a.editable-empty, a.editable-empty:hover {
+      color: #838383;
+    }
   </style>
   <script>
-    require(["jquery", "jquery.jeditable", "bootstrap", "bootstrap.datatables"], function ($) {
-      $('[data-toggle="popover"]').popover(
-        {
-          'trigger': 'hover',
-          placement: 'bottom'
-        });
-      $('table.table')
-        .on('draw.dt', function () {
-          $('tr.user td[data-key]').each(function () {
-            var uid = $(this).parent().data('uid');
-            var key = $(this).data('key');
-            var select_url = $(this).data('select-url');
-            var submitdata = {uid: uid, key: key};
+    require(["bootstrap", "bootstrap-table.editable"], function () {
+      function getRowStyle(row) {
+        if (row['on_date'] === '9999-01-01' && row['off_date'] === '9999-01-01') {
+          return { classes: 'info' };
+        } else if ( row['off_date'] !== '9999-01-01' ) {
+          return { classes: 'danger' };
+        }
 
-            var args = {
-              submitdata: submitdata,
-              height: '20px',
-              submit: 'OK',
-              placeholder: '[내용없음]',
-              data: function (value) {
-                return value;
+        return {};
+      }
+
+      $.getJSON( "/users/jeditable_key/team", function( teamList ) {
+        $('#tb_users').bootstrapTable({
+          url: '/users/list',
+          editableUrl: '/users/edit',
+          search: true,
+          pagination: true,
+          pageSize: 25,
+          pageList: [25, 50, 100],
+          editableEmptytext: '[내용없음]',
+          rowStyle: getRowStyle,
+          idField: 'uid',
+          columns: [
+            { field: 'id', sortable: true, editable: true },
+            { field: 'name', sortable: true, editable: true },
+            { field: 'email', sortable: true, editable: true },
+            {
+              field: 'team',
+              sortable: true,
+              editable: {
+                type: 'select',
+                prepend: { none: "--------------" },
+                source: teamList,
               }
-            };
-            if (select_url) {
-              args.loadurl = select_url;
-              args.type = 'select';
-            }
-
-            $(this).editable('/users/edit', args);
-          });
-        })
-        .dataTable({
-          "lengthMenu": [[20, -1], [20, "All"]]
+            },
+            { field: 'team_detail', sortable: true, editable: true },
+            { field: 'position', sortable: true, editable: true },
+            { field: 'outer_call', sortable: true, editable: true },
+            { field: 'inner_call', sortable: true, editable: true },
+            { field: 'mobile', sortable: true, editable: true },
+            { field: 'birth', sortable: true, editable: true },
+            { field: 'on_date', sortable: true, editable: true },
+            { field: 'off_date', sortable: true, editable: true },
+            { field: 'personcode', sortable: true, editable: true },
+            { field: 'ridibooks_id', sortable: true, editable: true }
+          ]
         });
 
+        $('#tb_users').on('all.bs.table', function () {
+          $('[data-toggle="popover"]').popover({
+            trigger: 'hover',
+            placement: 'bottom'
+          });
+        });
+      });
+
+      $('#btn_see_all').click(function () {
+        $('#tb_users').bootstrapTable('refresh');
+      });
+
+      $('#btn_see_outer').click(function () {
+        $('#tb_users').bootstrapTable('refresh', {
+          query: { outer: '1' }
+        });
+      });
     });
   </script>
 {% endblock %}
-{% block body %}
-  <div class="container-fluid">
-    <div>
-      <a href="list">
-        <button class="btn btn-default">직원만 보기</button>
-      </a>
-      <a href="list?outer=1">
-        <button class="btn btn-default">퇴사자만 보기</button>
-      </a>
-    </div>
-    <table class="table">
-      <colgroup>
-        <col width="1px">
-        <col width="*">
-      </colgroup>
-      <thead>
-      <tr>
-        <td class="hidden_column"></td>
-        <td>아이디<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                  data-content="TA계정 아이디을 다른 사람이 이어서 쓰는경우, 기존의 TA직원의 ID를 다른것으로 변경 후 가입진행해주세요"></i></td>
-        <td>이름<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                 data-content="이름이 TA로 시작하면 조직도, 전사주간 조회불가"></i></td>
-        <td>이메일</td>
-        <td>팀<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                data-content="엑셀 다운로드시 표시 됨"></i></td>
-        <td>팀 세부<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                   data-content="'인사팀' or else"></i></td>
-        <td>직급<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                 data-content="'CEO', '본부장', '팀장', 'CTO', 'CFO', 'CDO', '기타' 중 하나이면 승인자(결제요청 등)으로 지정가능"></i></td>
-        <td>외부전화</td>
-        <td>내선전화</td>
-        <td>휴대폰</td>
-        <td>생일</td>
-        <td>입사일<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                  data-content="입사일이 입력이 되어야 로그인가능"></i></td>
-        <td>퇴사일<i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-                  data-content="퇴사일이 입력되면 해당 날짜 이후 로그인 불가"></i></td>
-        <td>사원번호</td>
-        <td>리디북스아이디</td>
-      </tr>
-      </thead>
-      <tbody>
-      {% for user in users %}
-        <tr
-          class="
-          user
-            {% if user.on_date == '9999-01-01' and user.off_date == '9999-01-01' %}
-              joined_user
-            {% endif %}
-            {% if user.off_date != '9999-01-01' %}
-              js_exited_user
-            {% endif %}
-          "
-          data-uid="{{ user.uid }}"
-        >
-          <td class="hidden_column">
-            {{ user.on_date }}
-          </td>
-          <td data-key="id">{{ user.id }}</td>
-          <td data-key="name">{{ user.name }}</td>
-          <td data-key="email">{{ user.email }}</td>
-          <td data-key="team" data-select-url="/users/jeditable_key/team">{{ user.team }}</td>
-          <td data-key="team_detail">{{ user.team_detail }}</td>
-          <td data-key="position">{{ user.position }}</td>
-          <td data-key="outer_call">{{ user.outer_call }}</td>
-          <td data-key="inner_call">{{ user.inner_call }}</td>
-          <td data-key="mobile">{{ user.mobile }}</td>
-          <td data-key="birth">{{ user.birth }}</td>
-          <td data-key="on_date">{{ user.on_date }}</td>
-          <td data-key="off_date">{{ user.off_date }}</td>
-          <td data-key="personcode">{{ user.personcode }}</td>
-          <td data-key="ridibooks_id">{{ user.ridibooks_id }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
 
+{% block body %}
+  <div>
+    <button id="btn_see_all" class="btn btn-default">직원만 보기</button>
+    <button id="btn_see_outer" class="btn btn-default">퇴사자만 보기</button>
+  </div>
+  <table id="tb_users">
+    <thead>
+    <tr>
+      <th data-field="id" data-sortable="true" data-align="center">
+        아이디
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="TA계정 아이디을 다른 사람이 이어서 쓰는경우, 기존의 TA직원의 ID를 다른것으로 변경 후 가입진행해주세요"></i>
+      </th>
+      <th data-field="name" data-sortable="true" data-editable="true">
+        이름
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="이름이 TA로 시작하면 조직도, 전사주간 조회불가"></i>
+      </th>
+      <th data-field="email" data-sortable="true" data-editable="true">이메일</th>
+      <th data-field="team" data-sortable="true" data-editable="true">
+        팀
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="엑셀 다운로드시 표시 됨"></i>
+      </th>
+      <th data-field="team_detail" data-sortable="true" data-editable="true">
+        팀 세부
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="'인사팀' or else"></i>
+      </th>
+      <th data-field="position" data-sortable="true" data-editable="true">
+        직급
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="'CEO', '본부장', '팀장', 'CTO', 'CFO', 'CDO', '기타' 중 하나이면 승인자(결제요청 등)으로 지정가능"></i>
+      </th>
+      <th data-field="outer_call" data-sortable="true" data-editable="true">외부전화</th>
+      <th data-field="inner_call" data-sortable="true" data-editable="true">내선전화</th>
+      <th data-field="mobile" data-sortable="true" data-editable="true">휴대폰</th>
+      <th data-field="birth" data-sortable="true" data-editable="true">생일</th>
+      <th data-field="on_date" data-sortable="true" data-editable="true">
+        입사일
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="입사일이 입력이 되어야 로그인가능"></i>
+      </th>
+      <th data-field="off_date" data-sortable="true" data-editable="true">
+        퇴사일
+        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
+           data-content="퇴사일이 입력되면 해당 날짜 이후 로그인 불가"></i>
+      </th>
+      <th data-field="personcode" data-sortable="true" data-editable="true">사원번호</th>
+      <th data-field="ridibooks_id" data-sortable="true" data-editable="true">리디북스아이디</th>
+    </tr>
+    </thead>
+  </table>
 {% endblock %}
