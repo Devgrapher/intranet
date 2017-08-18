@@ -14,8 +14,11 @@
       "jquery.fileupload": "blueimp-file-upload/js/jquery.fileupload",
       'datatables.net': 'datatables/media/js/jquery.dataTables',
       "bootstrap": "bootstrap/dist/js/bootstrap.min",
-      'bootstrap.datatables': 'datatables/media/js/dataTables.bootstrap',
-      'select2': 'select2/select2.min',
+      "bootstrap-table": "bootstrap-table/dist/bootstrap-table",
+      "bootstrap-table.editable": "bootstrap-table/src/extensions/editable/bootstrap-table-editable",
+      "x-editable": "x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min",
+      "bootstrap.datatables": "datatables/media/js/dataTables.bootstrap",
+      "select2": "select2/select2.min",
 
       // jquery.fileupload bug hotfix
       "jquery-ui/widget": "../empty"
@@ -31,6 +34,9 @@
       "bootstrap": ["jquery"],
       "bootstrap.datatables": ["datatables.net", "bootstrap"],
       "datatables.net": ["jquery"],
+      "bootstrap-table": ["jquery", "bootstrap"],
+      "bootstrap-table.editable": ["bootstrap-table", "x-editable"],
+      "x-editable": ["jquery"],
       "jquery.cookie": ["jquery"],
       "jqueryte": ["jquery"],
       "jquery.fileupload": ["jquery", "jquery-ui"]

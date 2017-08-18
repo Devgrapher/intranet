@@ -102,22 +102,24 @@ class UsersController implements ControllerProviderInterface
             return '권한이 없습니다';
         }
 
-        $user_dtos = UserDtoFactory::createAllUserDtos();
-        if ($request->get('outer')) {
-            $user_dtos = array_filter($user_dtos, function (UserDto $item) {
-                $type = (new UserDtoHandler($item))->getType();
-                return $type == UserType::OUTER;
-            });
-        } else {
-            $user_dtos = array_filter($user_dtos, function (UserDto $item) {
-                $type = (new UserDtoHandler($item))->getType();
-                return $type != UserType::OUTER;
-            });
+        if (in_array('application/json', $request->getAcceptableContentTypes())) {
+            $user_dtos = UserDtoFactory::createAllUserDtos();
+            if ($request->get('outer')) {
+                $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
+                    $type = (new UserDtoHandler($item))->getType();
+                    return $type == UserType::OUTER;
+                }));
+            } else {
+                $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
+                    $type = (new UserDtoHandler($item))->getType();
+                    return $type != UserType::OUTER;
+                }));
+            }
+
+            return $app->json($user_dtos);
         }
 
-        return $app['twig']->render('users/list.twig', [
-            'users' => $user_dtos,
-        ]);
+        return $app['twig']->render('users/list.twig');
     }
 
     public function myInfo(Application $app)
@@ -133,11 +135,11 @@ class UsersController implements ControllerProviderInterface
 
     public function edit(Request $request)
     {
-        $uid = $request->get('uid');
-        $key = $request->get('key');
+        $uid = $request->get('pk');
+        $name = $request->get('name');
         $value = $request->get('value');
 
-        if (UserEditService::updateInfo($uid, $key, $value) !== null) {
+        if (UserEditService::updateInfo($uid, $name, $value) !== null) {
             return Response::create($value, Response::HTTP_OK);
         } else {
             return Response::create("server error", Response::HTTP_SERVICE_UNAVAILABLE);
