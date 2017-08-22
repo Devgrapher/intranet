@@ -4,7 +4,6 @@ namespace Deployer;
 require_once 'recipe/common.php';
 require_once 'vendor/deployer/recipes/slack.php';
 
-require_once __DIR__ . '/task/envTask.php';
 require_once __DIR__ . '/task/slackTask.php';
 require_once __DIR__ . '/task/vaultTask.php';
 
