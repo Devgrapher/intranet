@@ -2,7 +2,7 @@
 
 namespace Intra\Service\Menu;
 
-use Intra\Service\Auth\ExceptTaAuth;
+use Intra\Service\Auth\ExceptOuter;
 use Intra\Service\Auth\Superclass\AuthMultiplexer;
 use Intra\Service\User\UserSession;
 
@@ -29,7 +29,7 @@ class Link
          * @var AuthMultiplexer
          */
         if (is_null($auth_checker)) {
-            $auth_checker = new ExceptTaAuth();
+            $auth_checker = new ExceptOuter();
         }
 
         $this->title = $title;

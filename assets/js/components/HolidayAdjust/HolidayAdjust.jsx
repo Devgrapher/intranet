@@ -93,6 +93,11 @@ class HolidayAdjust extends React.Component {
       return;
     }
 
+    if(!this.state.managerUid) {
+      alert('결제자를 선택하셔야 합니다.');
+      return;
+    }
+
     const data = {
       uid: this.state.uid,
       diffYear: this.state.diffYear,

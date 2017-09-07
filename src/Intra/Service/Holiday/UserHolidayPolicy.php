@@ -155,14 +155,14 @@ class UserHolidayPolicy
     public function getModCost($year)
     {
         return HolidayAdjustModel::where('uid', $this->user->uid)
-            ->where('diff_year', '<=', $year)
+            ->where('diff_year', '=', $year)
             ->sum('diff');
     }
 
     public function getModList($year)
     {
         return HolidayAdjustModel::where('uid', $this->user->uid)
-            ->where('diff_year', '<=', $year)
+            ->where('diff_year', '=', $year)
             ->get();
     }
 

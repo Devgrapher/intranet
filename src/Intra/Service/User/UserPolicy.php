@@ -101,7 +101,18 @@ class UserPolicy
         if (strpos($user->email, ".ta") !== false
             || strpos($user->email, ".oa") !== false
             || strpos(strtoupper($user->name), "TA") !== false
+            || strpos($user->name, "(아)") !== false
         ) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public static function isStudioD(UserDto $user)
+    {
+        if ($user->email === "studiod@ridi.com") {
             return true;
         }
 
@@ -122,7 +133,7 @@ class UserPolicy
 
         $is_free_to_login = in_array($request->getPathInfo(), $free_to_login_path);
         $uid = UserSession::isLogined();
-        if (!$uid && $_ENV['is_dev']) {
+        if (!$uid && $_ENV['test_id'] && $_ENV['is_dev']) {
             UserSession::loginByAzure($_ENV['test_id']);
             $uid = UserSession::isLogined();
         }
