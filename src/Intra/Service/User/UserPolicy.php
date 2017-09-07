@@ -101,6 +101,7 @@ class UserPolicy
         if (strpos($user->email, ".ta") !== false
             || strpos($user->email, ".oa") !== false
             || strpos(strtoupper($user->name), "TA") !== false
+            || strpos(strtoupper($user->name), "(아)") !== false
         ) {
             return true;
         }
