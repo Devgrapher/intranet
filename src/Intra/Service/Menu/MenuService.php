@@ -2,6 +2,8 @@
 
 namespace Intra\Service\Menu;
 
+use Intra\Service\Auth\ExceptOuter;
+use Intra\Service\Auth\ExceptStudioD;
 use Intra\Service\Auth\ExceptTaAuth;
 use Intra\Service\Auth\OnlyHolidayEditable;
 use Intra\Service\Auth\OnlyPressManager;
@@ -38,33 +40,33 @@ class MenuService
         if (UserSession::isLogined()) {
             if ($_ENV['domain'] == 'ridi.com') {
                 $left_menu_list = [
-                    new Link('직원찾기', '/users/', new PublicAuth()),
+                    new Link('직원찾기', '/users/', new ExceptStudioD()),
                     new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
-                    new Link('전사 주간 업무 요약', '/weekly/', new ExceptTaAuth(), '_blank'),
-                    new Link('회의실', '/rooms/', new PublicAuth()),
+                    new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
+                    new Link('회의실', '/rooms/', new ExceptStudioD()),
                     new Link('포커스룸', '/focus/'),
                     '근태관리' => [
-                        new Link('휴가신청', '/holidays/', new PublicAuth()),
+                        new Link('휴가신청', '/holidays/', new ExceptStudioD()),
                         new Link('휴가조정(관리자)', '/holidayadmin/', new OnlyHolidayEditable()),
-                        new Link('얼리파마', '/flextime/', new PublicAuth()),
+                        new Link('얼리파마', '/flextime/', new ExceptStudioD()),
                     ],
                     '지원요청' => [
-                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DEVICE), '/support/' . SupportPolicy::TYPE_DEVICE, new PublicAuth()),
+                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DEVICE), '/support/' . SupportPolicy::TYPE_DEVICE, new ExceptStudioD()),
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_FAMILY_EVENT), '/support/' . SupportPolicy::TYPE_FAMILY_EVENT),
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_BUSINESS_CARD), '/support/' . SupportPolicy::TYPE_BUSINESS_CARD),
-                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DEPOT), '/support/' . SupportPolicy::TYPE_DEPOT, (new ExceptTaAuth())->accept(['hr.ta'])),
+                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DEPOT), '/support/' . SupportPolicy::TYPE_DEPOT, (new ExceptOuter())->accept(['hr.ta'])),
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_GIFT_CARD_PURCHASE), '/support/' . SupportPolicy::TYPE_GIFT_CARD_PURCHASE),
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_TRAINING), '/support/' . SupportPolicy::TYPE_TRAINING),
-                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DINNER), '/support/' . SupportPolicy::TYPE_DINNER, new PublicAuth(), '_blank'),
-                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DELIVERY), '/support/' . SupportPolicy::TYPE_DELIVERY, new PublicAuth(), '_blank'),
-                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_PRESENT), '/support/' . SupportPolicy::TYPE_PRESENT, new PublicAuth(), '_blank'),
-                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_VPN), '/support/' . SupportPolicy::TYPE_VPN, new PublicAuth()),
+                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DINNER), '/support/' . SupportPolicy::TYPE_DINNER, new ExceptStudioD(), '_blank'),
+                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_DELIVERY), '/support/' . SupportPolicy::TYPE_DELIVERY, new ExceptStudioD(), '_blank'),
+                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_PRESENT), '/support/' . SupportPolicy::TYPE_PRESENT, new ExceptStudioD(), '_blank'),
+                        new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_VPN), '/support/' . SupportPolicy::TYPE_VPN, new ExceptStudioD()),
                     ],
                     new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3'])),
-                    new Link('비용정산', '/receipts/', new PublicAuth()),
-                    new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
+                    new Link('비용정산', '/receipts/', new ExceptStudioD()),
+                    new Link('급여관리', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     new Link('보도자료 관리', '/press/', new OnlyPressManager()),
-                    new Link('조직도', '/organization/chart', new ExceptTaAuth(), '_blank'),
+                    new Link('조직도', '/organization/chart', new ExceptOuter(), '_blank'),
                 ];
             } else {
                 $left_menu_list = [
