@@ -108,6 +108,16 @@ class UserPolicy
         return false;
     }
 
+
+    public static function isStudioD(UserDto $user)
+    {
+        if ($user->email === "studiod@ridi.com") {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function assertRestrictedPath(Request $request)
     {
         $free_to_login_path = [
