@@ -38,6 +38,7 @@ class UserPaymentConst
     {
         $const = [];
         $const['team'] = Organization::readTeamNames();
+        $const['team_detail'] = Organization::readTeamDetailNames();
         $const['product'] = ['리디북스', '리디스토리', '페이퍼샵', '공통'];
         $const['tax'] = ['Y', 'N/A'];
         $const['is_account_book_registered'] = ['N', 'Y'];
