@@ -3,6 +3,7 @@ namespace Intra\Service\Payment;
 
 use Intra\Core\BaseDto;
 use Intra\Core\MsgException;
+use Intra\Service\User\Organization;
 use Intra\Service\User\UserJoinService;
 use Ridibooks\Platform\Common\DateUtil;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ class PaymentDto extends BaseDto
     public $request_date;
     public $month;
     public $team;
+    public $team_detail;
     public $product;
     public $category;
     public $desc;
@@ -107,6 +109,7 @@ class PaymentDto extends BaseDto
             'month',
             'manager_uid',
             'team',
+            'team_detail',
             'product',
             'category',
             'desc',
@@ -167,6 +170,13 @@ class PaymentDto extends BaseDto
         }
         if (DateUtil::isWeekend($return->pay_date)) {
             throw new MsgException('결제(예정)일을 주말로 설정할 수 없습니다');
+        }
+        if ($return->team == Organization::getTeamName(Organization::ALIAS_ROMANCE_BL) &&
+            (!$return->team_detail || $return->team_detail === '없음')) {
+            throw new MsgException($return->team . ' 부서인 경우 부서 세부분류를 선택해야 합니다.');
+        }
+        if ($return->team != Organization::getTeamName(Organization::ALIAS_ROMANCE_BL)) {
+            $return->team_detail = '';
         }
         if (!$return->is_account_book_registered) {
             $return->is_account_book_registered = 'N';
