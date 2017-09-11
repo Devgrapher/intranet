@@ -354,8 +354,8 @@
                 setUserArea(userId, 'floor11');
 
               } else if (menuIndex == '7') {
-                var isShow = userObj.css('opacity');
-                setUserHideShow(userId, isShow!=1);
+                var isHide = userObj.hasClass('long-absence');
+                setUserHideShow(userId, isHide);
 
               } else {
                 var colorCode = selectedMenu.text();

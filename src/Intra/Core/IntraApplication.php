@@ -32,6 +32,10 @@ class IntraApplication extends Application
         if (!empty($_ENV['trusted_proxies'])) {
             $trusted_proxies = explode('|', $_ENV['trusted_proxies']);
             Request::setTrustedProxies($trusted_proxies);
+
+            // This is for avoiding ConflictingHeadersException.
+            // See https://github.com/symfony/symfony/issues/20215#issuecomment-261252378
+            Request::setTrustedHeaderName(Request::HEADER_FORWARDED, null);
         }
 
         $this->register(new TwigServiceProvider(), [

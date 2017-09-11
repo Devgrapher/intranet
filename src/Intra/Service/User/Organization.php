@@ -14,6 +14,7 @@ class Organization
     const ALIAS_DEVICE = 'device';
     const ALIAS_CCPQ = 'ccpq';
     const ALIAS_STORY_OP = 'story_op';
+    const ALIAS_ROMANCE_BL = 'romance_bl';
 
     public static function readTeamNames()
     {
@@ -22,10 +23,24 @@ class Organization
         return $names;
     }
 
+    public static function readTeamDetailNames()
+    {
+        return [
+            '없음',
+            'BL',
+            '로맨스',
+        ];
+    }
+
     public static function getTeamName($alias)
     {
         $team_repo = new TeamRepository();
-        $team = $team_repo->first(['alias' => $alias])->toArray();
+        $team_with_alias = $team_repo->first(['alias' => $alias]);
+        if (!$team_with_alias) {
+            return $alias;
+        }
+
+        $team = $team_with_alias->toArray();
         return $team['name'];
     }
 }
