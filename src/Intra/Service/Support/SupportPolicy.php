@@ -378,6 +378,7 @@ class SupportPolicy
                         '노트북',
                         '데스크탑',
                         '서버 및 네트워크 장비',
+                        '소프트웨어/라이선스',
                     ]
                 ),
                 '품목/수량' => new SupportColumnText('detail'),

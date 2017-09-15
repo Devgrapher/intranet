@@ -24,6 +24,7 @@
     .tbody-scroll tbody {
       display: block;
       max-height: 1200px;
+      min-height: 100px;
       overflow: auto;
     }
 
@@ -66,6 +67,23 @@
       opacity: 0;
       filter: alpha(opacity=0);
     }
+
+    #explan th {
+      text-align: center;
+    }
+
+    #explan td {
+      background-color: #ffffff;
+      vertical-align: middle;
+    }
+
+    #explan td:first-child,td:nth-child(2) {
+      text-align: center;
+    }
+
+    #explan td p {
+      margin: 0px;
+    }
   </style>
   <script>
     require(["jquery", "jquery.jeditable", "jquery.fileupload", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
@@ -90,7 +108,7 @@
       });
 
       var columnVisible = {};
-      var columnWidths = [15, 90, 70, 80, 80, 100, 100, 120, 100, 240, 100, 80, 240, 100, 60, 100, 100, 100, 60, 140, 100, 140, 100, 300, 100, 100, 40];
+      var columnWidths = [15, 90, 70, 80, 80, 100, 100, 120, 100, 240, 100, 80, 240, 300, 60, 100, 100, 100, 60, 140, 100, 140, 100, 300, 100, 100, 40];
 
       function setAllColumnWidth() {
         var index = 0;
@@ -839,17 +857,92 @@
 
   <div style="width: 800px">
         <pre>
+<b>※ 재무팀의 비용검토를 위해 결제요청은 결제일기준 최소 영업일 3일전에 신청해주세요.</b>
+<br>
 A. 기본정보
   1. <b><span style="color: red">승인자</span> : 본인의 상급자 (팀장, 파트장 등등)</b>
   2. 귀속월 : 비용이 실제 사용되는 년/월을 입력 (귀속월이 확정되지 않은 경우, 당월 입력할 것)
   3. 귀속부서 및 프로덕트 : 목록에서 선택
-  4. 분류 : 사용 용도를 간단하게 입력 (ex. 광고비, 인쇄비, …)
-  5. 상세내역 : 사용목적 등을 자세하게 입력
+  4. 상세내역 : 사용목적 등을 자세하게 입력
+<br>
 B. 결제정보
-  1. 입금금액 : 부가세 포함한 전체 금액, 또는 원천징수세액 제외한 실 지급 금액을 입력
-  2. 결제예정일 : 거래처에 입금을 해주어야 하는 날짜를 입력
-  3. 세금계산서수취여부 : 결제요청 당시 수취여부 기입 (Y/N) 만약, 미수취상태인 경우 "비고"란에 수취예정일 기입
-4. 비고 : 구매해야할 품목의 링크 입력
+  1. 입금금액 : 부가세 포함한 전체 금액, 또는 원천징수세액 제외한 실지급 금액을 입력
+  2. 거래증빙 첨부 안내 (재무팀에서는 거래내역 확인을 위해 추가증빙을 요청드릴 수 있습니다.)
+  <table id="explan" class="table table-bordered table-condensed" style="width: 700px">
+    <thead>
+      <tr>
+        <th>거래종류</th>
+        <th>거래대상</th>
+        <th>첨부증빙</th>
+        <th>비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2">콘텐츠</td>
+        <td>사업자</td>
+        <td>계약서, 계산서, 통장사본</td>
+        <td>(통장사본은 첫거래시)</td>
+      </tr>
+      <tr>
+        <td style="display: none;"></td>
+        <td>개인</td>
+        <td>계약서, 주민등록증 사본</td>
+        <td>주민등록증 사본은 zip암호화 필수</td>
+      </tr>
+      <tr>
+        <td rowspan="2">제작, 표지, 제작관련 용역</td>
+        <td>사업자</td>
+        <td>계약서, 세금계산서</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="display: none;"></td>
+        <td>개인</td>
+        <td>계약서, 주민등록증 사본</td>
+        <td>주민등록증 사본은 zip암호화 필수</td>
+      </tr>
+      <tr>
+        <td>광고비</td>
+        <td>사업자</td>
+        <td>계약서(or 금액산출근거자료), 세금계산서</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>환불 (캐시, 코인, AS)</td>
+        <td>개인</td>
+        <td>금액산출 근거 자료</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>운반비</td>
+        <td></td>
+        <td>
+          <p>월간계약: 세금계간서, 이용내역</p>
+          <p>일회성 착불: 영수증</p>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>
+          <p>기타비용</p>
+          <p>(외주용역, 소모품비, 상품매입 등)</p>
+        </td>
+        <td>사업자</td>
+        <td>계약서, (세금)계산서</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>기타</td>
+        <td></td>
+        <td>재무팀 문의</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  * 모든 증빙은 <b><span style="color: red">PDF파일</span></b>로 첨부해주세요 (거래명세서상 내역이 많은 경우에는 엑셀첨부가능.)
+  ** 위 증빙 외에 참고할 수 있는 증빙 (거래명세서, 인보이스, 이메일, 사업자등록증)이 있다면 함께 첨부해주세요
+  *** 증빙없이 선지급해야하는 경우에는 비고란에 사유와 함께 증빙첨부 가능일을 적어주세요.
         </pre>
 
   </div>

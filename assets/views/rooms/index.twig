@@ -256,13 +256,13 @@
     <div class="dhx_cal_navline" style="margin-bottom: 100px;">
       {% if notice is defined %}
         <div style="position:absolute;left:180px;top:-10px;color: #888888">
-          {{ notice }}
+          {{ notice|raw }}
         </div>
       {% endif %}
 
       {% if warning is defined %}
         <div style="position:absolute;left:180px;top:20px;text-decoration:underline;font-weight:bold;font-size:14px;">
-          {{ warning }}
+          {{ warning|raw }}
         </div>
       {% endif %}
 
