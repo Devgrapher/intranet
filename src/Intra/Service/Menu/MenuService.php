@@ -44,7 +44,6 @@ class MenuService
                     new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
                     new Link('회의실', '/rooms/', new ExceptStudioD()),
-                    new Link('포커스룸', '/focus/'),
                     '근태관리' => [
                         new Link('휴가신청', '/holidays/', new ExceptStudioD()),
                         new Link('휴가조정(관리자)', '/holidayadmin/', new OnlyHolidayEditable()),
@@ -87,7 +86,6 @@ class MenuService
                     ],
                     new Link('비용정산', '/receipts/', new PublicAuth()),
                     new Link('회의실', '/rooms/', new PublicAuth()),
-                    new Link('포커스룸', '/focus/'),
                     new Link('리디 생활 가이드', '/users/'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
                 ];
