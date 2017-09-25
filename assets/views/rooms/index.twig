@@ -211,8 +211,8 @@
       var html = "<div class='dhx_event_move dhx_header' style='margin: 0px; padding: 0px; width: " + container_width + ";'></div>";
       html += "<div class='dhx_event_move dhx_body' style='margin: 0px; padding: 0px; height: " + container_height + ";'>";
 
-      html += "<span class='dhx_title'>" + scheduler.templates.event_date(ev.start_date) + "</span>";
-      html += "<span>" + scheduler.templates.event_text(ev.start_date,ev.end_date,ev) + "</span>";
+      html += "<span class='dhx_title'>" + scheduler.templates.event_date(ev.start_date) + " - " + scheduler.templates.event_date(ev.end_date) + "</span>";
+      html += "<span style='margin-left: 5px'>" + scheduler.templates.event_text(ev.start_date,ev.end_date,ev) + "</span>";
 
       html += "</div>";
       html += "<div class='dhx_event_resize dhx_footer' style='width: " + container_width + "'></div>";
