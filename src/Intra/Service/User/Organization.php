@@ -19,7 +19,7 @@ class Organization
     public static function readTeamNames()
     {
         $team_repo = new TeamRepository();
-        $names = $team_repo->all(['name'], 'id', 'asc')->pluck('name')->toArray();
+        $names = $team_repo->all(['name'], 'name', 'asc')->pluck('name')->toArray();
         return $names;
     }
 
