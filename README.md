@@ -1,4 +1,7 @@
 # Ridibooks Intranet
+
+[![](https://images.microbadger.com/badges/version/ridibooks/intranet.svg)](http://microbadger.com/images/ridibooks/intranet "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/ridibooks/intranet.svg)](http://microbadger.com/images/ridibooks/intranet "Get your own version badge on microbadger.com")
 [![Join the chat at https://gitter.im/ridibooks/intranet](https://badges.gitter.im/ridibooks/intranet.svg)](https://gitter.im/ridibooks/intranet?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Settings
