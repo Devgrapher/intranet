@@ -538,7 +538,7 @@ class SupportPolicy
                 }
             },
             self::TYPE_TRAINING => function ($support_dto, $columns) {
-                if (empty($support_dto->dict[$columns['수강료']->key])) {
+                if (empty($support_dto->dict[$columns['수강료']->key]) && $support_dto->dict[$columns['수강료']->key] !== '0') {
                     throw new MsgException('수강료를 입력해주세요');
                 }
             },
