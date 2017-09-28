@@ -133,22 +133,32 @@ class PaymentDto extends BaseDto
 
         $return->uid = $uid;
         if (!$is_admin) {
-            unset($return->status);
-            unset($return->paytype);
+            if (isset($return->status)) {
+                unset($return->status);
+            }
+            if (isset($return->paytype)) {
+                unset($return->paytype);
+            }
         }
 
         $return->request_date = date('Y-m-d');
         $return->month = preg_replace('/\D/', '/', trim($return->month));
         $return->month = date('Y-m', strtotime($return->month . '/1'));
         $return->pay_date = preg_replace('/\D/', '-', trim($return->pay_date));
-        if (strlen($return->status) == 0) {
+        if (isset($return->status) && strlen($return->status) == 0) {
             unset($return->status);
         }
-        if (!$return->manager_uid) {
+        if (empty($return->manager_uid)) {
             throw new MsgException('승인자가 누락되었습니다. 다시 입력해주세요');
         }
-        if (!$return->product) {
+        if (empty($return->team)) {
+            throw new MsgException('귀속부서가 누락되었습니다. 다시 입력해주세요');
+        }
+        if (empty($return->product)) {
             throw new MsgException('프로덕트가 누락되었습니다. 다시 입력해주세요');
+        }
+        if (empty($return->category)) {
+            throw new MsgException('분류가 누락되었습니다. 다시 입력해주세요');
         }
         if (strlen($return->paytype) == 0) {
             unset($return->paytype);

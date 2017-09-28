@@ -559,7 +559,11 @@
               {{ payment.manger_accept.created_datetime | date('Y-m-d') }}
             {% endif %}
           </td>
-          <td data-key='is_account_book_registered' data-keyselect>{{ payment.is_account_book_registered }}</td>
+          {% if isSuperAdmin %}
+            <td data-key='is_account_book_registered' data-keyselect>{{ payment.is_account_book_registered }}</td>
+          {% else %}
+            <td>{{ payment.is_account_book_registered }}</td>
+          {% endif %}
           <td>
             {% if payment.is_manager_accepted == 0 %}
               승인자 확인 필요
@@ -677,7 +681,8 @@
           <td></td>
           <td></td>
           <td>
-            <select name='manager_uid' js_cookie_save js_data_chosen>
+            <select name='manager_uid' js_data_chosen>
+              <option value='0'>선택</option>
               {% for user in managerUsers %}
                 <option value='{{ user.uid }}'>{{ user.name }}</option>
               {% endfor %}
@@ -691,7 +696,8 @@
                    placeholder="yyyy/mm"/>
           </td>
           <td class="highlight">
-            <select name='team' js_cookie_save js_data_chosen>
+            <select name='team' js_data_chosen>
+              <option value='0'>선택</option>
               {% for team in const.team %}
                 <option value='{{ team }}'>{{ team }}</option>
               {% endfor %}
@@ -705,7 +711,8 @@
             </select>
           </td>
           <td class="highlight">
-            <select name='product' js_cookie_save js_data_chosen>
+            <select name='product' js_data_chosen>
+              <option value='0'>선택</option>
               {% for product in const.product %}
                 <option value='{{ product }}'>{{ product }}</option>
               {% endfor %}
@@ -713,12 +720,9 @@
           </td>
           <td class="highlight">
             <select id='js_category_input' js_data_chosen>
+              <option value='0'>선택</option>
               {% for category in const.category %}
-                {% if loop.first %}
-                  <option value='{{ category }}' selected>{{ category }}</option>
-                {% else %}
-                  <option value='{{ category }}'>{{ category }}</option>
-                {% endif %}
+                <option value='{{ category }}'>{{ category }}</option>
               {% endfor %}
             </select>
             <input type='hidden' name='category'/>
