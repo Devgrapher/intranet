@@ -443,22 +443,22 @@
     <input type="checkbox" name="col-toggle7" class="toggle-vis" data-column="7" js_cookie_save js_default_save="true" />재무팀 확인 -
     <input type="checkbox" name="col-toggle8" class="toggle-vis" data-column="8" js_cookie_save js_default_save="true" />귀속월 -
     <input type="checkbox" name="col-toggle9" class="toggle-vis" data-column="9" js_cookie_save js_default_save="true" />귀속부서 -
-    <input type="checkbox" name="col-toggle18" class="toggle-vis" data-column="25" js_cookie_save js_default_save="true" />부서 세부분류 -
-    <input type="checkbox" name="col-toggle10" class="toggle-vis" data-column="10" js_cookie_save js_default_save="true" />프로덕트 -
-    <input type="checkbox" name="col-toggle11" class="toggle-vis" data-column="11" js_cookie_save js_default_save="true" />분류 -
-    <input type="checkbox" name="col-toggle12" class="toggle-vis" data-column="12" js_cookie_save js_default_save="true" />상세내역 -
-    <input type="checkbox" name="col-toggle13" class="toggle-vis" data-column="13" js_cookie_save js_default_save="true" />파일 -
-    <input type="checkbox" name="col-toggle14" class="toggle-vis" data-column="14" js_cookie_save js_default_save="true" />업체명 -
-    <input type="checkbox" name="col-toggle15" class="toggle-vis" data-column="15" js_cookie_save js_default_save="true" />입금금액 -
-    <input type="checkbox" name="col-toggle16" class="toggle-vis" data-column="16" js_cookie_save js_default_save="true" />결제(예정)일 -
-    <input type="checkbox" name="col-toggle17" class="toggle-vis" data-column="17" js_cookie_save js_default_save="true" />세금계산서수취여부 -
-    <input type="checkbox" name="col-toggle19" class="toggle-vis" data-column="18" js_cookie_save js_default_save="true" />세금계산서일자 -
-    <input type="checkbox" name="col-toggle20" class="toggle-vis" data-column="19" js_cookie_save js_default_save="true" />입금은행 -
-    <input type="checkbox" name="col-toggle21" class="toggle-vis" data-column="20" js_cookie_save js_default_save="true" />입금계좌번호 -
-    <input type="checkbox" name="col-toggle22" class="toggle-vis" data-column="21" js_cookie_save js_default_save="true" />예금주 -
-    <input type="checkbox" name="col-toggle23" class="toggle-vis" data-column="22" js_cookie_save js_default_save="true" />비고 -
-    <input type="checkbox" name="col-toggle24" class="toggle-vis" data-column="23" js_cookie_save js_default_save="true" />결제수단 -
-    <input type="checkbox" name="col-toggle25" class="toggle-vis" data-column="24" js_cookie_save js_default_save="true" />상태
+    <input type="checkbox" name="col-toggle10" class="toggle-vis" data-column="10" js_cookie_save js_default_save="true" />부서 세부분류 -
+    <input type="checkbox" name="col-toggle11" class="toggle-vis" data-column="11" js_cookie_save js_default_save="true" />프로덕트 -
+    <input type="checkbox" name="col-toggle12" class="toggle-vis" data-column="12" js_cookie_save js_default_save="true" />분류 -
+    <input type="checkbox" name="col-toggle13" class="toggle-vis" data-column="13" js_cookie_save js_default_save="true" />상세내역 -
+    <input type="checkbox" name="col-toggle14" class="toggle-vis" data-column="14" js_cookie_save js_default_save="true" />파일 -
+    <input type="checkbox" name="col-toggle15" class="toggle-vis" data-column="15" js_cookie_save js_default_save="true" />업체명 -
+    <input type="checkbox" name="col-toggle16" class="toggle-vis" data-column="16" js_cookie_save js_default_save="true" />입금금액 -
+    <input type="checkbox" name="col-toggle17" class="toggle-vis" data-column="17" js_cookie_save js_default_save="true" />결제(예정)일 -
+    <input type="checkbox" name="col-toggle18" class="toggle-vis" data-column="18" js_cookie_save js_default_save="true" />세금계산서수취여부 -
+    <input type="checkbox" name="col-toggle19" class="toggle-vis" data-column="19" js_cookie_save js_default_save="true" />세금계산서일자 -
+    <input type="checkbox" name="col-toggle20" class="toggle-vis" data-column="20" js_cookie_save js_default_save="true" />입금은행 -
+    <input type="checkbox" name="col-toggle21" class="toggle-vis" data-column="21" js_cookie_save js_default_save="true" />입금계좌번호 -
+    <input type="checkbox" name="col-toggle22" class="toggle-vis" data-column="22" js_cookie_save js_default_save="true" />예금주 -
+    <input type="checkbox" name="col-toggle23" class="toggle-vis" data-column="23" js_cookie_save js_default_save="true" />비고 -
+    <input type="checkbox" name="col-toggle24" class="toggle-vis" data-column="24" js_cookie_save js_default_save="true" />결제수단 -
+    <input type="checkbox" name="col-toggle25" class="toggle-vis" data-column="25" js_cookie_save js_default_save="true" />상태
   </div>
 
   <div id="rejectModal" class="modal fade" tabindex="-1" role="dialog">
@@ -1085,6 +1085,23 @@ B. 결제정보
           </td>
           <td>
             {{ todayQueuedCost }} 원 ({{ todayQueuedCount }}건)
+          </td>
+        </tr>
+        <tr>
+          <td>
+            은행 이체 파일 다운로드
+          </td>
+          <td>
+            <form action="/payments/downloadTodayBankTransfer" method="post">
+              오늘 결제 예정
+              <select name="type">
+                <option value='none'>조건 선택</option>
+                <option value='all'>전체({{ todayQueuedCost }}원, {{ todayQueuedCount }}건)</option>
+                <option value='confirmed'>승인({{ todayConfirmedQueuedCost }}원, {{ todayConfirmedQueuedCount }}건)</option>
+                <option value='unconfirmed'>미승인({{ todayUnconfirmedQueuedCost }}원, {{ todayUnconfirmedQueuedCount }}건)</option>
+              </select>
+              <input type="submit" value="받기"/>
+            </form>
           </td>
         </tr>
         <tr>
