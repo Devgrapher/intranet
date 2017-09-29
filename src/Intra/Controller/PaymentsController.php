@@ -44,6 +44,7 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->post('/downloadActiveMonth', [$this, 'downloadActiveMonth']);
         $controller_collection->post('/downloadActiveRequestDate', [$this, 'downloadActiveRequestDate']);
         $controller_collection->post('/downloadActiveTeam', [$this, 'downloadActiveTeam']);
+        $controller_collection->post('/downloadTodayBankTransfer', [$this, 'downloadTodayBankTransfer']);
         $controller_collection->get('/downloadRemain/{month}', [$this, 'downloadRemain']);
         $controller_collection->post('/downloadTaxDate', [$this, 'downloadTaxDate']);
         $controller_collection->get('/file/{fileid}', [$this, 'downloadFile']);
@@ -187,6 +188,13 @@ class PaymentsController implements ControllerProviderInterface
         return $payment_service->getCsvRespose($payments);
     }
 
+    private function getBankTransferCsvResponse($payment_dict)
+    {
+        $payment_service = new UserPaymentStatService();
+        $payments = PaymentDtoFactory::importFromDatabaseDicts($payment_dict);
+        return $payment_service->getBankTransferCsvRespose($payments);
+    }
+
     public function download(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
@@ -253,7 +261,7 @@ class PaymentsController implements ControllerProviderInterface
     public function downloadRemain()
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
-            return new Response("권한이 없습니다", 403);
+            return new Response("권한이 없습니다", Response::HTTP_FORBIDDEN);
         }
 
         $user_payment_model = new PaymentModel();
@@ -263,7 +271,7 @@ class PaymentsController implements ControllerProviderInterface
     public function downloadTaxDate(Request $request)
     {
         if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
-            return new Response("권한이 없습니다", 403);
+            return new Response("권한이 없습니다", Response::HTTP_FORBIDDEN);
         }
 
         $month = $request->get('month');
@@ -271,6 +279,25 @@ class PaymentsController implements ControllerProviderInterface
         $month = date('Y/m/1', strtotime($month));
         $user_payment_model = new PaymentModel();
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByTaxDate($month));
+    }
+
+    public function downloadTodayBankTransfer(Request $request)
+    {
+        if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
+            return new Response("권한이 없습니다", Response::HTTP_FORBIDDEN);
+        }
+
+        $user_payment_model = new PaymentModel();
+        $type = $request->get('type');
+        if ($type === 'all') {
+            return $this->getBankTransferCsvResponse($user_payment_model->todayQueued());
+        } else if ($type === 'confirmed') {
+            return $this->getBankTransferCsvResponse($user_payment_model->todayConfirmedQueued());
+        } else if ($type === 'unconfirmed') {
+            return $this->getBankTransferCsvResponse($user_payment_model->todayUnconfirmedQueued());
+        } else {
+            return new Response("조건을 선택하세요.");
+        }
     }
 
     public function downloadFile(Request $request)

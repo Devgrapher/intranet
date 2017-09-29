@@ -75,4 +75,32 @@ class UserPaymentStatService
 
         return new CsvResponse($csvs);
     }
+
+    public function getBankTransferCsvRespose($payments)
+    {
+        if (!UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
+            return new Response("권한이 없습니다", 403);
+        }
+        //header
+        $csvs = [];
+        $arr = [
+            '은행',
+            '계좌번호',
+            '금액',
+            '내통장표시',
+            '상대방통장표시',
+        ];
+        $csvs[] = $arr;
+        foreach ($payments as $payment) {
+            $csvs[] = [
+                $payment->bank,
+                '"' . $payment->bank_account . '"',
+                $payment->price,
+                $payment->bank_account_owner,
+                '리디 주식회사',
+            ];
+        }
+
+        return new CsvResponse($csvs);
+    }
 }
