@@ -97,7 +97,7 @@ class UserPaymentStatService
                 '"' . $payment->bank_account . '"',
                 $payment->price,
                 $payment->bank_account_owner,
-                '리디 주식회사',
+                '리디주식회사',
             ];
         }
 

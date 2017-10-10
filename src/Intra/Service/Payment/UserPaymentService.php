@@ -39,16 +39,12 @@ class UserPaymentService
         $payment = PaymentDtoFactory::createFromDatabaseByPk($payment_id);
         self::assertAddFiles($payment, $self);
 
-        $password = isset($_ENV['zip_password']) ? $_ENV['zip_password'] : null;
-
         $file_service = new PaymentFileService();
-        return $file_service->uploadFileWithZipped(
+        return $file_service->uploadFile(
             $self->uid,
             $payment_id,
             $file->getClientOriginalName(),
-            $file->getRealPath(),
-            null,
-            $password
+            file_get_contents($file->getRealPath())
         );
     }
 
