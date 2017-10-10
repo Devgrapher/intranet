@@ -2,6 +2,7 @@
 
 namespace Intra\Controller;
 
+use Intra\Core\MsgException;
 use Intra\Lib\Azure\AuthorizationHelperForAADGraphService;
 use Intra\Lib\Azure\GraphServiceAccessHelper;
 use Intra\Service\User\UserSession;
@@ -9,6 +10,7 @@ use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserSessionController implements ControllerProviderInterface
 {
@@ -28,10 +30,14 @@ class UserSessionController implements ControllerProviderInterface
         $user = GraphServiceAccessHelper::getMeEntry($azure_login_token_array);
         $id = $user->mailNickname;
 
-        if (UserSession::loginByAzure($id)) {
-            return new RedirectResponse('/?after_login');
-        } else {
-            return new RedirectResponse('/users/join');
+        try {
+            if (UserSession::loginByAzure($id)) {
+                return new RedirectResponse('/?after_login');
+            } else {
+                return new RedirectResponse('/users/join');
+            }
+        } catch (MsgException $e) {
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
