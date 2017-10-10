@@ -291,9 +291,9 @@ class PaymentsController implements ControllerProviderInterface
         $type = $request->get('type');
         if ($type === 'all') {
             return $this->getBankTransferCsvResponse($user_payment_model->todayQueued());
-        } else if ($type === 'confirmed') {
+        } elseif ($type === 'confirmed') {
             return $this->getBankTransferCsvResponse($user_payment_model->todayConfirmedQueued());
-        } else if ($type === 'unconfirmed') {
+        } elseif ($type === 'unconfirmed') {
             return $this->getBankTransferCsvResponse($user_payment_model->todayUnconfirmedQueued());
         } else {
             return new Response("조건을 선택하세요.");
