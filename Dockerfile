@@ -16,8 +16,8 @@ RUN apt-get update \
 # Clean
 && apt-get autoclean -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# Set PHP upload size
-ADD docs/docker/php/uploads.ini /usr/local/etc/php/conf.d/
+# Set PHP custom config
+ADD docs/docker/php/* /usr/local/etc/php/conf.d/
 
 # Set cron
 ADD docs/docker/cron.d/intranet_crontab /etc/cron.d/
