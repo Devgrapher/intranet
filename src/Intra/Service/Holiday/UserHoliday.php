@@ -10,8 +10,8 @@ use Ridibooks\Platform\Common\DateUtil;
 
 class UserHoliday
 {
-    private $COST_ZERO_DAY_VARIABLE_TYPE = ['공가', '경조', '대체휴가', '무급휴가'];
-    private $COST_ZERO_DAY_UNVARAIABLE_TYPE = ['PWT', '무급오전반차', '무급오후반차'];
+    private $COST_ZERO_DAY_VARIABLE_TYPE = ['공가', '경조', '무급휴가'];
+    private $COST_ZERO_DAY_UNVARAIABLE_TYPE = ['PWT', '무급오전반차', '무급오후반차', '대체휴가'];
     private $COST_HALF_TYPE = ['오전반차', '오후반차'];
     private $COST_INT_TYPE = ['연차'];
 
