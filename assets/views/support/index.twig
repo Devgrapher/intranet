@@ -21,9 +21,12 @@
       padding: 0;
     }
 
+    span[data-editable]:hover {
+      cursor: pointer;
+    }
+
     .fileupload_button {
       position: relative;
-      overflow: hidden;
     }
 
     .fileupload_button input.js_fileupload {
@@ -260,7 +263,7 @@
               <span data-editable='{{ key }}' data-keyselect>{{ display_dict[key] }}</span>
             {% elseif column.class_name == 'SupportColumnCategory' %}
               {% if display_dict[key] == '-' %}
-                <span data-editable='{{ key }}' data-keyselect>선택하세요.</span>
+                <span data-editable='{{ key }}' data-keyselect style="color:red">선택하세요.</span>
               {% else %}
                 {% for name, value in column.category_items %}
                   {% if value == display_dict[key]  %}
