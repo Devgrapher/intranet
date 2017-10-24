@@ -238,7 +238,7 @@ class HolidaysController implements ControllerProviderInterface
             $rows[] = $row;
         }
 
-        return new CsvResponse($rows);
+        return new CsvResponse($rows, null, true);
     }
 
     public function downloadRemain(Request $request)
