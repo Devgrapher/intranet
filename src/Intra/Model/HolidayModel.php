@@ -40,12 +40,22 @@ class HolidayModel
             ];
         } else {
             $where = [
-                'uid' => $user->uid,
+                'holidays.uid' => $user->uid,
                 'hidden' => 0,
                 'date' => sqlBetween($begin, $end),
             ];
         }
-        return $this->db->sqlObjects('select * from holidays where ? order by uid asc, date asc', sqlWhere($where));
+
+        return $this->db->sqlObjects('
+          select *,
+            user.name as uid_name,
+            manager.name as manager_uid_name,
+            keeper.name as keeper_uid_name
+          from holidays
+            LEFT JOIN users user on holidays.uid = user.uid
+            LEFT JOIN users manager on holidays.manager_uid = manager.uid
+            LEFT JOIN users keeper on holidays.keeper_uid = keeper.uid
+          where ? order by holidays.uid asc, date asc', sqlWhere($where));
     }
 
     public function add(UserHolidayDto $holidayRaw)
