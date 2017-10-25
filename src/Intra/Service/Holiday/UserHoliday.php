@@ -43,8 +43,6 @@ class UserHoliday
         $end = date('Y/m/d', $this->user_holiday_policy->getYearlyEndTimestamp($yearly));
         $holidays = $this->user_holiday_model->getHolidaysByUserYearly($this->user, $begin, $end);
 
-        self::filterHolidays($holidays);
-
         return $holidays;
     }
 
@@ -57,21 +55,7 @@ class UserHoliday
     {
         $holidayRaw = $this->user_holiday_model->get($holidayid, $this->user->uid);
         $holidayRaws = [$holidayRaw];
-        self::filterHolidays($holidayRaws);
         return $holidayRaws[0];
-    }
-
-    /**
-     * @param $holidays
-     */
-    public static function filterHolidays($holidays)
-    {
-        foreach ($holidays as $holiday) {
-            $holiday->personcode = self::getPersonCodeSafe($holiday->uid);
-            $holiday->uid_name = self::getUserNameSafe($holiday->uid);
-            $holiday->manager_uid_name = self::getUserNameSafe($holiday->manager_uid);
-            $holiday->keeper_uid_name = self::getUserNameSafe($holiday->keeper_uid);
-        }
     }
 
     public function edit($holidayid, $key, $value)

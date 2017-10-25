@@ -16,8 +16,6 @@ class UserHolidayStat
         $end = date(($year) . '/12/31');
         $holidays = $this->user_holiday_model->getHolidaysByUserYearly(null, $begin, $end);
 
-        UserHoliday::filterHolidays($holidays);
-
         return $holidays;
     }
 }
