@@ -60,7 +60,7 @@ class MenuService
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_PRESENT), '/support/' . SupportPolicy::TYPE_PRESENT, new ExceptStudioD(), '_blank'),
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_VPN), '/support/' . SupportPolicy::TYPE_VPN, new ExceptStudioD()),
                     ],
-                    new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3'])),
+                    new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3', 'story.op2'])),
                     new Link('비용정산', '/receipts/', new ExceptStudioD()),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     new Link('보도자료 관리', '/press/', new OnlyPressManager()),
