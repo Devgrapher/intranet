@@ -1,7 +1,7 @@
 require(["jquery", "jquery.attrajax", 'jquery-ui', "jquery-number", "jquery.cookie", "jquery-form", "select2"], function ($) {
   $(function () {
     $('*[attrajax]').attrAjax();
-    $('input[js_number_format]').number(true).css('text-align', 'right');
+    $('input[js_number_format]').number(true, 2).css('text-align', 'right');
   });
 
   if( !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
