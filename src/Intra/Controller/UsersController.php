@@ -9,8 +9,6 @@ use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserDtoHandler;
 use Intra\Service\User\UserEditService;
-use Intra\Service\User\UserJoinService;
-use Intra\Service\User\UserMailService;
 use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
 use Intra\Service\User\UserType;
@@ -35,8 +33,6 @@ class UsersController implements ControllerProviderInterface
         $controller_collection->post('/image_upload', [$this, 'uploadImage']);
         $controller_collection->post('/{userid}/updateExtra/{key}/{value}', [$this, 'updateExtraAjax']);
         $controller_collection->get('/jeditable_key/{key}', [$this, 'jeditableKey']);
-        $controller_collection->get('/join', [$this, 'join']);
-        $controller_collection->post('/join', [$this, 'joinAjax']);
         return $controller_collection;
     }
 
@@ -233,25 +229,5 @@ class UsersController implements ControllerProviderInterface
         }
 
         return JsonResponse::create($dicts);
-    }
-
-    public function join(Application $app)
-    {
-        return $app['twig']->render('users/join.twig', []);
-    }
-
-    public function joinAjax(Request $request, Application $app)
-    {
-        try {
-            $new_user_dto = UserJoinService::join($request);
-            if ($new_user_dto) {
-                UserMailService::sendMail('인트라넷 회원가입', $new_user_dto, $app);
-                return Response::create('success', Response::HTTP_OK);
-            } else {
-                return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-        } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
-        }
     }
 }

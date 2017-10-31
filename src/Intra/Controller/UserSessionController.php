@@ -5,6 +5,9 @@ namespace Intra\Controller;
 use Intra\Core\MsgException;
 use Intra\Lib\Azure\AuthorizationHelperForAADGraphService;
 use Intra\Lib\Azure\GraphServiceAccessHelper;
+use Intra\Model\UserModel;
+use Intra\Service\User\UserDto;
+use Intra\Service\User\UserMailService;
 use Intra\Service\User\UserSession;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
@@ -28,14 +31,22 @@ class UserSessionController implements ControllerProviderInterface
         $code = $request->get('code');
         $azure_login_token_array = AuthorizationHelperForAADGraphService::getAuthenticationHeaderFor3LeggedFlow($code);
         $user = GraphServiceAccessHelper::getMeEntry($azure_login_token_array);
-        $id = $user->mailNickname;
 
         try {
-            if (UserSession::loginByAzure($id)) {
-                return new RedirectResponse('/?after_login');
-            } else {
-                return new RedirectResponse('/users/join');
+            if (!UserSession::loginByAzure($user->mailNickname)) {
+                $join_dto = UserDto::importFromDatabase([
+                    'id' => $user->mailNickname,
+                    'name' => $user->displayName,
+                    'email' => $user->mail,
+                    'on_date' => date('Y-m-d'),
+                    'off_date' => '9999-01-01',
+                ]);
+                $join_dto->extra = null;
+                UserModel::addUser($join_dto);
+                UserMailService::sendMail('인트라넷 회원가입', $join_dto, $app);
             }
+
+            return new RedirectResponse('/?after_login');
         } catch (MsgException $e) {
             return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
