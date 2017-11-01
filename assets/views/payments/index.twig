@@ -638,7 +638,7 @@
             {% endif %}
           </td>
           <td data-key='company_name'>{{ payment.company_name }}</td>
-          <td data-key='price'><div class="price">{{ payment.price | number_format }}</div></td>
+          <td data-key='price'><div class="price">{{ payment.price | number_format(2) | replace({'.00' : ''}) }}</div></td>
           <td data-key='pay_date'>{{ payment.pay_date | slice(0, 10) }}</td>
           <td data-key='tax' data-keyselect>{{ payment.tax }}</td>
           <td data-key='tax_date'>{{ payment.tax_date }}</td>
@@ -662,7 +662,7 @@
                      data-aa-confirm='정말 삭제하시겠습니까?
 
 업체명 : {{ payment.company_name }}
-금액 : {{ payment.price | number_format }}'
+금액 : {{ payment.price | number_format(2) | replace({'.00' : ''}) }}'
                      data-aa-datatype="text"
                      data-aa-success-if-result-is="success"
                      data-aa-onsuccess-msg="삭제되었습니다"

@@ -1,6 +1,8 @@
 <?php
 namespace Intra\Service\User;
 
+use Intra\Core\MsgException;
+use Intra\Lib\Azure\Settings;
 use Intra\Model\SessionModel;
 use Intra\Model\UserModel;
 
@@ -15,10 +17,19 @@ class UserSession
     {
         self::initStatic();
 
-        UserJoinService::assertUserIdExist($id);
+        if (!UserModel::isExistById($id)) {
+            return false;
+        } else {
+            $user_dto_object = new UserDtoHandler(UserDtoFactory::importFromDatabaseWithId($id));
+            if (!$user_dto_object->isValid()) {
+                throw new MsgException(
+                    '로그인 불가능한 계정입니다. 인사팀에 확인해주세요. <a href="https://login.windows.net/common/oauth2/logout?response_type=code&client_id=' . Settings::getClientId() . '&resource=https://graph.windows.net&redirect_uri=">로그인 계정을 여러개 쓰는경우 로그인 해제</a>하고 다시 시도해주세요'
+                );
+            }
+        }
+
         $uid = UserModel::convertUidFromId($id);
         self::$session->set('users_uid', $uid);
-
         return true;
     }
 
