@@ -45,9 +45,9 @@ class MenuService
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
                     new Link('회의실', '/rooms/', new ExceptStudioD()),
                     'Tool' => [
-                        new Link('Asana', 'https://app.asana.com'),
-                        new Link('Confluence', 'https://ridicorp.atlassian.net'),
-                        new Link('모두싸인 (전자계약)', 'https://modusign.co.kr'),
+                        new Link('Asana', 'https://app.asana.com', null, '_blank'),
+                        new Link('Confluence', 'https://ridicorp.atlassian.net', null, '_blank'),
+                        new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
                     ],
                     '근태관리' => [
                         new Link('휴가신청', '/holidays/', new ExceptStudioD()),
@@ -90,9 +90,9 @@ class MenuService
                     new Link('비용정산', '/receipts/', new PublicAuth()),
                     new Link('회의실', '/rooms/', new PublicAuth()),
                     'Tool' => [
-                        new Link('Asana', 'https://app.asana.com'),
-                        new Link('Confluence', 'https://ridicorp.atlassian.net'),
-                        new Link('모두싸인 (전자계약)', 'https://modusign.co.kr'),
+                        new Link('Asana', 'https://app.asana.com', null, '_blank'),
+                        new Link('Confluence', 'https://ridicorp.atlassian.net', null, '_blank'),
+                        new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
                     ],
                     new Link('리디 생활 가이드', '/users/'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
