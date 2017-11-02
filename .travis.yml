@@ -7,6 +7,17 @@ php:
 before_script:
   - composer update --prefer-dist
 
+before_deploy:
+  - make env_key=$env_key decrpyt-env
+  - chmod +x $TRAVIS_BUILD_DIR/docs/ecs/deploy.sh
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: sh $TRAVIS_BUILD_DIR/docs/ecs/deploy.sh
+  on:
+    branch: feature/ecs-deploy2
+
 notifications:
   webhooks:
     urls:

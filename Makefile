@@ -45,3 +45,14 @@ ifndef env
 endif
 	vendor/bin/phinx rollback -e $(env)
 
+encrpyt-env:
+ifndef env_key
+	$(eval env_key := $(shell read -p "env_key: " REPLY; echo $$REPLY))
+endif
+	openssl aes-256-cbc -k "$(env_key)" -in docs/ecs/.env -out docs/ecs/.env.enc
+
+decrpyt-env:
+ifndef env_key
+	$(eval env_key := $(shell read -p "env_key: " REPLY; echo $$REPLY))
+endif
+	openssl aes-256-cbc -k "$(env_key)" -in docs/ecs/.env.enc -out docs/ecs/.env -d
