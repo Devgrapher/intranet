@@ -48,6 +48,7 @@ class MenuService
                         new Link('Asana', 'https://app.asana.com', null, '_blank'),
                         new Link('Confluence', 'https://ridicorp.atlassian.net', null, '_blank'),
                         new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
+                        new Link('비즈플레이', 'https://www.bizplay.co.kr', null, '_blank'),
                     ],
                     '근태관리' => [
                         new Link('휴가신청', '/holidays/', new ExceptStudioD()),
@@ -93,6 +94,7 @@ class MenuService
                         new Link('Asana', 'https://app.asana.com', null, '_blank'),
                         new Link('Confluence', 'https://ridicorp.atlassian.net', null, '_blank'),
                         new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
+                        new Link('비즈플레이', 'https://www.bizplay.co.kr', null, '_blank'),
                     ],
                     new Link('리디 생활 가이드', '/users/'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
