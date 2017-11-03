@@ -33,7 +33,7 @@ class UserPaymentRowInstance
         $updated_value = $updated_payment_dto->$key;
 
         if ($key == 'price') {
-            return number_format($updated_value) . ' 원';
+            return str_replace('.00', '', number_format($updated_value, 2));
         } elseif ($key == 'manager_uid') {
             $user_name = UserJoinService::getNameByUidSafe($updated_value);
             if ($user_name === null) {

@@ -132,7 +132,7 @@ class PaymentsController implements ControllerProviderInterface
                 }
             }
 
-            if ($result == 1) {
+            if ($result === 1) {
                 return Response::create('success', Response::HTTP_OK);
             } else {
                 if ($key == 'is_manager_accepted' || $key == 'is_co_accepted' || $result == 'error') {
