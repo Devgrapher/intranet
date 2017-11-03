@@ -1,0 +1,4 @@
+/.idea
+/docs/deployer/stage/*
+.env
+phinx.yml
