@@ -96,7 +96,7 @@ class MenuService
                         new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
                         new Link('비즈플레이', 'https://www.bizplay.co.kr', null, '_blank'),
                     ],
-                    new Link('리디 생활 가이드', '/users/'),
+                    new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
                 ];
             }
