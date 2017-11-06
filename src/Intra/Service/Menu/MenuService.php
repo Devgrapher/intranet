@@ -44,11 +44,12 @@ class MenuService
                     new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
                     new Link('회의실', '/rooms/', new ExceptStudioD()),
-                    'Tool' => [
-                        new Link('Asana', 'https://app.asana.com', null, '_blank'),
-                        new Link('Confluence', 'https://ridicorp.atlassian.net', null, '_blank'),
-                        new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
-                        new Link('비즈플레이', 'https://www.bizplay.co.kr', null, '_blank'),
+                    '업무용 서비스' => [
+                        new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
+                        new Link('Confluence (업무 메뉴얼)', 'https://ridicorp.atlassian.net', null, '_blank'),
+                        new Link('모두싸인 (전자계약)', 'https://modusign.co.kr', null, '_blank'),
+                        new Link('비즈플레이 (개인영수관리)', 'https://www.bizplay.co.kr', null, '_blank'),
+                        new Link('월급날(급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     ],
                     '근태관리' => [
                         new Link('휴가신청', '/holidays/', new ExceptStudioD()),
@@ -68,7 +69,6 @@ class MenuService
                     ],
                     new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3', 'story.op2'])),
                     new Link('비용정산', '/receipts/', new ExceptStudioD()),
-                    new Link('급여관리', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     new Link('보도자료 관리', '/press/', new OnlyPressManager()),
                     new Link('조직도', '/organization/chart', new ExceptOuter(), '_blank'),
                 ];
@@ -90,11 +90,12 @@ class MenuService
                     ],
                     new Link('비용정산', '/receipts/', new PublicAuth()),
                     new Link('회의실', '/rooms/', new PublicAuth()),
-                    'Tool' => [
-                        new Link('Asana', 'https://app.asana.com', null, '_blank'),
-                        new Link('Confluence', 'https://ridicorp.atlassian.net', null, '_blank'),
-                        new Link('모두싸인', 'https://modusign.co.kr', null, '_blank'),
-                        new Link('비즈플레이', 'https://www.bizplay.co.kr', null, '_blank'),
+                    '업무용 서비스' => [
+                        new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
+                        new Link('Confluence (업무 메뉴얼)', 'https://ridicorp.atlassian.net', null, '_blank'),
+                        new Link('모두싸인 (전자계약)', 'https://modusign.co.kr', null, '_blank'),
+                        new Link('비즈플레이 (개인영수관리)', 'https://www.bizplay.co.kr', null, '_blank'),
+                        new Link('월급날(급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     ],
                     new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),

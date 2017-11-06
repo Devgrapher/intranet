@@ -41,6 +41,7 @@ class SupportController implements ControllerProviderInterface
         $controller_collection->get('/dinner', [$this, 'orderDinner']);
         $controller_collection->get('/delivery', [$this, 'orderDelivery']);
         $controller_collection->get('/present', [$this, 'orderGuestPresent']);
+        $controller_collection->get('/device', [$this, 'supportDevice']);
 
         $controller_collection->get('/{target}', [$this, 'index']);
         $controller_collection->get('/{target}/{type}', [$this, 'index']);
@@ -333,5 +334,13 @@ class SupportController implements ControllerProviderInterface
             return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
         }
         return new RedirectResponse($_ENV['guest_present_order_url']);
+    }
+
+    public function supportDevice()
+    {
+        if (empty($_ENV['support_device_url'])) {
+            return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
+        }
+        return new RedirectResponse($_ENV['support_device_url']);
     }
 }
