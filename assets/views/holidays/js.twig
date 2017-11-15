@@ -36,13 +36,15 @@
     $('#js_type').on('change', function () {
       var type_str = $(this).val();
 
-      var hiddenCostTypes = ['오전반차', '오후반차', 'PWT'];
-      if (hiddenCostTypes.indexOf(type_str) !== -1) {
+      if (['무급오전반차', '무급오후반차', 'PWT', '오전반차', '오후반차'].indexOf(type_str) !== -1) {
+        $('#js_cost').val(0.5);
         $('#js_cost').hide();
       } else {
+        $('#js_cost').val(1);
         $('#js_cost').show();
       }
 
+      // 지난 달 설정 불가한 휴가 타입
       var notPermittedPastMonthTypes = ['연차', '오전반차', '오후반차', '무급휴가', '무급오전반차', '무급오후반차'];
       if (notPermittedPastMonthTypes.indexOf(type_str) !== -1) {
         var firstDayOfMonth = new Date();
@@ -53,22 +55,78 @@
       }
     }).trigger('change');
 
-    {% if editable %}
-    $('.holiday td[data-key]').each(function () {
-      var holidayid = $(this).parent().data('holidayid');
-      var key = $(this).data('key');
-      var submitdata = {holidayid: holidayid, key: key};
-      var args = {submitdata: submitdata, method: 'PUT'};
+    $('#holiday_form').submit(function () {
+      inputs = $('#holiday_form').find('input[type!=submit][type!=button], textarea, select');
+      paramDict = inputs.serializeArray();
 
-      var isSelectInput = ($(this).data('keyselect') != undefined);
-      if (isSelectInput) {
-        args['type'] = 'select';
-        args['loadurl'] = '/holidays/const/key/' + key;
-        args['submit'] = 'OK';
+      var type = $('select[name=type]').val();
+      var start = $('input[name=date]').val();
+      var memo = $('select[name=memo]').val();
+      var cost = $('input[name=cost]').val();
+      var period = parseFloat(cost);
+
+      if (['공가', '경조', 'PWT', '무급휴가', '무급오전반차', '무급오후반차', '대체휴가'].indexOf(type) !== -1) {
+        cost = 0;
       }
 
-      $(this).editable('/holidays/uid/' + uid, args);
+      var periodText = start;
+      if (period === 0.5) {
+        periodText += ' 반일';
+      } else if (isNaN(period) || period === 1) {
+        periodText += ' 하루';
+      } else if (period > 1) {
+        periodText += '부터 ' + period + '일 (휴일, 주말 제외)';
+      }
+
+      var confirmMsg = '다음 내용으로 휴가를 신청합니다.\n';
+      confirmMsg += '\n';
+      confirmMsg += '⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️️\n';
+      confirmMsg += '종류: ' + type + '\n';
+      confirmMsg += '기간: ' + periodText + '\n';
+      confirmMsg += '연차소모: ' + cost + '\n';
+      confirmMsg += '비고: ' + memo + '\n';
+      confirmMsg += '⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️️\n';
+      confirmMsg += '\n';
+      confirmMsg += '⚠️ 등록 후엔 수정이 불가능합니다.\n';
+      confirmMsg += '⚠️ 위 내용 꼭 확인 후 진행 부탁드립니다.\n';
+
+      if (!confirm(confirmMsg)) {
+        return false;
+      }
+
+      $.ajax({
+        url: '/holidays/uid/{{ target_user_dto.uid }}',
+        type: 'POST',
+        data: $.param(paramDict),
+        success: function (data) {
+          if (data === '1') {
+            alert('추가되었습니다.');
+            refresh();
+          } else {
+            alert(data);
+          }
+        }
+      });
+      return false;
     });
+
+
+    {% if editable %}
+      $('.holiday td[data-key]').each(function () {
+        var holidayid = $(this).parent().data('holidayid');
+        var key = $(this).data('key');
+        var submitdata = {holidayid: holidayid, key: key};
+        var args = {submitdata: submitdata, method: 'PUT'};
+
+        var isSelectInput = ($(this).data('keyselect') != undefined);
+        if (isSelectInput) {
+          args['type'] = 'select';
+          args['loadurl'] = '/holidays/const/key/' + key;
+          args['submit'] = 'OK';
+        }
+
+        $(this).editable('/holidays/uid/' + uid, args);
+      });
     {% endif %}
   });
 </script>
