@@ -41,9 +41,10 @@ class SupportPolicy
     const TYPE_DELIVERY = 'delivery';
     const TYPE_PRESENT = 'present';
     const TYPE_VPN = 'vpn';
+    const TYPE_BUSSINESSTRIP = 'bussinesstrip';
 
     const COLUMN_TITLES = [
-        self::TYPE_DEVICE => '업무환경 불편사항 문의',
+        self::TYPE_DEVICE => 'BWS DESK',
         self::TYPE_FAMILY_EVENT => '경조 지원',
         self::TYPE_BUSINESS_CARD => '명함 신청',
         self::TYPE_DEPOT => '구매 요청',
@@ -53,6 +54,7 @@ class SupportPolicy
         self::TYPE_DELIVERY => '등기우편/퀵/해외배송',
         self::TYPE_PRESENT => '외부손님선물',
         self::TYPE_VPN => 'VPN 신청',
+        self::TYPE_BUSSINESSTRIP => '출장 신청',
     ];
 
     const DB_TABLE = [

@@ -14,6 +14,7 @@ class UserPaymentConst
     const CATEGORY_USER_BOOK_CANCELMENT = '고객 서점 캐시 환불';
     const CATEGORY_USER_DEVICE_CANCELMENT = '고객 기기 AS비용 환불';
     const CATEGORY_USER_STORY_CANCELMENT = '고객 스토리 코인 환불';
+    const CATEGORY_WRITERS_FEE = '원고료';
 
     public static function getConstValueByKey($key)
     {
@@ -62,6 +63,7 @@ class UserPaymentConst
             self::CATEGORY_USER_BOOK_CANCELMENT,
             self::CATEGORY_USER_DEVICE_CANCELMENT,
             self::CATEGORY_USER_STORY_CANCELMENT,
+            self::CATEGORY_WRITERS_FEE,
         ];
         if (UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             $const['category'][] = '기타';
