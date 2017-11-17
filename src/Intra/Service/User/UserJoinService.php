@@ -62,7 +62,7 @@ class UserJoinService
         $ids = DictsUtils::extractValuesByKey($dicts, 'id');
         return array_map(
             function ($id) {
-                return $id . '@' . $_ENV['domain'];
+                return $id . '@' . $_ENV['INTRA_DOMAIN'];
             },
             $ids
         );

@@ -3,6 +3,7 @@
 namespace Intra\Controller;
 
 use Intra\Service\IntraDb;
+use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
@@ -164,7 +165,7 @@ class RoomsController implements ControllerProviderInterface
         $uid = $user->uid;
 
         $update = ['deleted' => 1];
-        if ($user->is_admin) {
+        if (UserPolicy::isSuperAdmin($user)) {
             $where = ['id' => $id];
         } else {
             $where = ['id' => $id, 'uid' => $uid];
@@ -184,7 +185,7 @@ class RoomsController implements ControllerProviderInterface
         $user = UserSession::getSelfDto();
         $uid = $user->uid;
 
-        if ($user->is_admin) {
+        if (UserPolicy::isSuperAdmin($user)) {
             $where = ['id' => $id];
         } else {
             $where = ['id' => $id, 'uid' => $uid];

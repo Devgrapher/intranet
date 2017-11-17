@@ -25,13 +25,12 @@ class IntraDb
             $capsule->addConnection(
                 [
                     'driver' => 'mysql',
-                    'host' => $_ENV['mysql_host'],
-                    'database' => $_ENV['mysql_db'],
-                    'username' => $_ENV['mysql_user'],
-                    'password' => $_ENV['mysql_password'],
+                    'host' => $_ENV['INTRA_DBHOST'],
+                    'database' => $_ENV['INTRA_DBNAME'],
+                    'username' => $_ENV['INTRA_DBUSER'],
+                    'password' => $_ENV['INTRA_DBPASS'],
                     'charset' => 'utf8',
                     'collation' => 'utf8_unicode_ci',
-                    'prefix' => '',
                 ]
             );
             $capsule->setAsGlobal();
