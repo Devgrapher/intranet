@@ -1,121 +1,146 @@
 <?php
 namespace Intra\Service\User;
 
+use Intra\Model\PolicyModel;
+use Intra\Model\UserEloquentModel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserPolicy
 {
-    private static function checkUserPolicy($email, $target)
+    const SUPER_ADMIN = 'super';
+    const USER_SPOT_EDITABLE = 'user_spot_editable';
+    const HOLIDAY_EDITABLE = 'holiday_editable';
+    const PRESS_MANAGER = 'press_manager';
+    const USER_MANAGER = 'user_manager';
+    const POST_ADMIN = 'post_admin';
+    const PAYMENT_ADMIN = 'payment_admin';
+    const SUPPORT_ADMIN_ALL = 'support_all_admin';
+    const SUPPORT_ADMIN_DEVICE = 'support_device_admin';
+    const SUPPORT_ADMIN_FAMILY_EVENT = 'support_familyevent_admin';
+    const SUPPORT_ADMIN_BUSINESS_CARD = 'support_businesscard_admin';
+    const SUPPORT_ADMIN_DEPOT = 'support_depot_admin';
+    const SUPPORT_ADMIN_GIFT_CARD_PURCHASE = 'support_giftcard_purchase_admin';
+    const SUPPORT_ADMIN_TRAINING = 'support_training_admin';
+    const SUPPORT_ADMIN_VPN = 'support_vpn_admin';
+    const RECEIPTS_ADMIN = 'receipts_admin';
+    const TA = 'ta';
+    const GUEST = 'guest';
+
+    public static function getAllWithUsers(): array
     {
-        if (empty($_ENV["user_policy_$target"])) {
-            return false;
+        $policies = PolicyModel::all();
+        $roles = $policies->toArray();
+
+        $assigned = [];
+        foreach ($policies as $policy) {
+            $assigned[$policy['keyword']] = $policy->users->pluck('uid')->all();
         }
 
-        $policy_list = $_ENV["user_policy_$target"];
-        if ($policy_list && in_array($email, explode(',', $policy_list))) {
-            return true;
+        return [
+            'roles' => $roles,
+            'assigned' => $assigned,
+        ];
+    }
+
+    public static function setAll(array $assigned)
+    {
+        foreach ($assigned as $keyword => $uids) {
+            self::setPolicy($keyword, $uids);
         }
     }
 
-    public static function isFirstPageEditable(UserDto $self)
+    public static function setPolicy(string $keyword, array $uids)
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'first_page_editable')) {
-            return true;
-        }
-
-        return false;
+        PolicyModel::where('keyword', $keyword)->first()->users()->sync($uids);
     }
 
-    public static function isHolidayEditable(UserDto $self)
+    private static function checkPermission(UserDto $self, array $roles): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'holiday_editable')) {
-            return true;
-        }
-
-        return false;
+        $policies = UserEloquentModel::find($self->uid)->policies()->get();
+        $results = $policies->whereIn('keyword', $roles);
+        return count($results) > 0;
     }
 
-    public static function isPressManager(UserDto $self)
+    public static function isSuperAdmin(UserDto $self): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'press_manager')) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [self::SUPER_ADMIN]);
     }
 
-    public static function isUserManager(UserDto $self)
+    public static function isUserSpotEditable(UserDto $self): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'user_manager')) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::USER_SPOT_EDITABLE,
+        ]);
     }
 
-    public static function isPostAdmin(UserDto $self)
+    public static function isHolidayEditable(UserDto $self): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'post_admin')) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::HOLIDAY_EDITABLE,
+        ]);
     }
 
-    public static function isPaymentAdmin(UserDto $self)
+    public static function isPressManager(UserDto $self): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'payment_admin')) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::PRESS_MANAGER,
+        ]);
     }
 
-    public static function isSupportAdmin(UserDto $self, $target = 'all')
+    public static function isUserManager(UserDto $self): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'support_admin_all')) {
-            return true;
-        }
-
-        $target = strtolower($target);
-        if ($target != 'all' && self::checkUserPolicy($self->email, "support_admin_$target")) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::USER_MANAGER,
+        ]);
     }
 
-    public static function isReceiptsAdmin(UserDto $self)
+    public static function isPostAdmin(UserDto $self): bool
     {
-        if ($self->is_admin || self::checkUserPolicy($self->email, 'receipts_admin')) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::POST_ADMIN,
+        ]);
     }
 
-    public static function isTa(UserDto $user)
+    public static function isPaymentAdmin(UserDto $self): bool
     {
-        if (strpos($user->email, ".ta") !== false
-            || strpos($user->email, ".oa") !== false
-            || strpos(strtoupper($user->name), "TA") !== false
-            || strpos($user->name, "(아)") !== false
-        ) {
-            return true;
-        }
-
-        return false;
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::PAYMENT_ADMIN,
+        ]);
     }
 
-    public static function isStudioD(UserDto $user)
+    public static function isSupportAdmin(UserDto $self, string $target = 'all'): bool
     {
-        if ($user->email === "studiod@ridi.com") {
-            return true;
-        }
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::SUPPORT_ADMIN_ALL,
+            'support_' . strtolower($target), '_admin',
+        ]);
+    }
 
-        return false;
+    public static function isReceiptsAdmin(UserDto $self): bool
+    {
+        return self::checkPermission($self, [
+            self::SUPER_ADMIN,
+            self::RECEIPTS_ADMIN,
+        ]);
+    }
+
+    public static function isTa(UserDto $self): bool
+    {
+        return self::checkPermission($self, [self::TA]);
+    }
+
+    public static function isStudioD(UserDto $self): bool
+    {
+        return self::checkPermission($self, [self::GUEST]);
     }
 
     public static function assertRestrictedPath(Request $request)
@@ -132,8 +157,8 @@ class UserPolicy
 
         $is_free_to_login = in_array($request->getPathInfo(), $free_to_login_path);
         $uid = UserSession::isLogined();
-        if (!$uid && $_ENV['test_id'] && $_ENV['is_dev']) {
-            UserSession::loginByAzure($_ENV['test_id']);
+        if (!$uid && $_ENV['INTRA_TEST_ID'] && $_ENV['INTRA_DEBUG']) {
+            UserSession::loginByAzure($_ENV['INTRA_TEST_ID']);
             $uid = UserSession::isLogined();
         }
         if (!$is_free_to_login && !$uid) {
