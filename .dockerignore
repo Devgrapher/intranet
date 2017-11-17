@@ -1,4 +1,4 @@
-/.idea
-/docs/deployer/stage/*
+*.log
 .env
-phinx.yml
+.php_cs.cache
+/var/*
