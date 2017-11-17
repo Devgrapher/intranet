@@ -1,12 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table, Button } from 'react-bootstrap';
 
 class HolidayAdjustTable extends React.Component {
   renderRows() {
-    const { initial, loading, rows, onDelete } = this.props;
+    const {
+      initial, loading, rows, onDelete,
+    } = this.props;
+
     if (initial) {
       return <tr><td colSpan="7">직원을 선택해주세요.</td></tr>;
     }
+
     if (rows.length === 0) {
       return <tr><td colSpan="7">데이터가 없습니다.</td></tr>;
     }
@@ -55,11 +60,20 @@ class HolidayAdjustTable extends React.Component {
   }
 }
 
+const doNothing = () => {};
+
+HolidayAdjustTable.defaultProps = {
+  initial: true,
+  loading: false,
+  rows: [],
+  onDelete: doNothing,
+};
+
 HolidayAdjustTable.propTypes = {
-  initial: React.PropTypes.bool,
-  loading: React.PropTypes.bool,
-  rows: React.PropTypes.array,
-  onDelete: React.PropTypes.func,
+  initial: PropTypes.bool,
+  loading: PropTypes.bool,
+  rows: PropTypes.arrayOf(PropTypes.object),
+  onDelete: PropTypes.func,
 };
 
 export default HolidayAdjustTable;
