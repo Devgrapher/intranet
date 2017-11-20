@@ -28,8 +28,5 @@
     "psr-4": {
       "Intra\\": "src/Intra"
     }
-  },
-  "scripts": {
-    "run": "php -S localhost:8000 -t web"
   }
 }
