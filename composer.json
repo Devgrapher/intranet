@@ -1,5 +1,6 @@
 {
   "require": {
+    "aws/aws-sdk-php": "^3.31",
     "gnf/gnfcache": "^0.1.0",
     "gnf/namespace-router": "0.1",
     "illuminate/database": "^5.1",
@@ -10,15 +11,16 @@
     "ridibooks/platform-gnfdb": "^0.1.0",
     "sentry/sentry": "^1.5",
     "silex/silex": "^2.0",
-    "twig/twig": "^1.28",
-    "vlucas/phpdotenv": "^2.4",
-    "aws/aws-sdk-php": "^3.31"
+    "symfony/asset": "^3.3",
+    "twig/twig": "^2.0",
+    "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7",
     "robmorgan/phinx": "^0.6.6",
     "deployer/deployer": "^5.0",
-    "deployer/recipes": "^4.0"
+    "deployer/recipes": "^4.0",
+    "fzaninotto/faker": "^1.7"
   },
   "config": {
     "preferred-install": "dist"

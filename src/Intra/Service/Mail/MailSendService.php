@@ -18,8 +18,8 @@ class MailSendService
     public static function sends($dtos)
     {
         foreach ($dtos as $dto) {
-            if ($_ENV['is_dev']) {
-                $test_mails = $_ENV['test_mails'];
+            if ($_ENV['INTRA_DEBUG']) {
+                $test_mails = $_ENV['INTRA_TEST_MAILS'];
                 if (!$test_mails) {
                     return true;
                 }
@@ -39,7 +39,7 @@ class MailSendService
      */
     public static function send($dto)
     {
-        $mg = new Mailgun($_ENV['mailgun_api_key']);
+        $mg = new Mailgun($_ENV['MAILGUN_API_KEY']);
         $domain = "ridibooks.com";
 
         $body = $dto->dicts ? DictsUtils::convertDictsToHtmlTable($dto->dicts) : "";

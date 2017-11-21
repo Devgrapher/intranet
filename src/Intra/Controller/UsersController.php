@@ -39,7 +39,7 @@ class UsersController implements ControllerProviderInterface
     public function index(Application $app)
     {
         $self = UserSession::getSelfDto();
-        $replaceable = UserPolicy::isFirstPageEditable($self);
+        $replaceable = UserPolicy::isUserSpotEditable($self);
 
         $holiday_model = new HolidayModel();
         $today_holidays = $holiday_model->getsToday();

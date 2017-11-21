@@ -2,10 +2,11 @@
 
 {% block head %}
   {{ parent() }}
-  <link rel="stylesheet" href="https://npmcdn.com/react-select@1.0.0-beta13/dist/react-select.css">
+  <link rel="stylesheet" href="{{ asset('common.css') }}">
 {% endblock %}
 
 {% block body %}
   <div id="content"></div>
-  <script type="text/javascript" src="/static/js/holiday_adjust.js"></script>
+  <script type="text/javascript" src="{{ asset('common.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('holiday_adjust.js') }}"></script>
 {% endblock %}

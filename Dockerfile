@@ -1,5 +1,7 @@
-FROM ridibooks/performance-apache-base:latest
+FROM ridibooks/performance-apache-base:7.1
 MAINTAINER Kang Ki Tae <kt.kang@ridi.com>
+
+ENV APACHE_DOC_ROOT /var/www/html/web
 
 # Install zip, cron and PHP modules (gd, exif)
 RUN apt-get update \
@@ -22,14 +24,10 @@ ADD docs/docker/php/* /usr/local/etc/php/conf.d/
 # Set cron
 ADD docs/docker/cron.d/intranet_crontab /etc/cron.d/
 
-# Enable apache mod and site
-ADD docs/docker/apache/*.conf /etc/apache2/sites-available/
-RUN a2dissite 000-default && a2ensite intranet
-
 # Change entrypoint
 EXPOSE 80 443
-ADD docs/docker/docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ADD docs/docker/docker-intranet-entrypoint.sh /
+ENTRYPOINT ["/docker-intranet-entrypoint.sh"]
 CMD ["apache2-foreground"]
 
 ADD . /var/www/html

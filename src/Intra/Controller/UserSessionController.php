@@ -55,7 +55,7 @@ class UserSessionController implements ControllerProviderInterface
     public function login(Request $request, Application $app)
     {
         $azure_login = AuthorizationHelperForAADGraphService::getAuthorizatonURL();
-        if ($_ENV['is_dev']) {
+        if ($_ENV['INTRA_DEBUG']) {
             $azure_login = '/';
         }
 

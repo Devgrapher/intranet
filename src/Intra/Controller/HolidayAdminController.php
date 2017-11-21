@@ -78,7 +78,7 @@ class HolidayAdminController implements ControllerProviderInterface
         if (!intval($uid)) {
             $uid = $self->uid;
         }
-        $year = $data['diffYear'];
+        $year = $data['adjustYear'];
         if (!intval($year)) {
             $year = date('Y');
         }

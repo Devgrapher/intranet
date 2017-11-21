@@ -14,12 +14,12 @@ class Ridi
 
     public static function isRidiIP($client_ip)
     {
-        return preg_match($_ENV['ridi_ips'], $client_ip);
+        return preg_match($_ENV['INTRA_IPS'], $client_ip);
     }
 
     public static function enableSentry()
     {
-        $sentry_key = strval($_ENV['sentry_key']);
+        $sentry_key = strval($_ENV['SENTRY_KEY']);
         if (strlen($sentry_key) <= 0) {
             return;
         }

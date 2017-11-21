@@ -1,37 +1,5 @@
 {% import _self as ridi %}
 
-
-{% macro printLink(link) %}
-  {% if link.is_visible %}
-    <li>
-      <a href="{{ link.url }}" target="{{ link.target }}">
-        {% if link.glyphicon %}
-          <span class="glyphicon glyphicon-{{ link.glyphicon }}"></span>
-        {% endif %}
-        {{ link.title }}
-      </a>
-    </li>
-  {% endif %}
-{% endmacro %}
-
-{% macro printLinks(links) %}
-  {% for link_name, link in links %}
-    {% if link is iterable %}
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ link_name }}<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          {% for sub_link in link %}
-            {{ _self.printLink(sub_link) }}
-          {% endfor %}
-        </ul>
-      </li>
-    {% else %}
-      {{ _self.printLink(link) }}
-    {% endif %}
-  {% endfor %}
-{% endmacro %}
-
-
 <html lang="ko">
 <head>
   <title>RIDI Corporation</title>
@@ -41,13 +9,14 @@
   <link rel="stylesheet" href="/static/css/screen.css" media="screen"/>
   <link rel="stylesheet" href="/static/css/print.css" media="print"/>
   <link rel="stylesheet" href="/static/css/style.css" media="screen"/>
-  <link rel="stylesheet" href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen"/>
-  <link rel="stylesheet" href="/assets/bower_components/jquery-ui/themes/base/jquery-ui.min.css" media="screen"/>
-  <link rel="stylesheet" href="/assets/bower_components/datatables/media/css/dataTables.bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="/assets/bower_components/bootstrap-table/dist/bootstrap-table.min.css" media="screen">
-  <link rel="stylesheet" href="/assets/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css" media="screen">
-  <link rel="stylesheet" href="/assets/bower_components/select2/select2.css">
-  <link rel="stylesheet" href="/assets/bower_components/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen"/>
+  <link rel="stylesheet" href="/static/bower_components/jquery-ui/themes/base/jquery-ui.min.css" media="screen"/>
+  <link rel="stylesheet" href="/static/bower_components/datatables/media/css/dataTables.bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="/static/bower_components/bootstrap-table/dist/bootstrap-table.min.css" media="screen">
+  <link rel="stylesheet" href="/static/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css" media="screen">
+  <link rel="stylesheet" href="/static/bower_components/select2/select2.css">
+  <link rel="stylesheet" href="/static/bower_components/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+
   <script src="https://cdn.ravenjs.com/3.9.0/raven.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
   {% include 'require.config.twig' %}
@@ -91,10 +60,10 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <nav id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        {{ ridi.printLinks(leftMenuList) }}
+        {{ printMenuList(leftMenuList) }}
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        {{ ridi.printLinks(rightMenuList) }}
+        {{ printMenuList(rightMenuList) }}
       </ul>
     </nav>
     <!-- /.navbar-collapse -->
