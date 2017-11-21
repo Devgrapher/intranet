@@ -6,8 +6,8 @@ use Intra\Service\Auth\ExceptOuter;
 use Intra\Service\Auth\ExceptStudioD;
 use Intra\Service\Auth\ExceptTaAuth;
 use Intra\Service\Auth\OnlyHolidayEditable;
+use Intra\Service\Auth\OnlyPolicyRecipientEditable;
 use Intra\Service\Auth\OnlyPressManager;
-use Intra\Service\Auth\OnlySuperAdmin;
 use Intra\Service\Auth\OnlyUserManager;
 use Intra\Service\Auth\PublicAuth;
 use Intra\Service\Support\SupportPolicy;
@@ -90,8 +90,8 @@ class MenuService
                 new LinkList('관리자', [
                     new Link('휴가 조정', '/holidayadmin/', new OnlyHolidayEditable()),
                     new Link('직원 목록', '/users/list', new OnlyUserManager()),
-                    new Link('권한 설정', '/admin/policy', new OnlySuperAdmin()),
-                    new Link('메일 수신 설정', '/admin/recipient', new OnlySuperAdmin()),
+                    new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
+                    new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
                 ], 'wrench'),
                 new Link('내정보', '/users/myinfo', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),

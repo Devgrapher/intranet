@@ -94,7 +94,8 @@ class UsersController implements ControllerProviderInterface
 
     public function getList(Request $request, Application $app)
     {
-        if (!UserSession::isUserManager()) {
+        $self = UserSession::getSelfDto();
+        if (!UserPolicy::isUserManager($self) && !UserPolicy::isPolicyRecipientEditable($self)) {
             return '권한이 없습니다';
         }
 

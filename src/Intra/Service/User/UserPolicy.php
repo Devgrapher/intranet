@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserPolicy
 {
-    const SUPER_ADMIN = 'super';
+    const POLICY_RECIPIENT_EDITTABLE = 'policy_recipient_manager';
     const USER_SPOT_EDITABLE = 'user_spot_editable';
     const HOLIDAY_EDITABLE = 'holiday_editable';
     const PRESS_MANAGER = 'press_manager';
@@ -65,61 +65,75 @@ class UserPolicy
 
     public static function isSuperAdmin(UserDto $self): bool
     {
-        return self::checkPermission($self, [self::SUPER_ADMIN]);
+        return $self->is_admin === 1;
+    }
+
+    public static function isPolicyRecipientEditable(UserDto $self): bool
+    {
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::POLICY_RECIPIENT_EDITTABLE]);
     }
 
     public static function isUserSpotEditable(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::USER_SPOT_EDITABLE,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::USER_SPOT_EDITABLE]);
     }
 
     public static function isHolidayEditable(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::HOLIDAY_EDITABLE,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::HOLIDAY_EDITABLE]);
     }
 
     public static function isPressManager(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::PRESS_MANAGER,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::PRESS_MANAGER]);
     }
 
     public static function isUserManager(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::USER_MANAGER,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::USER_MANAGER]);
     }
 
     public static function isPostAdmin(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::POST_ADMIN,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::POST_ADMIN]);
     }
 
     public static function isPaymentAdmin(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::PAYMENT_ADMIN,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::PAYMENT_ADMIN]);
     }
 
     public static function isSupportAdmin(UserDto $self, string $target = 'all'): bool
     {
         return self::checkPermission($self, [
-            self::SUPER_ADMIN,
             self::SUPPORT_ADMIN_ALL,
             'support_' . strtolower($target), '_admin',
         ]);
@@ -127,10 +141,11 @@ class UserPolicy
 
     public static function isReceiptsAdmin(UserDto $self): bool
     {
-        return self::checkPermission($self, [
-            self::SUPER_ADMIN,
-            self::RECEIPTS_ADMIN,
-        ]);
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
+        return self::checkPermission($self, [self::RECEIPTS_ADMIN]);
     }
 
     public static function isTa(UserDto $self): bool

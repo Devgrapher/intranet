@@ -26,7 +26,7 @@ class AdminController implements ControllerProviderInterface
     public function getPolicy(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
-        if (!UserPolicy::isSuperAdmin($self)) {
+        if (!UserPolicy::isPolicyRecipientEditable($self)) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -40,7 +40,7 @@ class AdminController implements ControllerProviderInterface
     public function postPolicy(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
-        if (!UserPolicy::isSuperAdmin($self)) {
+        if (!UserPolicy::isPolicyRecipientEditable($self)) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -53,7 +53,7 @@ class AdminController implements ControllerProviderInterface
     public function getRecipient(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
-        if (!UserPolicy::isSuperAdmin($self)) {
+        if (!UserPolicy::isPolicyRecipientEditable($self)) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -67,7 +67,7 @@ class AdminController implements ControllerProviderInterface
     public function postRecipient(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
-        if (!UserPolicy::isSuperAdmin($self)) {
+        if (!UserPolicy::isPolicyRecipientEditable($self)) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 

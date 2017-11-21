@@ -10,7 +10,7 @@ class Policies extends AbstractSeed
     public function run()
     {
         $policies = [
-            [ 'keyword' => UserPolicy::SUPER_ADMIN, 'name' => '모든 권한' ],
+            [ 'keyword' => UserPolicy::POLICY_RECIPIENT_EDITTABLE, 'name' => '권한설정 & 메일수신자 설정' ],
             [ 'keyword' => UserPolicy::USER_SPOT_EDITABLE, 'name' => '직원찾기' ],
             [ 'keyword' => UserPolicy::USER_MANAGER, 'name' => '직원목록' ],
             [ 'keyword' => UserPolicy::PRESS_MANAGER, 'name' => '보도자료' ],
@@ -32,10 +32,6 @@ class Policies extends AbstractSeed
 
         $this->table('policy')
             ->insert($policies)
-            ->save();
-
-        $this->table('policy_user')
-            ->insert([ 'user_id' => 1, 'policy_id' => 1 ])
             ->save();
     }
 }

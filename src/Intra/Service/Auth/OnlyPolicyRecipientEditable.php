@@ -5,10 +5,10 @@ use Intra\Service\Auth\Superclass\AuthMultiplexer;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserPolicy;
 
-class OnlySuperAdmin extends AuthMultiplexer
+class OnlyPolicyRecipientEditable extends AuthMultiplexer
 {
     protected function hasAuth(UserDto $user_dto): bool
     {
-        return UserPolicy::isSuperAdmin($user_dto);
+        return UserPolicy::isPolicyRecipientEditable($user_dto);
     }
 }

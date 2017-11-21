@@ -18,7 +18,7 @@ class Users extends AbstractSeed
                 'team' => '',
                 'on_date' => '2000-01-01',
                 'off_date' => '9999-01-01',
-                'is_admin' => true,
+                'is_admin' => 1,
             ],
         ];
 
