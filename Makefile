@@ -35,9 +35,5 @@ run-docker: ## Run web app with Docker.
 
 sample-db:
 	docker run --name mariadb -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=1 -d mariadb:latest
-	sleep 10s # Wait DB loading.
-	composer install
-	cp .env.sample .env
-	mysql -uroot -h 127.0.0.1 -e "create database intranet;"
-	vendor/bin/phinx migrate -e local -v
-	vendor/bin/phinx seed:run -s Teams -s Users -s Rooms -s Policies -s Recipients -e local -v
+	sleep 10s # Wait DB loading...
+	bin/init_sample_db.sh
