@@ -46,7 +46,7 @@ abstract class FileService
         $repo = new FileRepository();
         $sub_key = $repo->countKey($group, $key) + 1;
 
-        $s3_bucket = $_ENV['aws_s3_bucket'];
+        $s3_bucket = $_ENV['AWS_S3_BUCKET'];
         $ext = pathinfo($upload_file_name, PATHINFO_EXTENSION);
 
         $s3_prefix = $this->makeS3Prefix($group);
@@ -80,7 +80,7 @@ abstract class FileService
         $group = str_replace('.', '/', $pathinfo[0]);
 
         $s3_service = new Aws\S3();
-        $s3_bucket = $_ENV['aws_s3_bucket'];
+        $s3_bucket = $_ENV['AWS_S3_BUCKET'];
         $s3_bucket_key = $group . '/' . $pathinfo[1];
         $options = [];
         if (!empty($filename)) {
@@ -96,7 +96,7 @@ abstract class FileService
         $group = str_replace('.', '/', $pathinfo[0]);
 
         $s3_service = new Aws\S3();
-        $s3_bucket = $_ENV['aws_s3_bucket'];
+        $s3_bucket = $_ENV['AWS_S3_BUCKET'];
         $s3_bucket_key = $group . '/' . $pathinfo[1];
         return $s3_service->getUrl($s3_bucket, $s3_bucket_key);
     }

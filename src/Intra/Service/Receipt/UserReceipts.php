@@ -157,7 +157,7 @@ class UserReceipts
 
         $return['currentUid'] = $this->user->uid;
         $return['editable'] = (self::parseMonth() <= $month);
-        if (UserSession::getSelfDto()->is_admin) {
+        if (UserPolicy::isSuperAdmin(UserSession::getSelfDto())) {
             $return['isSuperAdmin'] = 1;
             $return['editable'] |= 1;
         }

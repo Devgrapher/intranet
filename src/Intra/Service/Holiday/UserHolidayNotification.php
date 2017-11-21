@@ -1,6 +1,7 @@
 <?php
 namespace Intra\Service\Holiday;
 
+use Intra\Service\Mail\MailRecipient;
 use Intra\Service\User\UserDto;
 use Intra\Service\User\UserDtoFactory;
 use Intra\Service\User\UserDtoHandler;
@@ -62,8 +63,8 @@ class UserHolidayNotification
         $receivers = $this->getMailReceivers();
         $contents = $this->getMailContents();
 
-        if ($_ENV['is_dev']) {
-            $test_mails = $_ENV['test_mails'];
+        if ($_ENV['INTRA_DEBUG']) {
+            $test_mails = $_ENV['INTRA_TEST_MAILS'];
             if (!$test_mails) {
                 return true;
             }
@@ -71,7 +72,7 @@ class UserHolidayNotification
             $receivers = explode(',', $test_mails);
         }
 
-        $mg = new Mailgun($_ENV['mailgun_api_key']);
+        $mg = new Mailgun($_ENV['MAILGUN_API_KEY']);
         $domain = "ridibooks.com";
         $ret = $mg->sendMessage(
             $domain,
@@ -98,11 +99,9 @@ class UserHolidayNotification
 
         $emails = [];
         foreach ($users as $user) {
-            $emails[] = $user->id . '@' . $_ENV['domain'];
+            $emails[] = $user->id . '@' . $_ENV['INTRA_DOMAIN'];
         }
-        if ($_ENV['recipients_holiday']) {
-            $emails = array_merge($emails, explode(',', $_ENV['recipients_holiday']));
-        }
+        $emails = array_merge($emails, MailRecipient::getMails(MailRecipient::HOLIDAY));
 
         return array_unique(array_filter($emails));
     }

@@ -6,31 +6,31 @@ class Settings
 {
     public static function getClientId()
     {
-        return $_ENV["azure_clientId"];
+        return $_ENV["AZURE_CLIENTID"];
     }
 
     public static function getPassword()
     {
-        return $_ENV["azure_password"];
+        return $_ENV["AZURE_PASSWORD"];
     }
 
     public static function getRediectURI()
     {
-        return $_ENV["azure_redirectURI"];
+        return $_ENV["AZURE_REDIRECT_URI"];
     }
 
     public static function getResourceURI()
     {
-        return $_ENV["azure_resourceURI"];
+        return $_ENV["AZURE_RESOURCE_URI"];
     }
 
     public static function getAppTenantDomainName()
     {
-        return $_ENV["azure_appTenantDomainName"];
+        return $_ENV["AZURE_APPTENANT_DOMAINNAME"];
     }
 
     public static function getApiVersion()
     {
-        return $_ENV["azure_apiVersion"];
+        return $_ENV["AZURE_API_VERSION"];
     }
 }

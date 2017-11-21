@@ -61,14 +61,14 @@ class Post
                 $mail_bodys = implode("", $mail_bodys);
 
                 $receivers = [];
-                $receivers[] = 'everyone@' . $_ENV['domain'];
+                $receivers[] = 'everyone@' . $_ENV['INTRA_DOMAIN'];
 
-                $mg = new Mailgun($_ENV['mailgun_api_key']);
+                $mg = new Mailgun($_ENV['MAILGUN_API_KEY']);
                 $domain = "ridi.com";
                 $result = $mg->sendMessage(
                     $domain,
                     [
-                        'from' => $_ENV['mailgun_from'],
+                        'from' => $_ENV['MAILGUN_FROM'],
                         'to' => implode(', ', $receivers),
                         'subject' => $mail_title,
                         'text' => strip_tags($mail_bodys),

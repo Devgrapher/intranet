@@ -6,7 +6,7 @@ RewriteCond %{REQUEST_URI} !^/server-status
 RewriteCond %{REQUEST_URI} !\.php
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d
-RewriteRule (.*) index.php?$0 [QSA,L]
+RewriteRule (.*) web/index.php?$0 [QSA,L]
 
 </IfModule>
 

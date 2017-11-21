@@ -8,20 +8,16 @@ use Aws\S3\S3Client;
 
 class S3
 {
-    const AWS_ACCESS_KEY_ENV = 'aws_access_key';
-    const AWS_SECRET_KEY_ENV = 'aws_secret_key';
-    const AWS_REGION_ENV = 'aws_region';
-
     private $client;
 
     public function __construct(string $key = null, string $secret = null, string $region = null)
     {
         $this->client = S3Client::factory([
             'credentials' => [
-                'key' => $key ? $key : $_ENV[self::AWS_ACCESS_KEY_ENV],
-                'secret' => $secret ? $secret : $_ENV[self::AWS_SECRET_KEY_ENV],
+                'key' => $key ? $key : $_ENV['AWS_ACCESS_KEY'],
+                'secret' => $secret ? $secret : $_ENV['AWS_SECRET_KEY'],
             ],
-            'region' => $region ? $region : $_ENV[self::AWS_REGION_ENV],
+            'region' => $region ? $region : $_ENV['AWS_REGION'],
             'version' => '2006-03-01',
         ]);
     }

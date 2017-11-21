@@ -6,7 +6,7 @@ use Intra\Service\Auth\ExceptOuter;
 use Intra\Service\Auth\Superclass\AuthMultiplexer;
 use Intra\Service\User\UserSession;
 
-class Link
+class Link implements LinkInterface
 {
     public $is_visible;
     public $title;
@@ -37,5 +37,21 @@ class Link
         $this->is_visible = $auth_checker->multiplexingAuth(UserSession::getSelfDto());
         $this->target = $target;
         $this->glyphicon = $glyphicon;
+    }
+
+    public function getHtml(): string
+    {
+        if (!$this->is_visible) {
+            return '';
+        }
+
+        $html = '<li><a href="' . $this->url . '" target="' . $this->target . '">';
+        if (!empty($this->glyphicon)) {
+            $html .= '<span class="glyphicon glyphicon-' . $this->glyphicon . '"></span> ';
+        }
+        $html .= $this->title;
+        $html .= '</a></li>';
+
+        return $html;
     }
 }

@@ -1,0 +1,12 @@
+{% extends 'ridi.twig' %}
+
+{% block head %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('common.css') }}">
+{% endblock %}
+
+{% block body %}
+  <div id="content"></div>
+  <script type="text/javascript" src="{{ asset('common.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('recipient.js') }}"></script>
+{% endblock %}

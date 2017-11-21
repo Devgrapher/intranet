@@ -3,6 +3,7 @@
 namespace Intra\Service\Support;
 
 use Intra\Service\Mail\MailingDto;
+use Intra\Service\Mail\MailRecipient;
 use Intra\Service\Mail\MailSendService;
 use Intra\Service\Support\Column\SupportColumnAcceptUser;
 use Intra\Service\Support\Column\SupportColumnCompleteUser;
@@ -47,7 +48,7 @@ class SupportMailService
         $is_pending = ($type === "완료" && !$support_dto->is_all_completed);
 
         $title = "[{$title}][{$type}][{$working_date}] {$register_name}님의 요청";
-        $link = 'http://intra.' . $_ENV['domain'] . '/support/' . $target;
+        $link = 'http://intra.' . $_ENV['INTRA_DOMAIN'] . '/support/' . $target;
         $html = $app['twig']->render(
             'support/template/mail.twig',
             [
@@ -64,9 +65,8 @@ class SupportMailService
                 $receivers[] = UserJoinService::getEmailByUidSafe($uid);
             }
         }
-        if (isset($_ENV['recipients_support_admin_all'])) {
-            $receivers = array_merge($receivers, explode(',', $_ENV['recipients_support_admin_all']));
-        }
+
+        $receivers = array_merge($receivers, MailRecipient::getMails(MailRecipient::SUPPORT_ALL));
         if (isset($_ENV["recipients_support_admin_$target"])) {
             $receivers = array_merge($receivers, explode(',', $_ENV["recipients_support_admin_$target"]));
         }

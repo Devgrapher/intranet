@@ -1,4 +1,4 @@
-.PHONY: all composer build config deploy rollback deploy-db rollback-db
+.PHONY: all help build composer composer-dev deploy-db rollback-db run-docker
 
 all: build composer ## Default task to do build.
 
@@ -15,23 +15,8 @@ composer: ## Install composer packages without dev tools.
 composer-dev: ## Install all composer packages.
 	composer update
 
-run-docker: ## Run web app with Docker.
-	docker run -d --name ridi-intranet -p 8000:80 -v `pwd`:/var/www/html --env-file .env ridibooks/intranet:latest
-
 build-docker: build composer ## Build a Docker image. (ridibooks/intranet)
 	docker build -t ridibooks/intranet:latest .
-
-deploy: ## Deploy codes with Deployer.
-ifndef stage
-	$(eval stage := $(shell read -p "Enter Deployer stage: " REPLY; echo $$REPLY))
-endif
-	vendor/bin/dep --file=docs/deployer/deploy.php deploy $(stage) -p
-
-rollback: ## Rollback with Deployer.
-ifndef stage
-	$(eval stage := $(shell read -p "Enter Deployer stage: " REPLY; echo $$REPLY))
-endif
-	vendor/bin/dep --file=docs/deployer/deploy.php rollback $(stage) -p
 
 deploy-db: ## Migrate DB with Phinx
 ifndef env
@@ -45,3 +30,10 @@ ifndef env
 endif
 	vendor/bin/phinx rollback -e $(env)
 
+run-docker: ## Run web app with Docker.
+	docker run -d --name ridi-intranet -p 8000:80 -v `pwd`:/var/www/html --env-file .env ridibooks/intranet:latest
+
+sample-db:
+	docker run --name mariadb -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=1 -d mariadb:latest
+	sleep 10s # Wait DB loading...
+	bin/init_sample_db.sh

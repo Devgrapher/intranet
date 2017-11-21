@@ -5,6 +5,7 @@ namespace Intra\Service\Cron\Job;
 use Intra\Model\PaymentModel;
 use Intra\Service\Cron\Interfacer\CronMailingInterface;
 use Intra\Service\Mail\MailingDto;
+use Intra\Service\Mail\MailRecipient;
 use Intra\Service\Payment\PaymentDtoFactory;
 use Intra\Service\User\UserJoinService;
 use Ridibooks\Platform\Common\ObjectsUtils;
@@ -41,10 +42,7 @@ class PaymentNoticeCronMailing extends CronMailingInterface
     public function getMailContentsDtos()
     {
         $dto_template = new MailingDto();
-        $dto_template->replyTo = [];
-        if ($_ENV['recipients_payment_admin']) {
-            $dto_template->replyTo = explode(',', $_ENV['recipients_payment_admin']);
-        }
+        $dto_template->replyTo = MailRecipient::getMails(MailRecipient::PAYMENT);
         $dto_template->title = '[확인요청] ' . date('Y-m-d') . ' 결제 예정 내역';
         $dto_template->body_header = date('Y-m-d') . "에 아래 결제가 완료될 예정입니다.<br/>
         혹시 변동사항이 있는지 확인해 주세요.<br/><br/><br/>";
@@ -63,9 +61,7 @@ class PaymentNoticeCronMailing extends CronMailingInterface
             $dto->CC = [
                 UserJoinService::getEmailByUidSafe($first_payment->manager_uid)
             ];
-            if ($_ENV['recipients_payment_admin']) {
-                $dto->CC = array_merge($dto->CC, explode(',', $_ENV['recipients_payment_admin']));
-            }
+            $dto->CC = array_merge($dto->CC, MailRecipient::getMails(MailRecipient::PAYMENT));
             $dto->dicts = [];
             foreach ($payments as $payment) {
                 $dto->dicts[] =
