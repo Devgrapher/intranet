@@ -37,7 +37,7 @@ class FlexTimeMailService
         $flextime->uid_name = UserJoinService::getNameByUidSafe($flextime->uid);
         $flextime->manager_uid_name = UserJoinService::getNameByUidSafe($flextime->manager_uid);
         $flextime->keeper_uid_name = UserJoinService::getNameByUidSafe($flextime->keeper_uid);
-        $html = $app['twig']->render('flextime/template/mail', [
+        $html = $app['twig']->render('flextime/template/mail.twig', [
             'flextime' => $flextime,
         ]);
 
