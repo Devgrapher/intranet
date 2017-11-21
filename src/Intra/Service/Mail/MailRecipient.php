@@ -46,9 +46,11 @@ class MailRecipient
 
     public static function getMails(string $event): array
     {
-        return RecipientModel::where('keyword', $event)->first()
-            ->users
-            ->pluck('email')
-            ->toArray();
+        $users = RecipientModel::where('keyword', $event)->first()->users;
+        if ($users) {
+            return [];
+        }
+
+        return $users->pluck('email')->toArray();
     }
 }
