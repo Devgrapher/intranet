@@ -43,4 +43,15 @@ class Organization
         $team = $team_with_alias->toArray();
         return $team['name'];
     }
+
+    public static function getShortTeamName($alias)
+    {
+        $divisions = explode('/', self::getTeamName($alias));
+        return end($divisions);
+    }
+
+    public static function getHRTeamName()
+    {
+        return self::getShortTeamName(self::ALIAS_CO);
+    }
 }
