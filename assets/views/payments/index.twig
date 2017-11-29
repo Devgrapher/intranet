@@ -770,10 +770,12 @@
           </td>
           <td>
             {% if isSuperAdmin %}
-              <select name='paytype' js_cookie_save js_data_chosen>
+              <select name='paytype' js_data_chosen>
                 <option value='미정'>미정</option>
                 {% for paytype in const.paytype %}
-                  <option value='{{ paytype }}'>{{ paytype }}</option>
+                  <option value='{{ paytype }}' {% if paytype == '현금' %} selected{% endif %}>
+                    {{ paytype }}
+                  </option>
                 {% endfor %}
               </select>
             {% endif %}
