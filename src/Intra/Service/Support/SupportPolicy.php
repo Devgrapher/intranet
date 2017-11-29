@@ -410,14 +410,14 @@ class SupportPolicy
                 'CO팀 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
                 'CO팀 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
                 '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000']))->defaultValue('10,000'),
-                '신청매수' => (new SupportColumnMoney('req_count'))->defaultValue('1'),
+                '신청매수' => (new SupportColumnText('req_count'))->setTextInputType('number')->defaultValue(1),
                 '신청금액' => new SupportColumnByValueCallback('req_sum',
                     $category_cost_multiplier('giftcard_category', 'req_count', ['10,000' => 9500, '50,000' => 46500])),
                 '입금자명' => new SupportColumnText('deposit_name', '', ''),
                 '입금예정일시(24시간 내)' => (new SupportColumnDate('deposit_date', date('Y-m-d H:i', strtotime('+0 day'))))
                     ->setOrderingColumn(),
                 '사용용도' => new SupportColumnText('purpose', ''),
-                '봉투수량' => (new SupportColumnMoney('num_envelops'))->defaultValue('1'),
+                '봉투수량' => (new SupportColumnText('num_envelops'))->setTextInputType('number')->defaultValue(1),
             ],
             self::TYPE_TRAINING => [
                 '일련번호' => new SupportColumnReadonly('uuid'),
