@@ -389,7 +389,9 @@ class SupportPolicy
                 'URL 링크' => new SupportColumnText('note', '', '구매 사이트 링크 / 비고'),
                 '파일첨부' => new SupportColumnFile('file'),
                 '구매예정일' => (new SupportColumnDate('request_date', date('Y-m-d', strtotime('+7 day'))))
-                    ->setOrderingColumn(),
+                    ->setOrderingColumn()
+                    ->readonly()
+                    ->addEditableUserPred($is_human_manage_team),
                 $hr.' 의견' => (new SupportColumnText('comment', '', '의견'))
                     ->readonly()
                     ->addEditableUserPred($is_human_manage_team),

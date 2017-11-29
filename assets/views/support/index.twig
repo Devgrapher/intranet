@@ -417,8 +417,9 @@
                    name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnDate' %}
-            <input style='width:150px' js_datepicker
-                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% endif %}
+            <input style='width:150px'
+            <input style='width:150px'
+                   name='{{ column.key }}' value='{{ column.default }}' placeholder='{{ column.placeholder }}' {% if column.required %}required{% endif %} type="{{ column.textInputType }}" {% if column.readonly %}readonly{% else %}js_datepicker{% endif %}
             />
           {% elseif column.class_name == 'SupportColumnDatetime' %}
             <input style='width:150px' js_datetimepicker data-date-format="yyyy-mm-dd hh:ii"
