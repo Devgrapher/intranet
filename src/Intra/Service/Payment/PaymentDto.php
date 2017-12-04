@@ -146,7 +146,7 @@ class PaymentDto extends BaseDto
         $return->month = date('Y-m', strtotime($return->month . '/1'));
         $return->pay_date = preg_replace('/\D/', '-', trim($return->pay_date));
         $return->price = empty($return->price) ? 0 : $return->price;
-        $return->tax_date = $return->tax_date !== '' ?: null;
+        $return->tax_date = $return->tax_date === '' ? null : $return->tax_date;
         if (isset($return->status) && strlen($return->status) == 0) {
             unset($return->status);
         }
