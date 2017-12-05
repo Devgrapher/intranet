@@ -82,6 +82,8 @@ class HolidaysController implements ControllerProviderInterface
 
             $availableUsers = UserDtoFactory::createAvailableUserDtos();
             $managerUsers = UserDtoFactory::createManagerUserDtos();
+
+            $holidayCancelUrl = $_ENV['holiday_cancel_url'] ?? "";
         }
 
         return $app['twig']->render('holidays/index.twig', [
@@ -103,7 +105,8 @@ class HolidaysController implements ControllerProviderInterface
             'availableUsers' => $availableUsers,
             'holidayConst' => $holidayConst,
             'holidayInfo' => $holidayInfo,
-            'managerUsers' => $managerUsers
+            'managerUsers' => $managerUsers,
+            'holidayCancelUrl' => $holidayCancelUrl,
         ]);
     }
 

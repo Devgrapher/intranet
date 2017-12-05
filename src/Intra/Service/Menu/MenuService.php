@@ -31,7 +31,7 @@ class MenuService
                     new Link('회의실', '/rooms/', new ExceptOuter()),
                     new LinkList('업무용 서비스', [
                         new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
-                        new Link('Confluence (업무 메뉴얼)', 'https://ridicorp.atlassian.net', null, '_blank'),
+                        new Link('Confluence (위키)', 'https://ridicorp.atlassian.net', null, '_blank'),
                         new Link('모두싸인 (전자계약)', 'https://modusign.co.kr', null, '_blank'),
                         new Link('비즈플레이 (개인영수관리)', 'https://www.bizplay.co.kr', null, '_blank'),
                         new Link('월급날 (급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
@@ -76,7 +76,7 @@ class MenuService
                     new Link('회의실', '/rooms/', new PublicAuth()),
                     new LinkList('업무용 서비스', [
                         new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
-                        new Link('Confluence (업무 메뉴얼)', 'https://ridicorp.atlassian.net', null, '_blank'),
+                        new Link('Confluence (위키)', 'https://ridicorp.atlassian.net', null, '_blank'),
                         new Link('모두싸인 (전자계약)', 'https://modusign.co.kr', null, '_blank'),
                         new Link('비즈플레이 (개인영수관리)', 'https://www.bizplay.co.kr', null, '_blank'),
                         new Link('월급날(급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
