@@ -59,7 +59,7 @@ class UserPolicy
     private static function checkPermission(UserDto $self, array $roles): bool
     {
         $policies = UserEloquentModel::find($self->uid)->policies()->get();
-        $results = $policies->whereIn('keyword', $roles);
+        $results = $policies->whereIn('keyword', $roles)->all();
         return count($results) > 0;
     }
 
@@ -133,9 +133,13 @@ class UserPolicy
 
     public static function isSupportAdmin(UserDto $self, string $target = 'all'): bool
     {
+        if (self::isSuperAdmin($self)) {
+            return true;
+        }
+
         return self::checkPermission($self, [
             self::SUPPORT_ADMIN_ALL,
-            'support_' . strtolower($target), '_admin',
+            'support_' . strtolower($target) . '_admin',
         ]);
     }
 
