@@ -48,7 +48,7 @@ class UserPaymentConst
         $const['category'] = [
             '상품매입 (페이퍼샵 판매용 상품 매입 비용)',
             '운반비 (택배, 퀵서비스 이용대금)',
-            '잡급 (로맨스, 판무 가이드 알바 급여)',
+            '잡급 (단기, 일회성 급여)',
             self::CATEGORY_WELFARE_EXPENSE,
             self::CATEGORY_OFFICE_SUPPLIES,
             self::CATEGORY_ASSETS,
