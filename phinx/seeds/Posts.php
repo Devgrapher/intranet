@@ -12,7 +12,7 @@ class Posts extends AbstractSeed
         $posts = [];
 
         $faker = Faker\Factory::create('ko_KR');
-        for ($i = 0; $i < self::POST_NUM; $i++) {
+        for ($i = 0; $i < self::POST_NUM; ++$i) {
             $created = $faker->dateTimeBetween('-1 Years', 'now')->format('Y-m-d H:i:s');
             $posts[] = [
                 'group' => 'notice',
@@ -29,7 +29,7 @@ class Posts extends AbstractSeed
             return $a['created_at'] > $b['created_at'];
         });
 
-        $posts[self::POST_NUM-1]['created_at'] = date('Y-m-d H:i:s');
+        $posts[self::POST_NUM - 1]['created_at'] = date('Y-m-d H:i:s');
 
         $this->table('posts')
             ->insert($posts)

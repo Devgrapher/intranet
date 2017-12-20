@@ -189,7 +189,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('desc', 'string', ['length' => 255])
             ->addColumn('from', 'datetime')
             ->addColumn('to', 'datetime')
-            ->addColumn('deleted', 'boolean')
+            ->addColumn('deleted', 'boolean', ['default' => false])
             ->addForeignKey('uid', 'users', 'uid')
             ->addIndex('room_id', ['name' => 'rid'])
             ->create();

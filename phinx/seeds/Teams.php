@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use Phinx\Seed\AbstractSeed;
 use Intra\Service\User\Organization;
+use Phinx\Seed\AbstractSeed;
 
 class Teams extends AbstractSeed
 {

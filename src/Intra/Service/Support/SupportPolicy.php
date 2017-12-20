@@ -267,9 +267,9 @@ class SupportPolicy
                 '일련번호2' => new SupportColumnReadonly('id'),
                 '요청일' => new SupportColumnReadonly('reg_date'),
                 '요청자' => new SupportColumnRegisterUser('uid'),
-                $hr.' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                $hr.' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                $hr.' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                $hr . ' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '귀속부서' => new SupportColumnTeam('team'),
                 '구분' => new SupportColumnCategory('category', ['사내 전산 H/W 장애문의', 'SW 설치문의', '기타 장애문의']),
                 '상세내용' => new SupportColumnText('detail', '', '상세내용'),
@@ -284,9 +284,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                $hr.' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                $hr.' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                $hr.' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                $hr . ' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
                     'receiver_area',
                     [
@@ -332,9 +332,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                $hr.' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                $hr.' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                $hr.' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                $hr . ' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '대상자' => new SupportColumnMutual(
                     'receiver_area',
                     [
@@ -368,9 +368,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                $hr.' 구매' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                $hr.' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                $hr.' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                $hr . ' 구매' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '사용자(직원)' => new SupportColumnWorker('receiver_uid'),
                 '분류' => new SupportColumnCategory(
                     'category',
@@ -392,7 +392,7 @@ class SupportPolicy
                     ->setOrderingColumn()
                     ->readonly()
                     ->addEditableUserPred($is_human_manage_team),
-                $hr.' 의견' => (new SupportColumnText('comment', '', '의견'))
+                $hr . ' 의견' => (new SupportColumnText('comment', '', '의견'))
                     ->readonly()
                     ->addEditableUserPred($is_human_manage_team),
             ],
@@ -409,9 +409,9 @@ class SupportPolicy
                     ->readonly()
                     ->addEditableUserPred($is_cash_flow_team)
                     ->defaultValue('N'),
-                $hr.' 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
-                $hr.' 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
-                $hr.' 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
+                $hr . ' 처리' => new SupportColumnComplete('is_approved_by_hr', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('approved_by_hr_uid', 'is_approved_by_hr'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('approved_by_hr_datetime', 'is_approved_by_hr'),
                 '권종' => (new SupportColumnCategory('giftcard_category', ['10,000', '50,000']))->defaultValue('10,000'),
                 '신청매수' => (new SupportColumnText('req_count'))->setTextInputType('number')->defaultValue(1),
                 '신청금액' => new SupportColumnByValueCallback('req_sum',
@@ -431,9 +431,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                $hr.' 승인' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                $hr.' 승인자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                $hr.' 승인시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                $hr . ' 승인' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 승인자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 승인시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '승인지원율' => (new SupportColumnCategory('support_rate', ['-', '75%', '100%']))
                     ->readonly()
                     ->addEditableUserPred($is_manager)
@@ -457,9 +457,9 @@ class SupportPolicy
                 '승인' => new SupportColumnAccept('is_accepted'),
                 '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
                 '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
-                $hr.' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
-                $hr.' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
-                $hr.' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                $hr . ' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
                 '사용기간' => new SupportColumnMutual(
                     'vpn_usage_type',
                     [
