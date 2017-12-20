@@ -215,7 +215,7 @@ class UserReceipts
 
         if ($row['type'] == '저녁/휴일 식사비' && $row['cost'] > 8000) {
             throw new \Exception('"저녁/휴일 식사비"는 8000원 이하이어야합니다');
-        } else if ($row['type'] == 'PAPER PRO 지원비' && $row['cost'] > 24900) {
+        } elseif ($row['type'] == 'PAPER PRO 지원비' && $row['cost'] > 24900) {
             throw new \Exception('"PAPER PRO 지원비"는 판매가의 10%에 해당하는 금액을 적어주세요.');
         }
         $timestamp_input_date = strtotime($row['date']);

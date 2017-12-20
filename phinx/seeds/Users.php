@@ -36,7 +36,7 @@ class Users extends AbstractSeed
     public function createNormalUsers($faker, $num, $team)
     {
         $users = [];
-        for ($i = 0; $i < $num; $i++) {
+        for ($i = 0; $i < $num; ++$i) {
             $users[] = [
                 'id' => $faker->userName,
                 'pass' => '',

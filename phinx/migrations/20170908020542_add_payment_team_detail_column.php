@@ -11,7 +11,7 @@ class AddPaymentTeamDetailColumn extends AbstractMigration
             ->addColumn(
                 'team_detail',
                 'string',
-                [ 'length' => 200, 'comment' => '팀 세부 분류', 'default' => '' ])
+                ['length' => 200, 'comment' => '팀 세부 분류', 'default' => ''])
             ->save();
     }
 }
