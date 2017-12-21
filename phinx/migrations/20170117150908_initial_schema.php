@@ -167,14 +167,14 @@ class InitialSchema extends AbstractMigration
     private function createReceipts()
     {
         $this->table('receipts', ['id' => false, 'primary_key' => ['receiptid']])
-            ->addColumn('receiptid', 'integer')
+            ->addColumn('receiptid', 'integer', ['identity' => true, 'signed' => false])
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('date', 'date')
             ->addColumn('title', 'string', ['length' => 100])
             ->addColumn('scope', 'string', ['length' => 20])
             ->addColumn('type', 'string', ['length' => 20])
             ->addColumn('cost', 'integer')
-            ->addColumn('node', 'string', ['length' => 100])
+            ->addColumn('note', 'string', ['length' => 100])
             ->addColumn('payment', 'string', ['length' => 20])
             ->addForeignKey('uid', 'users', 'uid')
             ->addIndex(['uid', 'date'])
@@ -208,7 +208,7 @@ class InitialSchema extends AbstractMigration
     {
         $this->table('support_business_card')
             ->addColumn('uuid', 'string', ['length' => 32])
-            ->addColumn('reg_date', 'datetime')
+            ->addColumn('reg_date', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
             ->addColumn('accept_uid', 'integer', ['signed' => false])
@@ -244,7 +244,7 @@ class InitialSchema extends AbstractMigration
     {
         $this->table('support_depot')
             ->addColumn('uuid', 'string', ['length' => 32])
-            ->addColumn('reg_date', 'datetime')
+            ->addColumn('reg_date', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
             ->addColumn('accept_uid', 'integer')
@@ -270,7 +270,7 @@ class InitialSchema extends AbstractMigration
     {
         $this->table('support_device')
             ->addColumn('uuid', 'string', ['length' => 32])
-            ->addColumn('reg_date', 'datetime')
+            ->addColumn('reg_date', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_completed', 'boolean')
             ->addColumn('completed_uid', 'integer')
@@ -289,7 +289,7 @@ class InitialSchema extends AbstractMigration
     {
         $this->table('support_family_event')
             ->addColumn('uuid', 'string', ['length' => 32])
-            ->addColumn('reg_date', 'datetime')
+            ->addColumn('reg_date', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
             ->addColumn('accept_uid', 'integer', ['signed' => false])
@@ -326,7 +326,7 @@ class InitialSchema extends AbstractMigration
     {
         $this->table('support_gift_card')
             ->addColumn('uuid', 'string', ['length' => 32])
-            ->addColumn('reg_date', 'datetime')
+            ->addColumn('reg_date', 'datetime', ['default' => 'CURRENT_TIMESTAMP'])
             ->addColumn('uid', 'integer', ['signed' => false])
             ->addColumn('is_accepted', 'boolean')
             ->addColumn('accept_uid', 'integer', ['signed' => false])
