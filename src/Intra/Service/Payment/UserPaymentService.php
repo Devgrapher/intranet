@@ -128,10 +128,12 @@ class UserPaymentService
 
     public function index($month, $type, $param)
     {
-        $return = [];
-        $return['user'] = $this->user;
-        $uid = $this->user->uid;
+        $return = [
+            'user' => $this->user,
+            'type' => $type,
+        ];
 
+        $uid = $this->user->uid;
         $prevmonth = date('Y-m', strtotime('-1 month', strtotime($month)));
         $nextmonth = date('Y-m', strtotime('+1 month', strtotime($month)));
 
@@ -161,7 +163,7 @@ class UserPaymentService
                 $payment_dicts = $queued_payment_dicts;
             } else {
                 $return['title'] = '모든 미승인 목록';
-                $payment_dicts = $this->payment_model->queuedPaymentsByManager($this->user->uid);
+                $payment_dicts = $this->payment_model->queuedPaymentsByManager($this->user->uid, false);
             }
         } elseif ($type == 'today') {
             $return['title'] = '오늘 결제 예정';
@@ -193,6 +195,9 @@ class UserPaymentService
             }
         } else {
             $payment_dicts = $this->payment_model->getPayments($uid, $month);
+            $payment_dicts_by_manager_dicts = $this->payment_model->queuedPaymentsByManager($uid, true);
+            $payment_dicts = array_merge($payment_dicts, $payment_dicts_by_manager_dicts);
+
             $extra_access = [];
             if ($self->team == Organization::getTeamName(Organization::ALIAS_CO)
                 && !UserPolicy::isTa($self)) {
@@ -211,17 +216,18 @@ class UserPaymentService
                 $payment_dicts = array_unique($payment_dicts, SORT_REGULAR);
             }
         }
-        $payments = PaymentDtoFactory::importFromDatabaseDicts($payment_dicts);
-        $return['payments'] = $payments;
+
+        $return['const'] = UserPaymentConst::get();
 
         $return['isSuperAdmin'] = UserPolicy::isPaymentAdmin($self) ? 1 : 0;
         $return['editable'] = $return['isSuperAdmin'];
 
         $return['allCurrentUsers'] = UserDtoFactory::createAvailableUserDtos();
-        $return['managerUsers'] = UserDtoFactory::createManagerUserDtos();
         $return['allUsers'] = UserDtoFactory::createAllUserDtos();
+        $return['managerUsers'] = UserDtoFactory::createManagerUserDtos();
 
-        $return['const'] = UserPaymentConst::get();
+        $payments = PaymentDtoFactory::importFromDatabaseDicts($payment_dicts);
+        $return['payments'] = $payments;
 
         return $return;
     }

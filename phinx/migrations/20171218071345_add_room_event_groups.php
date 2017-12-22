@@ -18,7 +18,7 @@ class AddRoomEventGroups extends AbstractMigration
         $this->table('room_event_groups')
             ->addColumn('uid', 'integer', [
                 'signed' => false,
-                'comment' => 'primary key'
+                'comment' => '유저 id (users)'
             ])
             ->addColumn('room_id', 'integer', [
                 'comment' => '회의실 id (rooms)'

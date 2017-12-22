@@ -28,7 +28,7 @@ class MenuService
                     new Link('직원찾기', '/users/', new ExceptStudioD()),
                     new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
-                    new Link('회의실', '/rooms/', new ExceptOuter()),
+                    new Link('회의실', '/rooms/', new ExceptTaAuth()),
                     new LinkList('업무용 서비스', [
                         new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
                         new Link('Confluence (위키)', 'https://ridicorp.atlassian.net', null, '_blank'),
