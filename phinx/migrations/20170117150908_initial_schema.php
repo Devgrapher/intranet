@@ -136,7 +136,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('is_account_book_registered', 'enum', ['values' => ['Y', 'N']])
             ->addColumn('note', 'string', ['length' => 255])
             ->addColumn('paytype', 'string', ['length' => 255, 'default' => '미정'])
-            ->addColumn('status', 'enum', ['values' => ['결제완료', '삭제', '결제 대기중'], 'default' => '결제 대기중'])
+            ->addColumn('status', 'enum', ['values' => ['결제 완료', '삭제', '결제 대기중'], 'default' => '결제 대기중'])
             ->addForeignKey('uid', 'users', 'uid')
             ->addForeignKey('manager_uid', 'users', 'uid')
             ->addIndex('request_date')

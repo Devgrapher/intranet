@@ -44,7 +44,7 @@ class PaymentModel extends BaseModel
         );
     }
 
-    public function queuedPaymentsByManager($uid)
+    public function queuedPaymentsByManager($uid, $is_accepted)
     {
         $table = [
             'payments.uid' => 'users.uid',
@@ -56,8 +56,13 @@ class PaymentModel extends BaseModel
         $where = [
             'status' => ["결제 대기중"],
             'payments.manager_uid' => $uid,
-            'payment_accept.paymentid' => null,
         ];
+
+        if ($is_accepted) {
+            $where['payment_accept.paymentid'] = sqlNot(null);
+        } else {
+            $where['payment_accept.paymentid'] = null;
+        }
 
         return $this->db->sqlDicts(
             'select payments.*, users.name from ? where ? order by `status`,`pay_date` asc, paymentid asc',

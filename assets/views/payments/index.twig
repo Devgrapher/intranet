@@ -402,10 +402,20 @@
   <div>
     <h4>
       <a href='/payments/uid/{{ currentUid }}/month/{{ prevmonth }}'>{{ prevmonth }}</a>
-      / {{ month }} /
+      /
+      {% if type == 'remain' %}
+        <a href='/payments/uid/{{ currentUid }}/month/{{ month }}'>{{ month }}</a>
+      {% else %}
+        {{ month }}
+      {% endif %}
+      /
       <a href='/payments/uid/{{ currentUid }}/month/{{ nextmonth }}'>{{ nextmonth }}</a>
       /
-      <a href='/payments/remain' class='paymentsCommand'>미승인</a>
+      {% if type == 'remain' %}
+        미승인
+      {% else %}
+        <a href='/payments/remain' class='paymentsCommand'>미승인</a>
+      {% endif %}
     </h4>
   </div>
   {% if isSuperAdmin %}
