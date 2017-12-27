@@ -195,9 +195,6 @@ class UserPaymentService
             }
         } else {
             $payment_dicts = $this->payment_model->getPayments($uid, $month);
-            $payment_dicts_by_manager_dicts = $this->payment_model->queuedPaymentsByManager($uid, true);
-            $payment_dicts = array_merge($payment_dicts, $payment_dicts_by_manager_dicts);
-
             $extra_access = [];
             if ($self->team == Organization::getTeamName(Organization::ALIAS_CO)
                 && !UserPolicy::isTa($self)) {
