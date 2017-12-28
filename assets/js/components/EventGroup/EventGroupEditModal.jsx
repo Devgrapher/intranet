@@ -288,7 +288,7 @@ class EventGroupEditModal extends React.Component {
               {
                 this.renderSelector(
                   'roomId', '회의실', '회의실 선택',
-                  rooms.map(room => ({ label: room.name, value: room.id })),
+                  rooms.map(room => ({ label: room.label, value: room.key })),
                 )
               }
               { this.renderDatePicker('fromDate', '예약기간 시작') }

@@ -39,7 +39,7 @@ class RoomsController implements ControllerProviderInterface
 
     public function getSections()
     {
-        return new JsonResponse(RoomService::getAllRoomSections());
+        return new JsonResponse(RoomService::getRoomSections('default'));
     }
 
     public function getEvents(Request $request)
