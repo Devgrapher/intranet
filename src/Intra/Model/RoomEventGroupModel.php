@@ -18,6 +18,7 @@ class RoomEventGroupModel extends Eloquent
         'to_date',
         'from_time',
         'to_time',
-        'day',
+        'days_of_week',
+        'desc'
     ];
 }
