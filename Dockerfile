@@ -32,4 +32,7 @@ CMD ["apache2-foreground"]
 
 ADD . /var/www/html
 WORKDIR /var/www/html
+RUN chown -R www-data:www-data /var/www/html/var \
+&& chmod 755 /var/www/html/var
+
 RUN make

@@ -1,2 +1,2 @@
 <?php
-echo 'OK';
+echo exec('git rev-parse HEAD');
