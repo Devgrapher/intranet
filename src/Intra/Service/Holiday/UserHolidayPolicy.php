@@ -28,6 +28,7 @@ class UserHolidayPolicy
     {
         $full_cost = $this->getAvailableCost($yearly);
         $used_cost = $this->getUsedCost($yearly);
+
         return $full_cost - $used_cost;
     }
 
@@ -59,6 +60,7 @@ class UserHolidayPolicy
             $full_cost = max(15, min(25, 15 + floor(($yearly - 2) / 2)));
         }
         $full_cost = $this->floorByZeroDotFive($full_cost);
+
         return $full_cost;
     }
 
@@ -112,6 +114,7 @@ class UserHolidayPolicy
 
             $ret['preused_cost_prev_year'] = max(0, $exceeded_cost);
         }
+
         return $ret;
     }
 
@@ -122,6 +125,7 @@ class UserHolidayPolicy
 
         $year = date('Y', $targetDate);
         $yearlyBeginTimestamp = strtotime($year . '/1/1');
+
         return max(strtotime($onDate), $yearlyBeginTimestamp);
     }
 
@@ -132,6 +136,7 @@ class UserHolidayPolicy
 
         $year = date('Y', $targetDate);
         $yearlyEndTimestamp = strtotime($year . '/12/31');
+
         return $yearlyEndTimestamp;
     }
 
@@ -144,6 +149,7 @@ class UserHolidayPolicy
     {
         $begin = date('Y/m/d', $this->getYearlyBeginTimestamp($yearly));
         $end = date('Y/m/d', $this->getYearlyEndTimestamp($yearly));
+
         return $this->user_holiday_model->getUsedCost($this->user, $begin, $end);
     }
 
@@ -174,6 +180,7 @@ class UserHolidayPolicy
     private function floorByZeroDotFive($fullCost)
     {
         $fullCost = floor($fullCost * 2) / 2;
+
         return $fullCost;
     }
 }

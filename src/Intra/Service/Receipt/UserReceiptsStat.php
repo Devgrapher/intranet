@@ -45,6 +45,7 @@ class UserReceiptsStat
             ];
             $csvs[] = $arr;
         }
+
         return new CsvResponse($csvs, 'download.' . $month);
     }
 
@@ -84,6 +85,7 @@ class UserReceiptsStat
             ];
             $csvs[] = $arr;
         }
+
         return new CsvResponse($csvs, 'downloadYear.' . $year);
     }
 }

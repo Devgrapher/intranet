@@ -13,6 +13,7 @@ class BaseDtoHandler
     public static function importFromDto($dto)
     {
         $called_class = get_called_class();
+
         return new $called_class($dto);
     }
 

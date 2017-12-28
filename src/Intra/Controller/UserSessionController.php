@@ -23,6 +23,7 @@ class UserSessionController implements ControllerProviderInterface
         $controller_collection->get('/login.azure', [$this, 'loginAzure']);
         $controller_collection->get('/login', [$this, 'login']);
         $controller_collection->get('/logout', [$this, 'logout']);
+
         return $controller_collection;
     }
 
@@ -67,6 +68,7 @@ class UserSessionController implements ControllerProviderInterface
     public function logout(Request $request, Application $app)
     {
         UserSession::logout();
+
         return new RedirectResponse('/usersession/login');
     }
 }

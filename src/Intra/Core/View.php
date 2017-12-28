@@ -18,6 +18,7 @@ class View
     {
         $query = $this->filterQuery($query);
         $file = $this->root . '/' . $query . ".twig";
+
         return file_exists($file);
     }
 
@@ -42,6 +43,7 @@ class View
         $query = preg_replace('/\.+\//', '', $query);
         //remove trail '/'
         $query = preg_replace('/\/+$/', '', $query);
+
         return $query;
     }
 }

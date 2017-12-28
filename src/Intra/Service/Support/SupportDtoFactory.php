@@ -14,6 +14,7 @@ class SupportDtoFactory
             throw  new MsgException('해당 자료가 없습니다.');
         }
         $dto = SupportDto::importFromDict($target, $columns, $dict);
+
         return $dto;
     }
 }

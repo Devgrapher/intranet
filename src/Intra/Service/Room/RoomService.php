@@ -42,6 +42,7 @@ class RoomService
     public static function addEventGroup(array $data)
     {
         $new = RoomEventGroupModel::create($data);
+
         return $new;
     }
 

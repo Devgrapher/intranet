@@ -39,12 +39,14 @@ class PostsController implements ControllerProviderInterface
         $post_list_view = PostListDto::import($group);
         $listViewParam = $post_list_view->exportAsArrayForListView();
         $listViewParam['isPostAdmin'] = UserPolicy::isPostAdmin(UserSession::getSelfDto());
+
         return $app['twig']->render('posts/index.twig', $listViewParam);
     }
 
     public function write(Request $request, Application $app)
     {
         $group = $request->get('group');
+
         return $app['twig']->render('posts/write.twig', ['group' => $group]);
     }
 
@@ -70,6 +72,7 @@ class PostsController implements ControllerProviderInterface
         if ($post->sendAll($group)) {
             return Response::create('발송되었습니다', Response::HTTP_OK);
         }
+
         return Response::create('발송실패', Response::HTTP_OK);
     }
 
@@ -80,6 +83,7 @@ class PostsController implements ControllerProviderInterface
 
         $post_list_view = PostDetailDto::importFromModel(PostModel::on()->find($id));
         $modifyViewParam = $post_list_view->exportAsArrayForModify();
+
         return $app['twig']->render('posts/modify.twig', $modifyViewParam);
     }
 
@@ -123,6 +127,7 @@ class PostsController implements ControllerProviderInterface
         $post_list_view = PostDetailDto::importFromModel(PostModel::on()->find($id));
         $detailViewParam = $post_list_view->exportAsArrayForDetailView();
         $detailViewParam['isPostAdmin'] = UserPolicy::isPostAdmin(UserSession::getSelfDto());
+
         return $app['twig']->render('posts/view.twig', $detailViewParam);
     }
 }

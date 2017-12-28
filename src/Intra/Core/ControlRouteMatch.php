@@ -53,6 +53,7 @@ class ControlRouteMatch
             return new ControlRouteNull();
             //throw new \Exception("parameter $string is not integer");
         }
+
         return $this;
     }
 
@@ -62,6 +63,7 @@ class ControlRouteMatch
             return new ControlRouteNull();
             //throw new \Exception("parameter $string is not valid");
         }
+
         return $this;
     }
 
@@ -75,6 +77,7 @@ class ControlRouteMatch
         if ($this->request->isMethod($string)) {
             return $this;
         }
+
         return new ControlRouteNull();
     }
 
@@ -87,6 +90,7 @@ class ControlRouteMatch
     public function setRequest($key, $value)
     {
         $this->request->attributes->set($key, $value);
+
         return $this;
     }
 }

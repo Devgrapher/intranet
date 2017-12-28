@@ -82,6 +82,7 @@ class Post
                 $result = true;
             }
         );
+
         return $result;
     }
 
@@ -96,6 +97,7 @@ class Post
         $this->assertModify();
 
         $post = PostModel::on()->find($id);
+
         return $post->delete();
     }
 }

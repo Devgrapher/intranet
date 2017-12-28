@@ -60,6 +60,7 @@ class UserPolicy
     {
         $policies = UserEloquentModel::find($self->uid)->policies()->get();
         $results = $policies->whereIn('keyword', $roles)->all();
+
         return count($results) > 0;
     }
 
@@ -187,6 +188,7 @@ class UserPolicy
                 return new RedirectResponse('/usersession/login');
             }
         }
+
         return null;
     }
 }

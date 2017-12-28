@@ -27,6 +27,7 @@ class UserDtoHandler extends BaseDtoHandler
         if ($is_safe_offdate) {
             return false;
         }
+
         return true;
     }
 
@@ -58,6 +59,7 @@ class UserDtoHandler extends BaseDtoHandler
     private function filterUpdate($key, $value)
     {
         $value = trim($value);
+
         return [$key, $value];
     }
 
@@ -82,6 +84,7 @@ class UserDtoHandler extends BaseDtoHandler
         if ($this->dto->off_date == '9999-01-01') {
             return str_replace('-', '', $this->dto->on_date);
         }
+
         return str_replace('-', '', $this->dto->on_date) * 10000;
     }
 
@@ -93,6 +96,7 @@ class UserDtoHandler extends BaseDtoHandler
         if ($this->dto->off_date == '9999-01-01') {
             return UserType::NORMAL;
         }
+
         return UserType::OUTER;
     }
 }

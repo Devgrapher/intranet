@@ -18,6 +18,7 @@ class OrganizationController implements ControllerProviderInterface
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/chart', [$this, 'getChart']);
         $controller_collection->match('/upload', [$this, 'upload'])->method('GET|POST');
+
         return $controller_collection;
     }
 
@@ -29,6 +30,7 @@ class OrganizationController implements ControllerProviderInterface
 
         $file_service = new OrganizationFileService();
         $file_location = $file_service->getLastFileLocation('organization');
+
         return new RedirectResponse($file_location);
     }
 

@@ -13,6 +13,7 @@ class UserJoinService
         }
         $dict = UserModel::getDictWithUid($uid);
         $dto = UserDto::importFromDatabase($dict);
+
         return $dto;
     }
 
@@ -60,6 +61,7 @@ class UserJoinService
     {
         $dicts = UserModel::getDictsWithTeam($team);
         $ids = DictsUtils::extractValuesByKey($dicts, 'id');
+
         return array_map(
             function ($id) {
                 return $id . '@' . $_ENV['INTRA_DOMAIN'];

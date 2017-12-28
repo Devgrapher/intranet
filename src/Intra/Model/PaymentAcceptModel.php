@@ -14,6 +14,7 @@ class PaymentAcceptModel extends BaseModel
     public static function insert(PaymentAcceptDto $payment_accept_dto)
     {
         $rows = $payment_accept_dto->exportDatabaseInsert();
+
         return self::getDb()->sqlInsert('payment_accept', $rows);
     }
 

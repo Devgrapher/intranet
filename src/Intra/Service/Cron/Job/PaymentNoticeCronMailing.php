@@ -33,6 +33,7 @@ class PaymentNoticeCronMailing extends CronMailingInterface
         if ($hour < 10) {
             return false;
         }
+
         return true;
     }
 

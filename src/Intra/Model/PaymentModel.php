@@ -183,6 +183,7 @@ class PaymentModel extends BaseModel
             ],
         ];
         $where = $this->getTodayConfirmedQueuedWhere();
+
         return $this->db->sqlCount(sqlLeftJoin($table), $where);
     }
 
@@ -196,6 +197,7 @@ class PaymentModel extends BaseModel
             ],
         ];
         $where = $this->getTodayUnconfirmedQueuedWhere();
+
         return $this->db->sqlCount(sqlLeftJoin($table), $where);
     }
 

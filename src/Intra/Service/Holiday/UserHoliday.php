@@ -55,6 +55,7 @@ class UserHoliday
     {
         $holidayRaw = $this->user_holiday_model->get($holidayid, $this->user->uid);
         $holidayRaws = [$holidayRaw];
+
         return $holidayRaws[0];
     }
 
@@ -68,6 +69,7 @@ class UserHoliday
         }
 
         $holidayRaw = $this->getHoliday($holidayid);
+
         return $holidayRaw->$key;
     }
 
@@ -218,6 +220,7 @@ class UserHoliday
             }
             $holiday_ids[] = $holiday_id;
         }
+
         return $holiday_ids;
     }
 
@@ -225,6 +228,7 @@ class UserHoliday
     {
         $holiday_raws = $this->user_holiday_model->gets($holidayids, $this->user->uid);
         $user_holiday_notification = new UserHolidayNotification($this->user, $holiday_raws, $action_type);
+
         return $user_holiday_notification->sendNotification();
     }
 
@@ -241,6 +245,7 @@ class UserHoliday
         }
         $fromYear = date('Y', strtotime($fromDate));
         $toDate = date('Y', $timestamp);
+
         return max(0, $toDate - $fromYear);
     }
 
@@ -249,6 +254,7 @@ class UserHoliday
         $onDate = $this->user->on_date;
         $onDateTimestamp = strtotime($onDate);
         $joinYear = date('Y', $onDateTimestamp);
+
         return $joinYear + $yearly;
     }
 
@@ -264,6 +270,7 @@ class UserHoliday
             $holiday_raw->cost = 1;
         }
         $holiday_raw->uid = $this->user->uid;
+
         return $holiday_raw;
     }
 
@@ -312,11 +319,13 @@ class UserHoliday
                 $return[] = clone $holiday_raw;
                 $date = $this->getNextDateWhichIsNotWeekend($date);
             }
+
             return $return;
         } else {
             if (in_array($holiday_raw->type, $this->COST_ZERO_DAY_VARIABLE_TYPE)) {
                 $holiday_raw->cost = 0;
             }
+
             return [$holiday_raw];
         }
     }
@@ -327,6 +336,7 @@ class UserHoliday
         while (DateUtil::isWeekend($date)) {
             $date = $this->getNextDate($date);
         }
+
         return $date;
     }
 
@@ -338,6 +348,7 @@ class UserHoliday
     private function getNextDate($date)
     {
         $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
+
         return $date;
     }
 
@@ -363,6 +374,7 @@ class UserHoliday
         if ($pm_count >= 2) {
             return true;
         }
+
         return false;
     }
 }

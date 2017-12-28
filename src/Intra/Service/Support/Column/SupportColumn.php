@@ -29,12 +29,14 @@ class SupportColumn
     public function readonly()
     {
         $this->readonly = true;
+
         return $this;
     }
 
     public function addEditableUserPred(callable $predicate)
     {
         $this->editableUserPreds[] = $predicate;
+
         return $this;
     }
 
@@ -55,24 +57,28 @@ class SupportColumn
                 return true;
             }
         }
+
         return false;
     }
 
     public function placeholder($placeholder)
     {
         $this->placeholder = $placeholder;
+
         return $this;
     }
 
     public function defaultValue($default)
     {
         $this->default = $default;
+
         return $this;
     }
 
     public function isVisibleIf(callable $predicate)
     {
         $this->isVisiblePreds[] = $predicate;
+
         return $this;
     }
 
@@ -86,24 +92,28 @@ class SupportColumn
                 return true;
             }
         }
+
         return false;
     }
 
     public function isRequired()
     {
         $this->required = true;
+
         return $this;
     }
 
     public function setTextInputType($type)
     {
         $this->textInputType = $type;
+
         return $this;
     }
 
     public function setOrderingColumn()
     {
         $this->is_ordering_column = true;
+
         return $this;
     }
 }

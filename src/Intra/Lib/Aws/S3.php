@@ -55,6 +55,7 @@ class S3
 
         $cmd = $this->client->getCommand('GetObject', $cmd_arg);
         $request = $this->client->createPresignedRequest($cmd, $expires);
+
         return (string)$request->getUri();
     }
 

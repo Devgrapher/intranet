@@ -28,6 +28,7 @@ class FlexTimeController implements ControllerProviderInterface
         $controller_collection->put('uid/{uid}', [$this, 'edit']);
         $controller_collection->delete('uid/{uid}/{flextimeid}', [$this, 'del']);
         $controller_collection->get('/download/{year}', [$this, 'downloadYearly']);
+
         return $controller_collection;
     }
 
@@ -114,6 +115,7 @@ class FlexTimeController implements ControllerProviderInterface
                     FlexTimeMailService::sendMail($flextime, '변경', $app);
                 }
             }
+
             return Response::create($value, Response::HTTP_OK);
         } catch (\Exception $e) {
             throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
@@ -148,6 +150,7 @@ class FlexTimeController implements ControllerProviderInterface
             $year = date('Y');
         }
         $flextimes = FlexTimeModel::whereBetween('start_date', [date($year . '/1/1'), date($year . '/12/31')])->get();
+
         return FlexTimeDownloadService::createCsvResponse($flextimes);
     }
 }

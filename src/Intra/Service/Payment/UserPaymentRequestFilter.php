@@ -11,12 +11,15 @@ class UserPaymentRequestFilter
             while (date('d', $cur_date) != $dest_day) {
                 $cur_date = strtotime('next day', $cur_date);
             }
+
             return date('Y-m-d', $cur_date);
         }
         if ($pay_type_str == '월말일') {
             $cur_date = strtotime('last day of this month');
+
             return date('Y-m-d', $cur_date);
         }
+
         return '';
     }
 
@@ -27,6 +30,7 @@ class UserPaymentRequestFilter
         } else {
             $month = date('Y-m', strtotime($month));
         }
+
         return $month;
     }
 
@@ -37,6 +41,7 @@ class UserPaymentRequestFilter
         } else {
             $date = date('Y-m-d', strtotime($date));
         }
+
         return $date;
     }
 }

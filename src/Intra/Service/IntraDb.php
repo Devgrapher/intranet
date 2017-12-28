@@ -15,6 +15,7 @@ class IntraDb
     public static function getGnfDb()
     {
         self::bootDB();
+
         return self::$gnfdb;
     }
 

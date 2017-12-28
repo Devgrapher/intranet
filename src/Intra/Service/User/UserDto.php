@@ -41,6 +41,7 @@ class UserDto extends BaseDto
             }
         }
         $return->initFromArray($user_row);
+
         return $return;
     }
 
@@ -56,6 +57,7 @@ class UserDto extends BaseDto
             $return->$key = $request->get($key);
         }
         $return->id = preg_replace('/@.+/', '', $return->email);
+
         return $return;
     }
 
@@ -75,6 +77,7 @@ class UserDto extends BaseDto
         foreach ($keys as $key) {
             $return[$key] = $this->$key;
         }
+
         return $return;
     }
 }

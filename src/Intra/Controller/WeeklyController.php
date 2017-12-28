@@ -15,6 +15,7 @@ class WeeklyController implements ControllerProviderInterface
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/', [$this, 'index']);
         $controller_collection->match('/upload', [$this, 'upload'])->method('GET|POST');
+
         return $controller_collection;
     }
 
@@ -22,6 +23,7 @@ class WeeklyController implements ControllerProviderInterface
     {
         try {
             Weekly::assertPermission($request);
+
             return Weekly::getContents();
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);

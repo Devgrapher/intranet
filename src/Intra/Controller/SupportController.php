@@ -152,6 +152,7 @@ class SupportController implements ControllerProviderInterface
                 }
             }
         }
+
         return new JsonResponse($return);
     }
 
@@ -174,6 +175,7 @@ class SupportController implements ControllerProviderInterface
         if ($type == 'complete') {
             return SupportRowService::complete($target, $id, $key, $app);
         }
+
         return SupportRowService::edit($target, $id, $key, $value, $app);
     }
 
@@ -282,6 +284,7 @@ class SupportController implements ControllerProviderInterface
                 '제작예정일'
             ]);
         }
+
         return $csv_header;
     }
 
@@ -313,6 +316,7 @@ class SupportController implements ControllerProviderInterface
             }
             $csv_row[] = $csv_row['제작(예정)일'];
         }
+
         return $csv_row;
     }
 
@@ -326,6 +330,7 @@ class SupportController implements ControllerProviderInterface
         if (empty($_ENV['delivery_order_url'])) {
             return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
         }
+
         return new RedirectResponse($_ENV['delivery_order_url']);
     }
 
@@ -334,6 +339,7 @@ class SupportController implements ControllerProviderInterface
         if (empty($_ENV['guest_present_order_url'])) {
             return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
         }
+
         return new RedirectResponse($_ENV['guest_present_order_url']);
     }
 
@@ -342,6 +348,7 @@ class SupportController implements ControllerProviderInterface
         if (empty($_ENV['support_device_url'])) {
             return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
         }
+
         return new RedirectResponse($_ENV['support_device_url']);
     }
 
@@ -350,6 +357,7 @@ class SupportController implements ControllerProviderInterface
         if (empty($_ENV['support_bussinesstrip_url'])) {
             return new Response(Util::printAlert(self::MSG_URL_NOT_EXISTS));
         }
+
         return new RedirectResponse($_ENV['support_bussinesstrip_url']);
     }
 }

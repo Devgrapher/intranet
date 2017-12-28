@@ -19,6 +19,7 @@ class PressController implements ControllerProviderInterface
         $controller_collection->post('/add', [$this, 'add']);
         $controller_collection->post('/edit', [$this, 'edit']);
         $controller_collection->get('/del/{id}', [$this, 'del']);
+
         return $controller_collection;
     }
 
@@ -27,6 +28,7 @@ class PressController implements ControllerProviderInterface
         try {
             $user = UserSession::getSelfDto();
             $press_service = new Press($user);
+
             return $app['twig']->render('press/index.twig', [
                 'user' => $user,
                 'press' => $press_service->getAll(),
@@ -43,6 +45,7 @@ class PressController implements ControllerProviderInterface
         $items_per_page = $request->get('items_per_page', 8);
         $user = UserSession::getSelfDto();
         $press_service = new Press($user);
+
         return $request->query->get('callback') . '(' . $press_service->getPressByPage($page, $items_per_page) . ')';
     }
 
@@ -77,6 +80,7 @@ class PressController implements ControllerProviderInterface
             $user = UserSession::getSelfDto();
             $press_service = new Press($user);
             $result = $press_service->edit($press_id, $key, $value);
+
             return Response::create($result, Response::HTTP_OK);
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);

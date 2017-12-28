@@ -23,6 +23,7 @@ class Route
     public function isExist()
     {
         $this->routeFile = $this->path . '/__route.php';
+
         return file_exists($this->routeFile);
     }
 
@@ -94,6 +95,7 @@ class Route
             }
 
             $this->lastMatch = new ControlRouteMatch($this->query, $unmatchedQueryTail, $parameters, $this->request);
+
             return $this->lastMatch;
         }
 

@@ -18,6 +18,7 @@ class PaymentAcceptDto extends BaseDto
     {
         $return = new self();
         $return->initFromArray($payment_accept_row);
+
         return $return;
     }
 

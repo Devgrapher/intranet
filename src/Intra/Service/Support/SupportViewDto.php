@@ -48,6 +48,7 @@ class SupportViewDto
     public static function create($support_dto)
     {
         $support_viewing_dto = new self($support_dto);
+
         return $support_viewing_dto;
     }
 

@@ -11,6 +11,7 @@ class PaymentAcceptDtoFactory
                 $return[] = PaymentAcceptDto::importFromDatabaseDict($payment_accepts_dict);
             }
         }
+
         return $return;
     }
 }

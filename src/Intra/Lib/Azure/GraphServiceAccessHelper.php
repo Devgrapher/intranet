@@ -28,6 +28,7 @@ class GraphServiceAccessHelper
         // close curl resource to free up system resources
         curl_close($ch);
         $jsonOutput = json_decode($output);
+
         return $jsonOutput;
     }
 
@@ -73,6 +74,7 @@ class GraphServiceAccessHelper
         curl_close($ch);
         // decode the response json decoder
         $udpatedEntry = json_decode($output);
+
         return $udpatedEntry;
     }
 }

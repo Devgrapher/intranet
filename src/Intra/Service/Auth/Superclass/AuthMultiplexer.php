@@ -17,6 +17,7 @@ abstract class AuthMultiplexer
     public function accept($ids)
     {
         $this->acceptor_ids = array_merge($this->acceptor_ids, $ids);
+
         return $this;
     }
 
@@ -28,6 +29,7 @@ abstract class AuthMultiplexer
     public function block($ids)
     {
         $this->must_block_ids = array_merge($this->must_block_ids, $ids);
+
         return $this;
     }
 
@@ -40,6 +42,7 @@ abstract class AuthMultiplexer
         if (in_array($id, $this->acceptor_ids)) {
             return true;
         }
+
         return $this->hasAuth($user_dto);
     }
 

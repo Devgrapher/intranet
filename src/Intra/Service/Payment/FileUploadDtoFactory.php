@@ -13,6 +13,7 @@ class FileUploadDtoFactory
                 $return[] = FileUploadDto::importFromDatabaseDict($payment_files_dict);
             }
         }
+
         return $return;
     }
 
@@ -22,12 +23,14 @@ class FileUploadDtoFactory
         if (!$dict) {
             throw new MsgException("파일정보에 오류가 있습니다. (삭제된 파일일 수 있습니다)");
         }
+
         return FileUploadDto::importFromDatabaseDict($dict);
     }
 
     public static function createFromGroupId($group, $id)
     {
         $dicts = FileUploadModel::getDictsByGroupAndKeys($group, $id);
+
         return self::createFromDatabaseDicts($dicts);
     }
 }

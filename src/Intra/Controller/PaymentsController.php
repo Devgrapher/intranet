@@ -51,6 +51,7 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->delete('/file/{fileid}', [$this, 'deleteFile']);
         $controller_collection->post('/file_upload', [$this, 'uploadFile']);
         $controller_collection->post('/get_pay_date_by_str', [$this, 'getPayDateByStr']);
+
         return $controller_collection;
     }
 
@@ -102,6 +103,7 @@ class PaymentsController implements ControllerProviderInterface
             $insert_id = $payment_service->add($payment_dto);
             if ($insert_id != null) {
                 UserPaymentMailService::sendMail('결제요청', $insert_id, null, $app);
+
                 return Response::create('success', Response::HTTP_OK);
             } else {
                 return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -158,6 +160,7 @@ class PaymentsController implements ControllerProviderInterface
                 if ($row->rejectManager()) {
                     $reason = $request->getContent();
                     UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
+
                     return Response::create('success', Response::HTTP_OK);
                 } else {
                     return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -178,6 +181,7 @@ class PaymentsController implements ControllerProviderInterface
     public function getConst(Request $request)
     {
         $key = $request->get('key');
+
         return JsonResponse::create(UserPaymentConst::getConstValueByKey($key), Response::HTTP_OK);
     }
 
@@ -185,6 +189,7 @@ class PaymentsController implements ControllerProviderInterface
     {
         $payment_service = new UserPaymentStatService();
         $payments = PaymentDtoFactory::importFromDatabaseDicts($payment_dict);
+
         return $payment_service->getCsvRespose($payments);
     }
 
@@ -192,6 +197,7 @@ class PaymentsController implements ControllerProviderInterface
     {
         $payment_service = new UserPaymentStatService();
         $payments = PaymentDtoFactory::importFromDatabaseDicts($payment_dict);
+
         return $payment_service->getBankTransferCsvRespose($payments);
     }
 
@@ -205,6 +211,7 @@ class PaymentsController implements ControllerProviderInterface
         $month = UserPaymentRequestFilter::parseMonth($month);
         $month = date('Y/m/1', strtotime($month));
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->getAllPayments($month));
     }
 
@@ -216,6 +223,7 @@ class PaymentsController implements ControllerProviderInterface
 
         $category = $request->get('category_condition');
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveCategory($category));
     }
 
@@ -229,6 +237,7 @@ class PaymentsController implements ControllerProviderInterface
         $month = UserPaymentRequestFilter::parseMonth($month);
         $month = date('Y/m/1', strtotime($month));
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveMonth($month));
     }
 
@@ -244,6 +253,7 @@ class PaymentsController implements ControllerProviderInterface
         $requestDateEnd = UserPaymentRequestFilter::parseDate($requestDateEnd);
 
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveRequestDate($requestDateStart, $requestDateEnd));
     }
 
@@ -255,6 +265,7 @@ class PaymentsController implements ControllerProviderInterface
 
         $team = $request->get('team');
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveTeam($team));
     }
 
@@ -265,6 +276,7 @@ class PaymentsController implements ControllerProviderInterface
         }
 
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->queuedPayments());
     }
 
@@ -278,6 +290,7 @@ class PaymentsController implements ControllerProviderInterface
         $month = UserPaymentRequestFilter::parseMonth($month);
         $month = date('Y/m/1', strtotime($month));
         $user_payment_model = new PaymentModel();
+
         return $this->getCsvResponse($user_payment_model->getAllPaymentsByTaxDate($month));
     }
 
@@ -305,6 +318,7 @@ class PaymentsController implements ControllerProviderInterface
         $file_id = $request->get('fileid');
         $file_service = new PaymentFileService();
         $file_location = $file_service->getFileLocation($file_id);
+
         return new RedirectResponse($file_location);
     }
 

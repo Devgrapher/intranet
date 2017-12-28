@@ -29,6 +29,7 @@ class SupportViewDtoFactory
             $support_view_dto = SupportViewDto::create($support_dto);
             $support_view_dtos[] = $support_view_dto;
         }
+
         return $support_view_dtos;
     }
 
@@ -50,6 +51,7 @@ class SupportViewDtoFactory
             $support_view_dto = SupportViewDto::create($support_dto);
             $support_view_dtos[] = $support_view_dto;
         }
+
         return $support_view_dtos;
     }
 }

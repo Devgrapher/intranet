@@ -13,6 +13,7 @@ class CronHistoryModel extends BaseModel
     public static function logExecuted($cron_class_name)
     {
         $insert = ['signature' => $cron_class_name];
+
         return self::getDb()->sqlInsert('cron_history', $insert);
     }
 }

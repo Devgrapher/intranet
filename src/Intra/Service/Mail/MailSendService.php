@@ -28,6 +28,7 @@ class MailSendService
             }
             self::send($dto);
         }
+
         return true;
     }
 
@@ -94,6 +95,7 @@ class MailSendService
         }
         $mailReceiver = array_unique($mailReceiver);
         $mailReceiver = array_filter($mailReceiver);
+
         return implode(',', $mailReceiver);
     }
 }

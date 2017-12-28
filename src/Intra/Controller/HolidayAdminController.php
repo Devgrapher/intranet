@@ -23,6 +23,7 @@ class HolidayAdminController implements ControllerProviderInterface
         $controller_collection->get('/uid/{uid}/year/{year}', [$this, 'get']);
         $controller_collection->post('uid/{uid}', [$this, 'add']);
         $controller_collection->delete('uid/{uid}/id/{id}', [$this, 'del']);
+
         return $controller_collection;
     }
 
@@ -48,6 +49,7 @@ class HolidayAdminController implements ControllerProviderInterface
         }
 
         $mods = HolidayAdjustModel::where('uid', $uid)->get();
+
         return JsonResponse::create($mods, Response::HTTP_OK);
     }
 
@@ -60,6 +62,7 @@ class HolidayAdminController implements ControllerProviderInterface
 
         $userList = UserDtoFactory::createAvailableUserDtos();
         $managerList = UserDtoFactory::createManagerUserDtos();
+
         return JsonResponse::create([
             'userList' => $userList,
             'managerList' => $managerList,
@@ -90,6 +93,7 @@ class HolidayAdminController implements ControllerProviderInterface
             'diff' => $data['diff'],
             'reason' => $data['reason'],
         ]);
+
         return JsonResponse::create($new, Response::HTTP_CREATED);
     }
 

@@ -76,6 +76,7 @@ class SupportDto
                 $dto->dict[$key] = $value;
             }
         }
+
         return $dto;
     }
 
@@ -103,6 +104,7 @@ class SupportDto
                 }
             }
         }
+
         return $dto;
     }
 
@@ -112,6 +114,7 @@ class SupportDto
         foreach ($this->dict as $key => $column) {
             $dict[$key] = $column;
         }
+
         return $dict;
     }
 }

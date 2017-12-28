@@ -31,6 +31,7 @@ class HolidaysController implements ControllerProviderInterface
         $controller_collection->delete('uid/{uid}/{holidayid}', [$this, 'del']);
         $controller_collection->get('/download/{year}', [$this, 'download']);
         $controller_collection->get('/downloadRemain/{year}', [$this, 'downloadRemain']);
+
         return $controller_collection;
     }
 
@@ -134,6 +135,7 @@ class HolidaysController implements ControllerProviderInterface
             }
         } catch (\Exception $e) {
             $ret = $e->getMessage();
+
             return new Response($ret);
         }
 
@@ -166,6 +168,7 @@ class HolidaysController implements ControllerProviderInterface
             }
         } catch (\Exception $e) {
             $ret = $e->getMessage();
+
             return new Response($ret);
         }
 
@@ -197,6 +200,7 @@ class HolidaysController implements ControllerProviderInterface
             }
         } catch (\Exception $e) {
             $ret = $e->getMessage();
+
             return new Response($ret);
         }
 

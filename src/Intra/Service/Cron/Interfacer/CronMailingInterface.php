@@ -24,12 +24,14 @@ abstract class CronMailingInterface extends CronInterface
         if ($last_date == $today_date) {
             return true;
         }
+
         return false;
     }
 
     public function reformatDatetime($format, $request_date)
     {
         $datetime = new \DateTime($request_date);
+
         return $datetime->format($format);
     }
 
@@ -44,6 +46,7 @@ abstract class CronMailingInterface extends CronInterface
             throw new MsgException('invalid getMailContentsDtos : ' . get_called_class());
         }
         MailSendService::sends($dtos);
+
         return true;
     }
 }
