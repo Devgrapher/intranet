@@ -180,12 +180,18 @@
         return event.text;
       }
 
-      var daysOfWeekMap = ['일', '월', '화', '수', '목', '금', '토'];
+      var daysOfWeekMap = ['월', '화', '수', '목', '금'];
       var daysOfWeek = event.days_of_week.split(',').map(function (day) {
-        return daysOfWeekMap[day];
+        return daysOfWeekMap[day-1];
       }).join(',');
 
-      return daysOfWeek + '요일 정기예약' + '<br>' + event.text;
+      if (daysOfWeek === '월,화,수,목,금' || daysOfWeek.length === 0) {
+        daysOfWeek = '매일';
+      } else {
+        daysOfWeek += '요일';
+      }
+
+      return daysOfWeek+ ' 정기예약' + '<br>' + event.text;
     };
 
     scheduler.renderEvent = function (container, event) {
@@ -212,14 +218,6 @@
       container.innerHTML = html;
       return true;
     };
-
-    scheduler.attachEvent('onEventCreated', event_handler.handler_helper('onEventCreated'));
-    scheduler.attachEvent('onEventAdded', event_handler.handler_helper('onEventAdded'));
-    scheduler.attachEvent('onBeforeDrag', event_handler.handler_helper('beforeEdit'));
-    scheduler.attachEvent('onDblClick', event_handler.handler_helper('beforeEdit'));
-    scheduler.attachEvent('onClick', event_handler.handler_helper('beforeEdit'));
-    scheduler.attachEvent('onEventChanged', event_handler.handler_helper('afterEdit'));
-    scheduler.attachEvent('onBeforeEventDelete', event_handler.handler_helper('onBeforeEventDelete'));
 
     var sections = {{ sections|json_encode()|raw }};
     var room_ids = sections.map(function (section) {
