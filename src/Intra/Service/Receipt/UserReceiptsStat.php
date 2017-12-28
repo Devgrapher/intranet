@@ -26,10 +26,10 @@ class UserReceiptsStat
 
         $csvs = [];
         //header
-        {
-            $arr = ['사원번호', '이름', '팀', '날짜', '상호', '금액', '적요', '분류', '지불방식', '용도'];
-            $csvs[] = $arr;
-        }
+
+        $arr = ['사원번호', '이름', '팀', '날짜', '상호', '금액', '적요', '분류', '지불방식', '용도'];
+        $csvs[] = $arr;
+
         foreach ($receipts as $receipt) {
             $arr = [
                 $receipt['personcode'],
@@ -65,10 +65,10 @@ class UserReceiptsStat
 
         $csvs = [];
         //header
-        {
-            $arr = ['월', '사원번호', '이름', '팀', '상호', '금액', '적요', '분류', '지불방식', '용도'];
-            $csvs[] = $arr;
-        }
+
+        $arr = ['월', '사원번호', '이름', '팀', '상호', '금액', '적요', '분류', '지불방식', '용도'];
+        $csvs[] = $arr;
+
         foreach ($receipts as $receipt) {
             $arr = [
                 $receipt['yearmonth'] . '월',

@@ -13,7 +13,7 @@
 
 ### with PHP Built-in server
  
-1. Run ```php -S localhost:8000 -t `pwd` ```
+1. Run ```php -S localhost:8000 -t `web` ```
 2. Open `http://localhost:8000`.
 
 

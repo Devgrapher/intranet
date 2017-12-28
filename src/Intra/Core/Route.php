@@ -69,19 +69,17 @@ class Route
         $regex = '/\{(\w+)\}/';
 
         //find paramaters
-        {
-            preg_match_all($regex, $pattern, $match);
-            $parameterNames = $match[1];
-        }
+
+        preg_match_all($regex, $pattern, $match);
+        $parameterNames = $match[1];
 
         //build regex for parameter
-        {
-            $pattern_regex = $pattern;
-            $pattern_regex = preg_replace('/^\/+|\/+$/', '', $pattern_regex);
-            $pattern_regex = str_replace('/', '\\' . '/+', $pattern_regex);
-            $pattern_regex = preg_replace($regex, '([^\/\\?&]+)', $pattern_regex);
-            $pattern_regex = '/^' . $pattern_regex . '\/*$/';
-        }
+
+        $pattern_regex = $pattern;
+        $pattern_regex = preg_replace('/^\/+|\/+$/', '', $pattern_regex);
+        $pattern_regex = str_replace('/', '\\' . '/+', $pattern_regex);
+        $pattern_regex = preg_replace($regex, '([^\/\\?&]+)', $pattern_regex);
+        $pattern_regex = '/^' . $pattern_regex . '\/*$/';
 
         if (preg_match($pattern_regex, $this->query, $match)) {
             $parameters = [];

@@ -63,28 +63,27 @@ class HolidaysController implements ControllerProviderInterface
         $joinYear = $user_holiday->getYearByYearly(0);
         $yearly = $year - $joinYear;
 
-//main
-        {
-            $today = date('Y-m-d');
-            $holidayConst = HolidayModel::$const;
-            $yearPrev = $year - 1;
-            $yearNext = $year + 1;
-            $yearlyFrom = date('Y-m-d', $user_holiday_policy->getYearlyBeginTimestamp($yearly));
-            $yearlyTo = date('Y-m-d', $user_holiday_policy->getYearlyEndTimestamp($yearly));
+        //main
 
-            $fullCost = $user_holiday_policy->getAvailableCost($yearly);
-            $usedCost = $user_holiday_policy->getUsedCost($yearly);
-            $modCost = $user_holiday_policy->getModCost($year);
-            $modList = $user_holiday_policy->getModList($year);
-            $remainCost = $user_holiday_policy->getRemainCost($yearly);
-            $holidays = $user_holiday->getUserHolidays($yearly);
-            $holidayInfo = $user_holiday_policy->getDetailInfomationByYearly($yearly);
+        $today = date('Y-m-d');
+        $holidayConst = HolidayModel::$const;
+        $yearPrev = $year - 1;
+        $yearNext = $year + 1;
+        $yearlyFrom = date('Y-m-d', $user_holiday_policy->getYearlyBeginTimestamp($yearly));
+        $yearlyTo = date('Y-m-d', $user_holiday_policy->getYearlyEndTimestamp($yearly));
 
-            $availableUsers = UserDtoFactory::createAvailableUserDtos();
-            $managerUsers = UserDtoFactory::createManagerUserDtos();
+        $fullCost = $user_holiday_policy->getAvailableCost($yearly);
+        $usedCost = $user_holiday_policy->getUsedCost($yearly);
+        $modCost = $user_holiday_policy->getModCost($year);
+        $modList = $user_holiday_policy->getModList($year);
+        $remainCost = $user_holiday_policy->getRemainCost($yearly);
+        $holidays = $user_holiday->getUserHolidays($yearly);
+        $holidayInfo = $user_holiday_policy->getDetailInfomationByYearly($yearly);
 
-            $holidayCancelUrl = $_ENV['holiday_cancel_url'] ?? "";
-        }
+        $availableUsers = UserDtoFactory::createAvailableUserDtos();
+        $managerUsers = UserDtoFactory::createManagerUserDtos();
+
+        $holidayCancelUrl = $_ENV['holiday_cancel_url'] ?? "";
 
         return $app['twig']->render('holidays/index.twig', [
             'target_user_dto' => $target_user_dto,
@@ -186,7 +185,7 @@ class HolidaysController implements ControllerProviderInterface
             $user_holiday = new UserHoliday($dto);
             $holidayid = $request->get('holidayid');
 
-//finalize
+            //finalize
             $db = IntraDb::getGnfDb();
             $db->sqlBegin();
             if ($user_holiday->del($holidayid)) {
@@ -210,7 +209,7 @@ class HolidaysController implements ControllerProviderInterface
             return new Response("권한이 없습니다", 403);
         }
 
-//input
+        //input
         $year = $request->get('year');
         if (!intval($year)) {
             $year = date('Y');
