@@ -10,6 +10,8 @@ const common = {
   entry: {
     policy: ['babel-polyfill', './js/components/Policy'],
     recipient: ['babel-polyfill', './js/components/Recipient'],
+    room: ['babel-polyfill', './js/components/Room'],
+    eventGroup: ['babel-polyfill', './js/components/EventGroup'],
     holiday_adjust: './js/components/HolidayAdjust',
   },
   output: {
@@ -56,11 +58,11 @@ const common = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
-      chunks: ['policy', 'recipient', 'holiday_adjust'],
+      chunks: ['policy', 'recipient', 'room', 'eventGroup', 'holiday_adjust'],
       minChunk: 2,
     }),
     new ExtractTextPlugin({
-      filename: 'styles.css',
+      filename: '[name].[chunkhash].css',
     }),
     new ManifestPlugin({
       fileName: 'manifest.json',

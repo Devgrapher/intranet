@@ -92,6 +92,8 @@ class MenuService
                     new Link('직원 목록', '/users/list', new OnlyUserManager()),
                     new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
                     new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
+                    new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
+                    new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
                 ], 'wrench'),
                 new Link('내정보', '/users/myinfo', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),

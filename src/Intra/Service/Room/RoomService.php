@@ -9,22 +9,6 @@ use Intra\Model\RoomModel;
 
 class RoomService
 {
-    const DESCRIPTIONS = [
-        'default' => '#회의실 예약 방법
-1. 인트라넷에 로그인 후, [회의실 예약] 메뉴를 눌러주세요.
-2. 예약할 회의실을 선택한 후, 사용하실 시간을 드래그하여 지정해주세요.
-3. 예약자와 예약내용을 기재하시고, ‘Enter’키를 눌러 저장해주세요.
-4. 삭제 시 내가 저장한 시간을 클릭하고 왼쪽에 ‘휴지통’ 버튼을 눌러주세요. (수정 시에는 ‘펜’ 버튼을 눌러주세요.)
-
-*주의사항
-- 회의실 예약 후, 미팅이 취소된 경우 다른 사람을 위해 예약 내역을 꼭 삭제해주세요.
-- 회의실 예약 후 15분 이상 공실로 비어 있을 경우, 다른 직원분들이 사용할 수 있도록 기존 예약자의 소유권이 소멸됨을 안내 드립니다.
-
-- 모든 외부 손님의 미팅은 10층에서 진행해주세요. (예. 출판사 미팅, 면접 등)
-- 11층의 중요한 외부 손님(예. VIP, 중요한 기자 등) 방문의 경우, 방문자 및 방문내용에 대해 대표님 서면 승인이 있어야 출입이 가능하오니 유념하여 주세요.
-* 관련 문의는 인사팀에 해주시기 바랍니다.',
-    ];
-
     const NOTICES = [
         'default' => '<p>정기 미팅, 장기 미팅은 BWS팀 철민님 통해 예약가능합니다.</p><p><b>회의실 예약 후 15분 이상 공실로 비어 있을 경우, 다른 직원분들이 사용할 수 있도록 기존 예약자의 소유권이 소멸됨을 안내 드립니다.</b></p>',
         'focus' => ' - FOCUS ROOM은 업무 집중 및 개인 휴식 공간입니다',
@@ -55,21 +39,10 @@ class RoomService
         return $new['id'];
     }
 
-    public static function addEventGroup(int $room_id, string $desc, string $from_date, string $to_date,
-                                         string $from_time, string $to_time, string $days_of_week, int $uid)
+    public static function addEventGroup(array $data)
     {
-        $new = RoomEventGroupModel::create([
-            'uid' => $uid,
-            'room_id' => $room_id,
-            'desc' => $desc,
-            'from_date' => $from_date,
-            'to_date' => $to_date,
-            'from_time' => $from_time,
-            'to_time' => $to_time,
-            'days_of_week' => $days_of_week,
-        ]);
-
-        return $new['id'];
+        $new = RoomEventGroupModel::create($data);
+        return $new;
     }
 
     public static function deleteEvent(int $id, int $uid = null)
@@ -105,9 +78,25 @@ class RoomService
         RoomEventModel::where($where)->update($update);
     }
 
-    public static function getAllEvents($from, $to, $room_ids)
+    public static function editEventGroup(int $id, array $data)
     {
-        $events = RoomEventModel::whereIn('room_id', $room_ids)
+        $event = RoomEventGroupModel::find($id);
+        $event->uid = $data['uid'];
+        $event->room_id = $data['room_id'];
+        $event->from_date = $data['from_date'];
+        $event->to_date = $data['to_date'];
+        $event->from_time = $data['from_time'];
+        $event->to_time = $data['to_time'];
+        $event->days_of_week = $data['days_of_week'];
+        $event->desc = $data['desc'];
+        $event->save();
+
+        return $event->toArray();
+    }
+
+    public static function getEvents($from, $to, $room_ids)
+    {
+        return RoomEventModel::whereIn('room_id', $room_ids)
             ->where('from', '>=', $from)
             ->where('to', '<', $to)
             ->get([
@@ -115,16 +104,34 @@ class RoomService
                 'from as start_date',
                 'to as end_date',
                 'desc as text',
-                'desc as details',
                 'room_id',
             ])
             ->toArray();
+    }
 
-        $event_groups = RoomEventGroupModel::whereIn('room_id', $room_ids)
-            ->where('to_date', '>=', $from)
-            ->where('from_date', '<=', $to)
-            ->get()
-            ->toArray();
+    public static function getEventGroups($from, $to, $room_ids)
+    {
+        $query = RoomEventGroupModel::query();
+
+        if (isset($room_ids)) {
+            $query = $query->whereIn('room_id', $room_ids);
+        }
+
+        if (isset($from)) {
+            $query = $query->where('to_date', '>=', $from);
+        }
+
+        if (isset($to)) {
+            $query = $query->where('from_date', '<', $to);
+        }
+
+        return $query->get()->toArray();
+    }
+
+    public static function getAllEvents($from, $to, $room_ids)
+    {
+        $events = self::getEvents($from, $to, $room_ids);
+        $event_groups = self::getEventGroups($from, $to, $room_ids);
 
         $start = strtotime($from);
         $end = strtotime($to);
@@ -151,6 +158,11 @@ class RoomService
         return $events;
     }
 
+    public static function getAllEventGroups()
+    {
+        return self::getEventGroups(null, null, null);
+    }
+
     public static function getRoomSections(string $type)
     {
         return RoomModel::where('is_visible', 1)
@@ -160,5 +172,10 @@ class RoomService
                 'name as label'
             ])
             ->toArray();
+    }
+
+    public static function getAllRoomSections()
+    {
+        return RoomModel::all()->toArray();
     }
 }

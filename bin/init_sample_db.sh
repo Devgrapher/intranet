@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-composer install
+composer install --no-dev
 cp .env.sample .env
 mysql -uroot -h 127.0.0.1 -e "create database intranet;"
 vendor/bin/phinx migrate -e local -v

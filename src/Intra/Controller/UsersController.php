@@ -125,7 +125,7 @@ class UsersController implements ControllerProviderInterface
 
         $service = new UserImageFileService();
         $image_location = $service->getLastFileLocation($dto->uid);
-        $dto->image = $image_location ? $image_location : 'http://placehold.it/300x300';
+        $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
 
         return $app['twig']->render('users/myinfo.twig', ['info' => $dto]);
     }
@@ -158,7 +158,7 @@ class UsersController implements ControllerProviderInterface
 
         $service = new UserImageFileService();
         $image_location = $service->getLastFileLocation($dto->uid);
-        $dto->image = $image_location ? $image_location : 'http://placehold.it/300x300';
+        $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
 
         $users = UserDtoFactory::createAvailableUserDtos();
 

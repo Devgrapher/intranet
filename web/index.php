@@ -1,4 +1,5 @@
 <?php
+
 use Intra\Model\SessionModel;
 use Intra\Service\Ridi;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +23,15 @@ if (getenv('INTRA_TRUSTED_PROXIES', true) !== false) {
     Request::setTrustedHeaderName(Request::HEADER_FORWARDED, null);
 }
 
-Ridi::enableSentry();
-\Intra\Service\IntraDb::bootDB();
-SessionModel::init();
-
+/** @var \Silex\Application $app */
 $app = require_once __DIR__ . '/../src/app.php';
+
+$app->before(function () {
+    Ridi::enableSentry();
+    \Intra\Service\IntraDb::bootDB();
+    SessionModel::init();
+});
+
 require_once __DIR__ . '/../src/controller.php';
+
 $app->run();

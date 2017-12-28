@@ -16,7 +16,8 @@ class RoomsController implements ControllerProviderInterface
     {
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/', [$this, 'index']);
-        $controller_collection->get('/event', [$this, 'get']);
+        $controller_collection->get('/section', [$this, 'getSections']);
+        $controller_collection->get('/event', [$this, 'getEvents']);
         $controller_collection->post('/event', [$this, 'addEvent']);
         $controller_collection->post('/event/{id}', [$this, 'modEvent']);
         $controller_collection->delete('/event/{id}', [$this, 'delEvent']);
@@ -33,13 +34,15 @@ class RoomsController implements ControllerProviderInterface
         return $app['twig']->render('rooms/index.twig', [
             'sections' => $rooms,
             'name' => $name,
-            'description' => RoomService::DESCRIPTIONS[$type],
-            'notice' => RoomService::NOTICES[$type],
-            'warning' => RoomService::WARNING[$type]
         ]);
     }
 
-    public function get(Request $request)
+    public function getSections()
+    {
+        return new JsonResponse(RoomService::getAllRoomSections());
+    }
+
+    public function getEvents(Request $request)
     {
         $now = date('Y-m-d');
         $from = $request->get('from', $now);
@@ -64,25 +67,6 @@ class RoomsController implements ControllerProviderInterface
 
         try {
             return RoomService::addEvent($room_id, $desc, $from, $to, $uid);
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function addEventGroup(Request $request)
-    {
-        $room_id = $request->get('room_id');
-        $desc = $request->get('desc');
-        $from_date = $request->get('from_date');
-        $to_date = $request->get('to_date');
-        $from_time = $request->get('from_time');
-        $to_time = $request->get('to_time');
-        $days_of_week = $request->get('days_of_week');
-        $user = UserSession::getSelfDto();
-        $uid = $user->uid;
-
-        try {
-            return RoomService::addEventGroup($room_id, $desc, $from_date, $to_date, $from_time, $to_time, $days_of_week, $uid);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
