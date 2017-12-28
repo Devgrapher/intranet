@@ -215,7 +215,7 @@ class HolidaysController implements ControllerProviderInterface
             $year = date('Y');
         }
 
-        $user_holiday = new UserHolidayStat(UserSession::getSelfDto());
+        $user_holiday = new UserHolidayStat();
         $holidays = $user_holiday->getHolidaysAllUsers($year);
 
         $csvs = [

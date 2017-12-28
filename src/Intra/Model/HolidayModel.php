@@ -47,7 +47,9 @@ class HolidayModel
         }
 
         return $this->db->sqlObjects('
-          select *,
+          select
+            holidays.*,
+            user.personcode,
             user.name as uid_name,
             manager.name as manager_uid_name,
             keeper.name as keeper_uid_name

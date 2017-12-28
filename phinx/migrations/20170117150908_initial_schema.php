@@ -93,7 +93,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('keeper_uid', 'integer', ['signed' => false])
             ->addColumn('phone_emergency', 'string', ['length' => 20])
             ->addColumn('memo', 'text')
-            ->addColumn('hidden', 'boolean')
+            ->addColumn('hidden', 'boolean', ['default' => false])
             ->addForeignKey('manager_uid', 'users', 'uid')
             ->addForeignKey('keeper_uid', 'users', 'uid')
             ->create();

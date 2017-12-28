@@ -1,0 +1,13 @@
+{
+  "short_name": "리디 인트라넷",
+  "name": "리디 주식회사 인트라넷",
+  "icons": [
+    {
+      "src": "static/img/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone"
+}
