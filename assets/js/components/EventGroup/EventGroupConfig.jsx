@@ -61,7 +61,7 @@ class EventGroupConfig extends React.Component {
   }
 
   getRoomName(roomId) {
-    return this.state.rooms.find(room => room.id === roomId).name;
+    return this.state.rooms.find(room => room.key === roomId).name;
   }
 
   convertEventGroupFromServerData(serverData) {

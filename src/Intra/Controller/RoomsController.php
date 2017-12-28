@@ -21,6 +21,7 @@ class RoomsController implements ControllerProviderInterface
         $controller_collection->post('/event', [$this, 'addEvent']);
         $controller_collection->post('/event/{id}', [$this, 'modEvent']);
         $controller_collection->delete('/event/{id}', [$this, 'delEvent']);
+
         return $controller_collection;
     }
 
@@ -39,7 +40,7 @@ class RoomsController implements ControllerProviderInterface
 
     public function getSections()
     {
-        return new JsonResponse(RoomService::getAllRoomSections());
+        return new JsonResponse(RoomService::getRoomSections('default'));
     }
 
     public function getEvents(Request $request)
@@ -51,6 +52,7 @@ class RoomsController implements ControllerProviderInterface
         $room_ids = explode(',', $room_ids);
 
         $events = RoomService::getAllEvents($from, $to, $room_ids);
+
         return new JsonResponse([
             'data' => $events,
         ]);
