@@ -16,6 +16,7 @@ class ProgramsController implements ControllerProviderInterface
         $controller_collection->get('/list', [$this, 'getList']);
         $controller_collection->get('/add/{key}/{value}', [$this, 'add']);
         $controller_collection->get('/insert', [$this, 'insert']);
+
         return $controller_collection;
     }
 

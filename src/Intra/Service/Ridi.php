@@ -35,8 +35,10 @@ class Ridi
     {
         if (self::$raven_client instanceof Raven_Client) {
             self::$raven_client->captureException($e);
+
             return true;
         }
+
         return false;
     }
 }

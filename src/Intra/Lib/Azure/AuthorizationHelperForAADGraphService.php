@@ -17,6 +17,7 @@ class AuthorizationHelperForAADGraphService
             "client_id=" . Settings::getClientId() . "&" .
             "resource=" . Settings::getResourceURI() . "&" .
             "redirect_uri=" . Settings::getRediectURI();
+
         return $authUrl;
     }
 

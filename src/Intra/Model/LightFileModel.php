@@ -49,6 +49,7 @@ class LightFileModel
     {
         $return = $this->dir . '/' . $filename;
         $this->makeDirectory(dirname($return));
+
         return $return;
     }
 }

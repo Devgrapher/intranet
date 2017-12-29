@@ -193,6 +193,7 @@ class PaymentDto extends BaseDto
         if (!$return->is_account_book_registered) {
             $return->is_account_book_registered = 'N';
         }
+
         return $return;
     }
 

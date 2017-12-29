@@ -38,6 +38,7 @@ class UserHolidayDto extends BaseDto
         $holiday_raw->date = date('Y-m-d', strtotime($holiday_raw->date));
         $holiday_raw->phone_emergency = trim($holiday_raw->phone_emergency);
         $holiday_raw->yearly = $yearly;
+
         return $holiday_raw;
     }
 }

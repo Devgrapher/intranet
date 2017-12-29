@@ -13,12 +13,14 @@ class UserEditService
     public static function getImageLocation($uid)
     {
         $file_model = new LightFileModel('user_img');
+
         return $file_model->getUploadableLocation($uid);
     }
 
     public static function getThumbLocation($uid)
     {
         $file_model = new LightFileModel('user_img');
+
         return $file_model->getUploadableLocation($uid . '.' . 'jpeg');
     }
 
@@ -64,6 +66,7 @@ class UserEditService
         imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $width, $height, $width_origin, $height_origin); //사이즈 변경하여 복사
 
         $dest = self::getThumbLocation($uid);
+
         return imagejpeg($virtual_image, $dest);
     }
 
@@ -78,6 +81,7 @@ class UserEditService
         if (is_file($dest)) {
             return $dest;
         }
+
         return null;
     }
 
@@ -102,6 +106,7 @@ class UserEditService
         UserModel::update($uid, [$key => $value]);
 
         $user_dto = UserDtoFactory::createByUid($uid);
+
         return $user_dto->$key;
     }
 }

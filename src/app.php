@@ -45,6 +45,7 @@ $app->extend('twig', function (Twig_Environment $twig) use ($app) {
         } else {
             $html = $menu_list->getHtml();
         }
+
         return new Twig_Markup($html, 'UTF-8');
     }));
 

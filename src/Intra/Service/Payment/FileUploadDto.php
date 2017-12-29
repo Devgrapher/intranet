@@ -40,6 +40,7 @@ class FileUploadDto extends BaseDto
     {
         $return = new self();
         $return->initFromArray($payment_files_dict);
+
         return $return;
     }
 

@@ -14,6 +14,7 @@ class APIController implements ControllerProviderInterface
     {
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/ridibooks_ids', [$this, 'getRidibooksIds']);
+
         return $controller_collection;
     }
 

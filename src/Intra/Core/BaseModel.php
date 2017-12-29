@@ -48,6 +48,7 @@ class BaseModel
     public static function create($db = null)
     {
         $called_class = get_called_class();
+
         return new $called_class($db);
     }
 }

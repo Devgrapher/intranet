@@ -64,6 +64,7 @@ class Press
     {
         try {
             $this->press->update([$key => $value], ['id' => $id]);
+
             return $value;
         } catch (\Exception $e) {
             return '수정을 실패했습니다!';
@@ -82,6 +83,7 @@ class Press
     public function getAllPress()
     {
         $press = $this->getAll();
+
         return $this->makeJsonResponse($press);
     }
 
@@ -90,6 +92,7 @@ class Press
         $skip = ($page - 1) * $take;
         $press = $this->press->paginate($take, $skip, ['*'], 'date', 'desc');
         $count = $this->press->count();
+
         return $this->makeJsonResponse($press, $count);
     }
 

@@ -49,6 +49,7 @@ class UserPaymentMailService
             $receivers = array_merge($receivers, $receivers_append);
             $receivers = array_unique($receivers);
         }
+
         return $receivers;
     }
 

@@ -33,6 +33,7 @@ class UsersController implements ControllerProviderInterface
         $controller_collection->post('/image_upload', [$this, 'uploadImage']);
         $controller_collection->post('/{userid}/updateExtra/{key}/{value}', [$this, 'updateExtraAjax']);
         $controller_collection->get('/jeditable_key/{key}', [$this, 'jeditableKey']);
+
         return $controller_collection;
     }
 
@@ -86,6 +87,7 @@ class UsersController implements ControllerProviderInterface
 
             $users_ret[] = $user_arr;
         }
+
         return $app['twig']->render('users/index.twig', [
             'replaceable' => $replaceable,
             'users' => $users_ret
@@ -104,11 +106,13 @@ class UsersController implements ControllerProviderInterface
             if ($request->get('outer')) {
                 $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
                     $type = (new UserDtoHandler($item))->getType();
+
                     return $type == UserType::OUTER;
                 }));
             } else {
                 $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
                     $type = (new UserDtoHandler($item))->getType();
+
                     return $type != UserType::OUTER;
                 }));
             }
@@ -215,6 +219,7 @@ class UsersController implements ControllerProviderInterface
 
         $user = new UserDtoHandler(UserDtoFactory::createByUid($uid));
         $user->setExtra($key, $value);
+
         return Response::create('success', Response::HTTP_OK);
     }
 

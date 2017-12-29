@@ -12,6 +12,7 @@ $app->before(function (Request $request) {
 
 $app->get('/', function (Application $app) {
     $subRequest = Request::create('/posts/notice', 'GET');
+
     return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 });
 
@@ -31,6 +32,7 @@ $app->mount('/holidayadmin', new Intra\Controller\HolidayAdminController());
 $app->mount('/rooms', new Intra\Controller\RoomsController());
 $app->get('/focus/', function (Application $app) {
     $subRequest = Request::create('/rooms/', 'GET', ['type' => 'focus']);
+
     return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 });
 

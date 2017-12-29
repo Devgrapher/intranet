@@ -30,6 +30,7 @@ class UserSession
 
         $uid = UserModel::convertUidFromId($id);
         self::$session->set('users_uid', $uid);
+
         return true;
     }
 
@@ -57,8 +58,10 @@ class UserSession
         }
         if (self::$session->get('users_uid')) {
             $users_uid = self::$session->get('users_uid');
+
             return UserDtoFactory::createByUid($users_uid);
         }
+
         return null;
     }
 
@@ -67,6 +70,7 @@ class UserSession
         self::initStatic();
 
         $users_uid = self::$session->get('users_uid');
+
         return intval($users_uid);
     }
 
@@ -76,6 +80,7 @@ class UserSession
         if ($user === null) {
             return false;
         }
+
         return UserPolicy::isTa($user);
     }
 
@@ -95,6 +100,7 @@ class UserSession
         if ($user === null) {
             return false;
         }
+
         return UserPolicy::isUserManager($user);
     }
 }

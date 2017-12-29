@@ -18,6 +18,7 @@ class PaymentDtoFactory
         if (!$payment_row) {
             return null;
         }
+
         return self::importFromDatabaseDicts([$payment_row])[0];
     }
 
@@ -56,6 +57,7 @@ class PaymentDtoFactory
 
             $return[] = PaymentDto::importFromDatabase($payment_dict, $payment_accept_dtos, $payment_files_dtos);
         }
+
         return $return;
     }
 }

@@ -28,6 +28,7 @@ class ReceiptsController implements ControllerProviderInterface
         $controller_collection->get('/download/{month}', [$this, 'download']);
         $controller_collection->get('/downloadYear/{month}', [$this, 'downloadYear']);
         $controller_collection->post('/queryIsWeekend', [$this, 'queryIsWeekend']);
+
         return $controller_collection;
     }
 
@@ -48,6 +49,7 @@ class ReceiptsController implements ControllerProviderInterface
         $payment_service = new UserReceipts($target_user_dto);
         $twig_param = $payment_service->index($month);
         $twig_param['isAdmin'] = UserPolicy::isReceiptsAdmin(UserSession::getSelfDto());
+
         return $app['twig']->render('receipts/index.twig', $twig_param);
     }
 
@@ -125,6 +127,7 @@ class ReceiptsController implements ControllerProviderInterface
         $day = $request->get('day');
 
         $result = UserReceipts::queryWeekend($month, $day);
+
         return Response::create($result, 200);
     }
 
@@ -138,6 +141,7 @@ class ReceiptsController implements ControllerProviderInterface
 
         $month = UserPaymentRequestFilter::parseMonth($month);
         $payment_service = new UserReceiptsStat();
+
         return $payment_service->download($month);
     }
 
@@ -152,6 +156,7 @@ class ReceiptsController implements ControllerProviderInterface
         $month = UserPaymentRequestFilter::parseMonth($month);
 
         $payment_service = new UserReceiptsStat();
+
         return $payment_service->downloadYear($month);
     }
 }

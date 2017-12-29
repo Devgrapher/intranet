@@ -30,6 +30,7 @@ trait ClassLightFunctionCache
         }
         $function_result = $function();
         self::insertCache($class, $domain_primary_keys, $function_result);
+
         return $function_result;
     }
 
@@ -50,6 +51,7 @@ trait ClassLightFunctionCache
         if (isset(self::$cache[$class][$hash])) {
             return self::$cache[$class][$hash];
         }
+
         return null;
     }
 

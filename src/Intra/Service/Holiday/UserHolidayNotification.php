@@ -83,6 +83,7 @@ class UserHolidayNotification
                 'text' => $contents
             ]
         );
+
         return $ret->http_response_code == 200;
     }
 
@@ -131,6 +132,7 @@ class UserHolidayNotification
 비상시연락처 : {$holiday_raw->phone_emergency}
 비고 : {$holiday_raw->memo}
 ";
+
         return $text;
     }
 
@@ -140,6 +142,7 @@ class UserHolidayNotification
     private function getHolidayType()
     {
         $holiday_type = $this->holiday_raws[0]->type;
+
         return $holiday_type;
     }
 
@@ -150,6 +153,7 @@ class UserHolidayNotification
     {
         if (count($this->holiday_raws) == 1) {
             $date_duration = $this->holiday_raws[0]->date;
+
             return $date_duration;
         } else {
             $date_durations = [];
@@ -157,6 +161,7 @@ class UserHolidayNotification
                 $date_durations[] = $holiday_raw->date;
             }
             $date_duration = implode(', ', $date_durations);
+
             return $date_duration;
         }
     }
@@ -170,6 +175,7 @@ class UserHolidayNotification
         foreach ($this->holiday_raws as $holiday_raw) {
             $cost_sum += $holiday_raw->cost;
         }
+
         return $cost_sum;
     }
 }

@@ -53,6 +53,7 @@ class UserImageFileService extends FileService
 
         ob_start();
         imagejpeg($virtual_image, null, self::THUMBNAIL_JPG_QUALITY);
+
         return ob_get_clean();
     }
 }

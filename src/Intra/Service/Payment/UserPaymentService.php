@@ -40,6 +40,7 @@ class UserPaymentService
         self::assertAddFiles($payment, $self);
 
         $file_service = new PaymentFileService();
+
         return $file_service->uploadFile(
             $self->uid,
             $payment_id,
@@ -73,6 +74,7 @@ class UserPaymentService
         self::assertAccessFile($self, $file_upload_dto, $payment_dto);
 
         $file_upload_service = new FileUploadService('payment_files');
+
         return $file_upload_service->getBinaryFileResponseWithDto($file_upload_dto);
     }
 
@@ -261,6 +263,7 @@ class UserPaymentService
             throw new \Exception('invalid paymentid request');
         }
         $paymentid = $payment['paymentid'];
+
         return new UserPaymentRowInstance($paymentid);
     }
 }

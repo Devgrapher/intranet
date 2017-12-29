@@ -27,6 +27,7 @@ class UserModel extends BaseModel
         if (!$uid) {
             throw new MsgException('계정 추가가 실패하였습니다');
         }
+
         return true;
     }
 

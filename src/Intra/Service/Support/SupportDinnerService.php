@@ -34,6 +34,7 @@ class SupportDinnerService
         $now = new \DateTime();
         $dinner_start = new \DateTime(self::TIME_DINNER_ORDER_START);
         $dinner_end = new \DateTime(self::TIME_DINNER_ORDER_END);
+
         return $dinner_start <= $now && $now <= $dinner_end;
     }
 }

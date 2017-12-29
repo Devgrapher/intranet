@@ -26,6 +26,7 @@ class JsonDtoWrapper
             $json_dto = new JsonDto($e->getMessage());
             $json_dto->success = false;
         }
+
         return new JsonResponse($json_dto);
     }
 }

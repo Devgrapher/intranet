@@ -23,6 +23,7 @@ abstract class Repository implements RepositoryInterface
         if (!$model instanceof Model) {
             throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
         }
+
         return $this->model = $model;
     }
 

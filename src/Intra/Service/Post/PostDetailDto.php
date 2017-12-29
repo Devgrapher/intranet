@@ -53,6 +53,7 @@ class PostDetailDto extends BaseDto
         $return = $this->exportAsArrayExceptNull();
         $return['name'] = UserDtoHandler::importFromDto(UserDtoFactory::createByUid($this->uid))->getName();
         $return['content_html'] = nl2br($return['content_html']);
+
         return $return;
     }
 
@@ -61,12 +62,14 @@ class PostDetailDto extends BaseDto
         $array = $this->exportAsArrayByKeys(['group', 'uid', 'title', 'content_html']);
         $return = new PostModel();
         $return->setRawAttributes($array);
+
         return $return;
     }
 
     public function exportAsArrayForModify()
     {
         $return = $this->exportAsArrayExceptNull();
+
         return $return;
     }
 
@@ -75,6 +78,7 @@ class PostDetailDto extends BaseDto
         $array = $this->exportAsArrayByKeys(['group', 'uid', 'title', 'content_html', 'id']);
         $return = new PostModel();
         $return->setRawAttributes($array);
+
         return $return;
     }
 }

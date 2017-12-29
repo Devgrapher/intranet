@@ -21,6 +21,7 @@ class HolidayModel
     public function getUsedCost(UserDto $user, $begin, $end)
     {
         $where = ['uid' => $user->uid, 'hidden' => 0, 'date' => sqlBetween($begin, $end)];
+
         return max(0, $this->db->sqlData('select sum(cost) from holidays where ?', sqlWhere($where)));
     }
 
@@ -70,12 +71,14 @@ class HolidayModel
         }
 
         $this->db->sqlInsert('holidays', $holiday);
+
         return $this->db->insert_id();
     }
 
     public function hide($holidayid, $uid)
     {
         $update = ['hidden' => 1];
+
         return $this->db->sqlUpdate('holidays', $update, compact('holidayid', 'uid'));
     }
 
@@ -109,6 +112,7 @@ class HolidayModel
     public function gets(array $holidayids, $uid)
     {
         $where = ['holidayid' => $holidayids, 'uid' => $uid];
+
         return $this->db->sqlObjects('select * from holidays where ? order by date asc', sqlWhere($where));
     }
 
@@ -118,6 +122,7 @@ class HolidayModel
             'date' => date('Y-m-d'),
             'hidden' => 0
         ];
+
         return $this->db->sqlObjects('select uid, `type` from holidays where ?', sqlWhere($where));
     }
 
@@ -129,6 +134,7 @@ class HolidayModel
             'uid' => $uid,
             'hidden' => 0
         ];
+
         return $this->db->sqlData('select sum(cost) >= (1 - ' . intval($cost) . ') from holidays where ?', sqlWhere($where));
     }
 
@@ -140,6 +146,7 @@ class HolidayModel
             'uid' => $uid,
             'hidden' => 0
         ];
+
         return $this->db->sqlCount('holidays', $where);
     }
 
@@ -151,6 +158,7 @@ class HolidayModel
             'uid' => $uid,
             'hidden' => 0
         ];
+
         return $this->db->sqlCount('holidays', $where);
     }
 
@@ -162,6 +170,7 @@ class HolidayModel
             'uid' => $uid,
             'hidden' => 0
         ];
+
         return $this->db->sqlData('select type from holidays where ?', sqlWhere($where));
     }
 }

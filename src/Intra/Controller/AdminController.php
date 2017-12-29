@@ -27,6 +27,7 @@ class AdminController implements ControllerProviderInterface
         $controller_collection->post('/event_group', [$this, 'postEventGroup']);
         $controller_collection->post('/event_group/{id}', [$this, 'postEventGroup']);
         $controller_collection->delete('/event_group/{id}', [$this, 'deleteEventGroup']);
+
         return $controller_collection;
     }
 

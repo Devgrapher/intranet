@@ -61,6 +61,7 @@ class SupportRowService
         if (SupportPolicy::getColumn($target, $key) instanceof SupportColumnWorker) {
             return UserJoinService::getNameByUidSafe($support_dto->dict[$key]);
         }
+
         return $support_dto->dict[$key];
     }
 
@@ -79,6 +80,7 @@ class SupportRowService
                 ) {
                     $hasAuth = ($support_dto->uid == $user->uid
                         || $column->isEditableForUser($user));
+
                     return $hasAuth;
                 }
                 break;

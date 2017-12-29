@@ -93,6 +93,7 @@ class SupportPolicy
     public static function getColumnFields($target)
     {
         self::initColumnFields();
+
         return self::$column_fields[$target];
     }
 
@@ -249,6 +250,7 @@ class SupportPolicy
         };
         $get_team_by_uid = function (SupportDto $support_dto) {
             $uid = $support_dto->dict['uid'];
+
             return UserJoinService::getTeamByUidSafe($uid);
         };
         $category_cost_multiplier = function ($category_column, $multiplier_column, $category_value_table) {
@@ -256,6 +258,7 @@ class SupportPolicy
                 $multiplier = $support_dto->dict[$multiplier_column];
                 $category_name = $support_dto->dict[$category_column];
                 $category_value = $category_value_table[$category_name];
+
                 return number_format($category_value * $multiplier);
             };
         };
@@ -554,6 +557,7 @@ class SupportPolicy
                 if ($row_dict['support_rate'] == '-') {
                     throw new MsgException('승인지원율을 선택해 주세요.');
                 }
+
                 return true;
             },
         ];

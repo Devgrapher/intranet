@@ -20,6 +20,7 @@ class Organization
     {
         $team_repo = new TeamRepository();
         $names = $team_repo->all(['name'], 'name', 'asc')->pluck('name')->toArray();
+
         return $names;
     }
 
@@ -41,12 +42,14 @@ class Organization
         }
 
         $team = $team_with_alias->toArray();
+
         return $team['name'];
     }
 
     public static function getShortTeamName($alias)
     {
         $divisions = explode('/', self::getTeamName($alias));
+
         return end($divisions);
     }
 

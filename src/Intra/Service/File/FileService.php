@@ -37,6 +37,7 @@ abstract class FileService
     public function deleteFile(int $id)
     {
         $repo = new FileRepository();
+
         return $repo->deleteFile($id);
     }
 
@@ -54,6 +55,7 @@ abstract class FileService
 
         $s3_service = new Aws\S3();
         $s3_service->uploadToS3($s3_bucket, $s3_prefix . '/' . $s3_filename, $file_content, $content_type);
+
         return $repo->createFile($uploader_uid, $group, $key, $upload_file_name, $group . '/' . $s3_filename);
     }
 
@@ -98,6 +100,7 @@ abstract class FileService
         $s3_service = new Aws\S3();
         $s3_bucket = $_ENV['AWS_S3_BUCKET'];
         $s3_bucket_key = $group . '/' . $pathinfo[1];
+
         return $s3_service->getUrl($s3_bucket, $s3_bucket_key);
     }
 
@@ -109,6 +112,7 @@ abstract class FileService
     private function makeS3FileName(string $key, string $sub_key, string $ext): string
     {
         $file_name = $key . '.' . $sub_key;
+
         return  $ext ? $file_name . '.' . $ext : $file_name;
     }
 }

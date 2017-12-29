@@ -23,6 +23,7 @@ class UserPaymentConst
             foreach (UserDtoFactory::createAvailableUserDtos() as $user) {
                 $ret[$user->uid] = $user->name;
             }
+
             return json_encode($ret);
         }
         if (!self::isExistByKey($key)) {
@@ -32,6 +33,7 @@ class UserPaymentConst
         foreach (self::getByKey($key) as $v) {
             $ret[$v] = $v;
         }
+
         return json_encode($ret);
     }
 

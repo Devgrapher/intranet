@@ -20,6 +20,7 @@ class UserDtoFactory
             throw new Exception("Database Row Not Exist");
         }
         $dict = UserModel::getDictWithUid($uid);
+
         return UserDto::importFromDatabase($dict);
     }
 
@@ -29,6 +30,7 @@ class UserDtoFactory
         foreach ($dicts as $dict) {
             $return[] = UserDto::importFromDatabase($dict);
         }
+
         return $return;
     }
 
@@ -38,6 +40,7 @@ class UserDtoFactory
     public static function createAvailableUserDtos()
     {
         $dicts = UserModel::getDictsAvailable();
+
         return self::createFromDatabaseDicts($dicts);
     }
 
@@ -47,6 +50,7 @@ class UserDtoFactory
     public static function createAllUserDtos()
     {
         $dicts = UserModel::getAllDicts();
+
         return self::createFromDatabaseDicts($dicts);
     }
 
@@ -56,6 +60,7 @@ class UserDtoFactory
     public static function createManagerUserDtos()
     {
         $dicts = UserModel::getDictsOfManager();
+
         return self::createFromDatabaseDicts($dicts);
     }
 
@@ -71,6 +76,7 @@ class UserDtoFactory
         foreach ($dicts as $dict) {
             $return[] = UserDto::importFromDatabase($dict);
         }
+
         return $return;
     }
 
@@ -83,6 +89,7 @@ class UserDtoFactory
     public static function importFromDatabaseWithId($id)
     {
         $uid = UserModel::convertUidFromId($id);
+
         return self::createByUid($uid);
     }
 }

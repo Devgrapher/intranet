@@ -20,6 +20,7 @@ class SupportModel extends BaseModel
         $table = self::getTableName($support_dto->target);
         $dict = $support_dto->exportDictAddRequest();
         self::getDb()->sqlInsert($table, $dict);
+
         return self::getDb()->insert_id();
     }
 
@@ -52,6 +53,7 @@ class SupportModel extends BaseModel
             $order_column => sqlRange($date, $next_date),
             'is_deleted' => 0,
         ];
+
         return self::getDb()->sqlDicts(
             'select * from ? where ? order by ? asc',
             sqlTable($table),
@@ -87,6 +89,7 @@ class SupportModel extends BaseModel
             $order_column => sqlRange($date, $next_date),
             'is_deleted' => 0,
         ];
+
         return self::getDb()->sqlDicts(
             'select * from ? where ? order by ? asc',
             sqlTable($table),
@@ -179,6 +182,7 @@ class SupportModel extends BaseModel
             'id' => $id,
             'is_deleted' => 0,
         ];
+
         return self::getDb()->sqlDict(
             'select * from ? where ?',
             sqlTable($table),
@@ -194,6 +198,7 @@ class SupportModel extends BaseModel
             'id' => $id,
             'is_deleted' => 0,
         ];
+
         return self::getDb()->sqlUpdate($table, $update, $where);
     }
 
@@ -207,6 +212,7 @@ class SupportModel extends BaseModel
             'id' => $id,
             'is_deleted' => 0,
         ];
+
         return self::getDb()->sqlUpdate($table, $update, $where);
     }
 
@@ -237,6 +243,7 @@ class SupportModel extends BaseModel
             $order_column => sqlRange($begin_datetime->format('Y-m-d'), $end_datetime->format('Y-m-d')),
             'is_deleted' => 0,
         ];
+
         return self::getDb()->sqlDicts(
             'select * from ? where ? order by ? asc',
             sqlTable($table),
@@ -258,6 +265,7 @@ class SupportModel extends BaseModel
             throw new \Exception('invalid taget mapping  from ' . $target);
         }
         $table = 'support_' . $target;
+
         return $table;
     }
 }

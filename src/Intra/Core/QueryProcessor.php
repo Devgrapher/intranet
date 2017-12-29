@@ -52,6 +52,7 @@ class QueryProcessor
             );
             $ret = $subQueryProcessor->__act();
             $this->executed_query = $matched_query . '/' . $subQueryProcessor->getRoutedQuery();
+
             return $ret;
         } elseif ($this->isAvailableController($matched_query)) {
             try {
@@ -65,10 +66,13 @@ class QueryProcessor
                 $ret = $target->call();
             } catch (MsgException $e) {
                 $ret = $e->getMessage();
+
                 return new Response($ret);
             }
+
             return $ret;
         }
+
         return false;
     }
 
@@ -111,10 +115,12 @@ class QueryProcessor
             $matched_query_raw = $match[0];
             $matched_query = $match[1];
             $unmatched_query_tail = substr($this->remain_query, strlen($matched_query_raw));
+
             return [$matched_query, $unmatched_query_tail];
         } else {
             $matched_query = 'index';
             $unmatched_query_tail = '';
+
             return [$matched_query, $unmatched_query_tail];
         }
     }

@@ -39,8 +39,10 @@ class UserPaymentRowInstance
             if ($user_name === null) {
                 return 'error';
             }
+
             return $user_name;
         }
+
         return $updated_value;
     }
 
@@ -72,6 +74,7 @@ class UserPaymentRowInstance
         if (!($is_payment_admin || $is_editable)) {
             return false;
         }
+
         return true;
     }
 
@@ -83,6 +86,7 @@ class UserPaymentRowInstance
         if ($res) {
             return 1;
         }
+
         return '삭제가 실패했습니다!';
     }
 
@@ -93,6 +97,7 @@ class UserPaymentRowInstance
         if (!($is_payment_admin || $is_editable)) {
             throw new MsgException("삭제 권한이 없습니다.");
         }
+
         return true;
     }
 
@@ -103,6 +108,7 @@ class UserPaymentRowInstance
         if ($payment_dto->manager_uid != $self->uid) {
             throw new MsgException("담당 승인자가 아닙니다.");
         }
+
         return $this->accept('manager', $self->uid);
     }
 
@@ -112,6 +118,7 @@ class UserPaymentRowInstance
         if (!UserPolicy::isPaymentAdmin($self)) {
             throw new MsgException("담당 승인자가 아닙니다.");
         }
+
         return $this->accept('co', $self->uid);
     }
 
@@ -119,6 +126,7 @@ class UserPaymentRowInstance
     {
         $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
         PaymentAcceptModel::insert($payment_accept_dto);
+
         return 1;
     }
 
@@ -138,6 +146,7 @@ class UserPaymentRowInstance
     {
         $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
         PaymentAcceptModel::delete($payment_accept_dto);
+
         return 1;
     }
 }

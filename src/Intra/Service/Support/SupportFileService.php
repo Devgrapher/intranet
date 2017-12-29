@@ -33,6 +33,7 @@ class SupportFileService
         self::assertAccessFiles($support_dto, $self, $target, $columns);
 
         $file_service = new SupportS3FileService($target, $column_key);
+
         return $file_service->uploadFile(
             $self->uid,
             $id,
@@ -87,6 +88,7 @@ class SupportFileService
 
         $file_service = new SupportS3FileService($target, $column_key);
         $file_location = $file_service->getFileLocation($file_id);
+
         return RedirectResponse::create($file_location);
     }
 
@@ -100,6 +102,7 @@ class SupportFileService
 
         $file_service = new SupportS3FileService($target, $column_key);
         $deleted_num = $file_service->deleteFile($file_id);
+
         return $deleted_num === 1;
     }
 

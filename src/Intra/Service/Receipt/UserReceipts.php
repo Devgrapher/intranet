@@ -29,6 +29,7 @@ class UserReceipts
         if (self::isWeekend($date)) {
             return '(<span style="color:red">주말</span>)';
         }
+
         return "(평일)";
     }
 
@@ -177,6 +178,7 @@ class UserReceipts
         } else {
             $month = date('Y-m', strtotime($month));
         }
+
         return $month;
     }
 
@@ -205,6 +207,7 @@ class UserReceipts
         if ($res) {
             return 1;
         }
+
         return '자료를 추가할 수 없습니다. 다시 확인해 주세요';
     }
 
@@ -239,6 +242,7 @@ class UserReceipts
         if ($res) {
             return 1;
         }
+
         return '삭제가 실패했습니다!';
     }
 
@@ -263,6 +267,7 @@ class UserReceipts
         if ($key == 'cost') {
             return number_format($new_value) . ' 원';
         }
+
         return $new_value;
     }
 
@@ -272,6 +277,7 @@ class UserReceipts
         if (UserPolicy::isReceiptsAdmin($self)) {
             return ['receiptid' => $receiptid];
         }
+
         return ['receiptid' => $receiptid, 'uid' => $this->user->uid];
     }
 }

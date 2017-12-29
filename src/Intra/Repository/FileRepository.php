@@ -66,6 +66,7 @@ class FileRepository extends Repository
         $file = $this->find([
             'id' => $id,
         ], ['id'])->first();
+
         return $this->delete($file->toArray());
     }
 
