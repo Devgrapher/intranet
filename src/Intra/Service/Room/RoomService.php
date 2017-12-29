@@ -23,11 +23,6 @@ class RoomService
 
     public static function addEvent(int $room_id, string $desc, string $from, string $to, int $uid)
     {
-        $old_events = self::getAllEvents($from, $to, [$room_id]);
-        if (count($old_events) > 0) {
-            throw new \Exception('이미 다른 사람이 예약한 시간입니다 새로고침 해주세요.');
-        }
-
         $new = RoomEventModel::create([
             'uid' => $uid,
             'room_id' => $room_id,
