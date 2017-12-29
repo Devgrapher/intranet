@@ -21,7 +21,7 @@
     "jquery-ui": "1.12.1",
     "jquery.attrajax": "^0.1",
     "jquery.cookie": "1.4.1",
-    "jquery.jeditable": "https://github.com/tuupola/jquery_jeditable.git",
+    "jeditable": "~1.7.0",
     "jquery.tmpl": "https://github.com/BorisMoore/jquery-tmpl.git",
     "jqueryte": "1.4.0",
     "scheduler": "4.3.1",
