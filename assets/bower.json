@@ -24,7 +24,6 @@
     "jeditable": "~1.7.0",
     "jquery.tmpl": "https://github.com/BorisMoore/jquery-tmpl.git",
     "jqueryte": "1.4.0",
-    "scheduler": "4.3.1",
     "select2": "3.5.4",
     "select2-bootstrap-css": "1.4.6",
     "smalot-bootstrap-datetimepicker": "2.3.11",
