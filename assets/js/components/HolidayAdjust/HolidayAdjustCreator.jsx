@@ -40,7 +40,7 @@ const HolidayAdjustCreator = (props) => {
           <FormControl
             type="text"
             value={diff}
-            disabled
+            disabled={disabled}
             placeholder="(+/-)숫자"
             onChange={e => onDiffChange(e.target.value)}
           />
@@ -53,7 +53,7 @@ const HolidayAdjustCreator = (props) => {
           <FormControl
             type="text"
             value={reason}
-            disabled
+            disabled={disabled}
             placeholder="사유를 적어주세요."
             onChange={e => onReasonChange(e.target.value)}
           />
