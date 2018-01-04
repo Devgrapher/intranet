@@ -15,7 +15,7 @@ use Intra\Service\User\UserSession;
 
 class MenuService
 {
-    const RIDI_GUIDE_URL = 'https://ridicorp.sharepoint.com/intranet/SitePages/%EB%A6%AC%EB%94%94%20%EC%83%9D%ED%99%9C%20%EA%B0%80%EC%9D%B4%EB%93%9C.aspx';
+    const RIDI_GUIDE_URL = 'https://ridicorp.atlassian.net/wiki/spaces/bws/pages';
 
     public static function getMenuLinkList(): array
     {
@@ -26,7 +26,7 @@ class MenuService
             if ($_ENV['INTRA_DOMAIN'] == 'ridi.com') {
                 $left_menu_list = [
                     new Link('직원찾기', '/users/', new ExceptStudioD()),
-                    new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
+                    new Link('RIDI PUBLIC', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
                     new Link('회의실', '/rooms/', new ExceptTaAuth()),
                     new LinkList('업무용 서비스', [
@@ -54,7 +54,6 @@ class MenuService
                     ]),
                     new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3', 'story.op2'])),
                     new Link('비용정산', '/receipts/', new ExceptOuter()),
-                    new Link('보도자료 관리', '/press/', new OnlyPressManager()),
                     new Link('조직도', '/organization/chart', new ExceptOuter(), '_blank'),
                 ];
             } else {
@@ -88,12 +87,13 @@ class MenuService
 
             $right_menu_list = [
                 new LinkList('관리자', [
-                    new Link('휴가 조정', '/holidayadmin/', new OnlyHolidayEditable()),
-                    new Link('직원 목록', '/users/list', new OnlyUserManager()),
                     new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
                     new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
+                    new Link('직원 목록', '/users/list', new OnlyUserManager()),
+                    new Link('휴가 조정', '/holidayadmin/', new OnlyHolidayEditable()),
                     new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
                     new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
+                    new Link('보도자료 관리', '/press/', new OnlyPressManager()),
                 ], 'wrench'),
                 new Link('내정보', '/users/myinfo', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),

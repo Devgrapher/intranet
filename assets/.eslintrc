@@ -3,11 +3,14 @@
   "env": {
     "browser": true
   },
+  "globals": {
+    "$": true
+  },
   "rules": {
     "no-alert": 0,
     "no-param-reassign": 0,
     "react/no-array-index-key": 0,
     "react/no-did-mount-set-state": 0,
-    "react/no-find-dom-node": 0
+    "react/no-find-dom-node": 0,
   }
 }
