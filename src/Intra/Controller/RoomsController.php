@@ -7,8 +7,8 @@ use Intra\Service\User\UserPolicy;
 use Intra\Service\User\UserSession;
 use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoomsController implements ControllerProviderInterface
 {
@@ -21,6 +21,7 @@ class RoomsController implements ControllerProviderInterface
         $controller_collection->post('/event', [$this, 'addEvent']);
         $controller_collection->post('/event/{id}', [$this, 'modEvent']);
         $controller_collection->delete('/event/{id}', [$this, 'delEvent']);
+
         return $controller_collection;
     }
 
@@ -37,12 +38,20 @@ class RoomsController implements ControllerProviderInterface
         ]);
     }
 
-    public function getSections()
+    public function getSections(Request $request, Application $app)
     {
-        return new JsonResponse(RoomService::getRoomSections('default'));
+        $type = $request->get('type', 'default');
+        if ($type === 'all') {
+            $self = UserSession::getSelfDto();
+            if (!UserPolicy::isPolicyRecipientEditable($self)) {
+                return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
+            }
+        }
+
+        return $app->json(RoomService::getRoomSections($type));
     }
 
-    public function getEvents(Request $request)
+    public function getEvents(Request $request, Application $app)
     {
         $now = date('Y-m-d');
         $from = $request->get('from', $now);
@@ -51,17 +60,20 @@ class RoomsController implements ControllerProviderInterface
         $room_ids = explode(',', $room_ids);
 
         $events = RoomService::getAllEvents($from, $to, $room_ids);
-        return new JsonResponse([
+
+        return $app->json([
             'data' => $events,
         ]);
     }
 
     public function addEvent(Request $request)
     {
-        $room_id = $request->get('room_id');
-        $desc = $request->get('desc');
-        $from = $request->get('from');
-        $to = $request->get('to');
+        $data = json_decode($request->getContent(), true);
+        $room_id = $data['room_id'];
+        $desc = $data['desc'];
+        $from = $data['from'];
+        $to = $data['to'];
+
         $user = UserSession::getSelfDto();
         $uid = $user->uid;
 
@@ -86,10 +98,12 @@ class RoomsController implements ControllerProviderInterface
     public function modEvent(Request $request)
     {
         $id = $request->get('id');
-        $desc = $request->get('desc');
-        $from = $request->get('from');
-        $to = $request->get('to');
-        $room_id = $request->get('room_id');
+
+        $data = json_decode($request->getContent(), true);
+        $room_id = $data['room_id'];
+        $desc = $data['desc'];
+        $from = $data['from'];
+        $to = $data['to'];
 
         $update = [
             'desc' => $desc,

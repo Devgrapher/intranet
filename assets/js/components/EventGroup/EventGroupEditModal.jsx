@@ -6,7 +6,7 @@ import 'react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { Modal, Button, Checkbox, Col, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
-import OverlayBinder from './OverlayBinder';
+import OverlayBinder from '../OverlayBinder';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'HH:mm';
@@ -120,7 +120,7 @@ class EventGroupEditModal extends React.Component {
   showError(key, text) {
     this.setState({
       [key]: Object.assign({}, this.state[key], {
-        errorShow: true,
+        showError: true,
         errorText: text,
       }),
     });
@@ -128,7 +128,7 @@ class EventGroupEditModal extends React.Component {
     setTimeout(() => {
       this.setState({
         [key]: Object.assign({}, this.state[key], {
-          errorShow: false,
+          showError: false,
           errorText: text,
         }),
       });
@@ -191,7 +191,7 @@ class EventGroupEditModal extends React.Component {
           <OverlayBinder
             id={`overlay-${key}`}
             width={150}
-            show={this.state[key].errorShow}
+            show={this.state[key].showError}
             text={this.state[key].errorText}
           >
             <Select
@@ -215,7 +215,7 @@ class EventGroupEditModal extends React.Component {
           <OverlayBinder
             id={`overlay-${key}`}
             width={200}
-            show={this.state[key].errorShow}
+            show={this.state[key].showError}
             text={this.state[key].errorText}
           >
             <DateTime
@@ -240,7 +240,7 @@ class EventGroupEditModal extends React.Component {
           <OverlayBinder
             id={`overlay-${key}`}
             width={150}
-            show={this.state[key].errorShow}
+            show={this.state[key].showError}
             text={this.state[key].errorText}
           >
             <DateTime
@@ -269,6 +269,8 @@ class EventGroupEditModal extends React.Component {
     return (
       <div>
         <Modal
+          autoFocus
+          keyboard
           show={show}
           onEnter={this.handleEnter}
           onHide={() => this.handleClose(false)}

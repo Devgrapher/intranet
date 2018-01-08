@@ -21,75 +21,6 @@ class RoomService
 
     const EVENT_GROUP_START = 1000000;
 
-    public static function addEvent(int $room_id, string $desc, string $from, string $to, int $uid)
-    {
-        $new = RoomEventModel::create([
-            'uid' => $uid,
-            'room_id' => $room_id,
-            'desc' => $desc,
-            'from' => $from,
-            'to' => $to,
-        ]);
-
-        return $new['id'];
-    }
-
-    public static function addEventGroup(array $data)
-    {
-        $new = RoomEventGroupModel::create($data);
-
-        return $new;
-    }
-
-    public static function deleteEvent(int $id, int $uid = null)
-    {
-        if (isset($uid)) {
-            $where = ['id' => $id, 'uid' => $uid];
-        } else {
-            $where = ['id' => $id];
-        }
-
-        return RoomEventModel::where($where)->delete();
-    }
-
-    public static function deleteEventGroup(int $id, int $uid = null)
-    {
-        if (isset($uid)) {
-            $where = ['id' => $id, 'uid' => $uid];
-        } else {
-            $where = ['id' => $id];
-        }
-
-        return RoomEventGroupModel::where($where)->delete();
-    }
-
-    public static function editEvent(int $id, array $update, int $uid = null)
-    {
-        if (isset($uid)) {
-            $where = ['id' => $id, 'uid' => $uid];
-        } else {
-            $where = ['id' => $id];
-        }
-
-        RoomEventModel::where($where)->update($update);
-    }
-
-    public static function editEventGroup(int $id, array $data)
-    {
-        $event = RoomEventGroupModel::find($id);
-        $event->uid = $data['uid'];
-        $event->room_id = $data['room_id'];
-        $event->from_date = $data['from_date'];
-        $event->to_date = $data['to_date'];
-        $event->from_time = $data['from_time'];
-        $event->to_time = $data['to_time'];
-        $event->days_of_week = $data['days_of_week'];
-        $event->desc = $data['desc'];
-        $event->save();
-
-        return $event->toArray();
-    }
-
     public static function getEvents($from, $to, $room_ids)
     {
         return RoomEventModel::whereIn('room_id', $room_ids)
@@ -105,30 +36,68 @@ class RoomService
             ->toArray();
     }
 
-    public static function getEventGroups($from, $to, $room_ids)
-    {
-        $query = RoomEventGroupModel::query();
-
-        if (isset($room_ids)) {
-            $query = $query->whereIn('room_id', $room_ids);
-        }
-
-        if (isset($from)) {
-            $query = $query->where('to_date', '>=', $from);
-        }
-
-        if (isset($to)) {
-            $query = $query->where('from_date', '<', $to);
-        }
-
-        return $query->get()->toArray();
-    }
-
     public static function getAllEvents($from, $to, $room_ids)
     {
         $events = self::getEvents($from, $to, $room_ids);
         $event_groups = self::getEventGroups($from, $to, $room_ids);
 
+        return array_merge($events, $event_groups);
+    }
+
+    public static function addEvent(int $room_id, string $desc, string $from, string $to, int $uid)
+    {
+        $old_events = self::getAllEvents($from, $to, [$room_id]);
+        if (count($old_events) > 0) {
+            throw new \Exception('이미 다른 사람이 예약한 시간입니다 새로고침 해주세요.');
+        }
+
+        $new = RoomEventModel::create([
+            'uid' => $uid,
+            'room_id' => $room_id,
+            'desc' => $desc,
+            'from' => $from,
+            'to' => $to,
+        ]);
+
+        return $new['id'];
+    }
+
+    public static function editEvent(int $id, array $update, int $uid = null)
+    {
+        if (isset($uid)) {
+            $where = ['id' => $id, 'uid' => $uid];
+        } else {
+            $where = ['id' => $id];
+        }
+
+        RoomEventModel::where($where)->update($update);
+    }
+
+    public static function deleteEvent(int $id, int $uid = null)
+    {
+        if (isset($uid)) {
+            $where = ['id' => $id, 'uid' => $uid];
+        } else {
+            $where = ['id' => $id];
+        }
+
+        return RoomEventModel::where($where)->delete();
+    }
+
+    public static function getAllEventGroups()
+    {
+        return RoomEventGroupModel::query()->get()->toArray();
+    }
+
+    private static function getEventGroups($from, $to, $room_ids)
+    {
+        $event_groups = RoomEventGroupModel::query()
+            ->whereIn('room_id', $room_ids)
+            ->where('to_date', '>=', $from)
+            ->where('from_date', '<', $to)
+            ->get()->toArray();
+
+        $events = [];
         $start = strtotime($from);
         $end = strtotime($to);
         while ($start < $end) {
@@ -154,24 +123,80 @@ class RoomService
         return $events;
     }
 
-    public static function getAllEventGroups()
+    public static function addEventGroup(array $data)
     {
-        return self::getEventGroups(null, null, null);
+        $new = RoomEventGroupModel::create($data);
+
+        return $new;
+    }
+
+    public static function editEventGroup(int $id, array $data)
+    {
+        $event = RoomEventGroupModel::find($id);
+        $event->uid = $data['uid'];
+        $event->room_id = $data['room_id'];
+        $event->from_date = $data['from_date'];
+        $event->to_date = $data['to_date'];
+        $event->from_time = $data['from_time'];
+        $event->to_time = $data['to_time'];
+        $event->days_of_week = $data['days_of_week'];
+        $event->desc = $data['desc'];
+        $event->save();
+
+        return $event->toArray();
+    }
+
+    public static function deleteEventGroup(int $id, int $uid = null)
+    {
+        if (isset($uid)) {
+            $where = ['id' => $id, 'uid' => $uid];
+        } else {
+            $where = ['id' => $id];
+        }
+
+        return RoomEventGroupModel::where($where)->delete();
     }
 
     public static function getRoomSections(string $type)
     {
-        return RoomModel::where('is_visible', 1)
-            ->where('type', $type)
-            ->get([
-                'id as key',
-                'name as label'
-            ])
-            ->toArray();
+        if ($type === 'all') {
+            $query = RoomModel::all();
+        } else {
+            $query = RoomModel::where('type', $type)->get();
+        }
+
+        return $query->toArray();
     }
 
     public static function getAllRoomSections()
     {
         return RoomModel::all()->toArray();
+    }
+
+    public static function addRoomSection(array $data)
+    {
+        $new = RoomModel::create([
+            'type' => $data['type'] ?? 'default',
+            'name' => $data['name'],
+            'is_visible' => $data['is_visible'],
+        ]);
+
+        return $new;
+    }
+
+    public static function editRoomSection(int $id, array $data)
+    {
+        $room = RoomModel::find($id);
+        $room->type = $data['type'] ?? 'default';
+        $room->name = $data['name'];
+        $room->is_visible = $data['is_visible'];
+        $room->save();
+
+        return $room->toArray();
+    }
+
+    public static function deleteRoomSection(int $id)
+    {
+        return RoomModel::find($id)->delete();
     }
 }

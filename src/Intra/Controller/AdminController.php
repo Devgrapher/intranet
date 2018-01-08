@@ -21,8 +21,10 @@ class AdminController implements ControllerProviderInterface
         $controller_collection->post('/policy', [$this, 'postPolicy']);
         $controller_collection->get('/recipient', [$this, 'getRecipient']);
         $controller_collection->post('/recipient', [$this, 'postRecipient']);
-        $controller_collection->get('/room', [$this, 'getRoom']);
-        $controller_collection->post('/room', [$this, 'postRoom']);
+        $controller_collection->get('/room', [$this, 'getRoomSection']);
+        $controller_collection->post('/room', [$this, 'postRoomSection']);
+        $controller_collection->post('/room/{id}', [$this, 'postRoomSection']);
+        $controller_collection->delete('/room/{id}', [$this, 'deleteRoomSection']);
         $controller_collection->get('/event_group', [$this, 'getEventGroup']);
         $controller_collection->post('/event_group', [$this, 'postEventGroup']);
         $controller_collection->post('/event_group/{id}', [$this, 'postEventGroup']);
@@ -85,29 +87,45 @@ class AdminController implements ControllerProviderInterface
         return new Response('success', Response::HTTP_OK);
     }
 
-    public function getRoom(Request $request, Application $app)
+    public function getRoomSection(Application $app)
     {
         $self = UserSession::getSelfDto();
         if (!UserPolicy::isPolicyRecipientEditable($self)) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
-        }
-
-        if (in_array('application/json', $request->getAcceptableContentTypes())) {
-            return $app->json(RoomService::getAllRoomSections());
         }
 
         return $app['twig']->render('admin/room/index.twig');
     }
 
-    public function postRoom(Request $request)
+    public function postRoomSection(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
         if (!UserPolicy::isPolicyRecipientEditable($self)) {
             return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
         }
 
+        $room_id = intval($request->get('id'));
         $data = json_decode($request->getContent(), true);
-        RoomService::setAll($data['assigned']);
+
+        if ($room_id) {
+            $result = RoomService::editRoomSection($room_id, $data);
+        } else {
+            $result = RoomService::addRoomSection($data);
+        }
+
+        return $app->json($result);
+    }
+
+    public function deleteRoomSection(Request $request)
+    {
+        $self = UserSession::getSelfDto();
+        if (!UserPolicy::isPolicyRecipientEditable($self)) {
+            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $room_id = intval($request->get('id'));
+
+        RoomService::deleteRoomSection($room_id);
 
         return new Response('success', Response::HTTP_OK);
     }

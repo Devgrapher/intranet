@@ -12,6 +12,7 @@ const common = {
     recipient: ['babel-polyfill', './js/components/Recipient'],
     room: ['babel-polyfill', './js/components/Room'],
     eventGroup: ['babel-polyfill', './js/components/EventGroup'],
+    scheduler: ['babel-polyfill', './js/components/Scheduler'],
     holiday_adjust: './js/components/HolidayAdjust',
   },
   output: {
@@ -53,12 +54,16 @@ const common = {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader',
       },
+      {
+        test: /\.(gif|png|jpe?g)$/,
+        loader: 'file-loader',
+      },
     ],
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
-      chunks: ['policy', 'recipient', 'room', 'eventGroup', 'holiday_adjust'],
+      chunks: ['policy', 'recipient', 'room', 'eventGroup', 'scheduler', 'holiday_adjust'],
       minChunk: 2,
     }),
     new ExtractTextPlugin({
