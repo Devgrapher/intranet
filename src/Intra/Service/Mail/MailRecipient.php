@@ -15,6 +15,7 @@ class MailRecipient
     const SUPPORT_GIFT_CARD_PURCHASE = 'support_giftcard_purchase';
     const SUPPORT_TRAINING = 'support_training';
     const SUPPORT_VPN = 'support_vpn';
+    const SUPPORT_USB = 'support_usb';
 
     public static function getAllWithUsers(): array
     {

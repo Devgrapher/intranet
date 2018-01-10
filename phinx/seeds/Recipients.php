@@ -19,6 +19,7 @@ class Recipients extends AbstractSeed
             ['keyword' => MailRecipient::SUPPORT_GIFT_CARD_PURCHASE, 'name' => '지원요청 - 상품권구매'],
             ['keyword' => MailRecipient::SUPPORT_TRAINING, 'name' => '지원요청 - 사외수강'],
             ['keyword' => MailRecipient::SUPPORT_VPN, 'name' => '지원요청 - VPN신청'],
+            ['keyword' => MailRecipient::SUPPORT_USB, 'name' => '지원요청 - USB신청'],
         ];
 
         $this->table('recipients')

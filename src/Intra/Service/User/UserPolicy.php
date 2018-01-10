@@ -24,6 +24,7 @@ class UserPolicy
     const SUPPORT_ADMIN_GIFT_CARD_PURCHASE = 'support_giftcard_purchase_admin';
     const SUPPORT_ADMIN_TRAINING = 'support_training_admin';
     const SUPPORT_ADMIN_VPN = 'support_vpn_admin';
+    const SUPPORT_ADMIN_USB = 'support_usb_admin';
     const RECEIPTS_ADMIN = 'receipts_admin';
     const TA = 'ta';
     const GUEST = 'guest';
