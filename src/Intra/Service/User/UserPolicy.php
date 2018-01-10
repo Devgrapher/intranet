@@ -141,8 +141,13 @@ class UserPolicy
 
         return self::checkPermission($self, [
             self::SUPPORT_ADMIN_ALL,
-            'support_' . strtolower($target) . '_admin',
+            self::getSupportPolicyName($target),
         ]);
+    }
+
+    public static function getSupportPolicyName($target)
+    {
+        return 'support_' . strtolower($target) . '_admin';
     }
 
     public static function isReceiptsAdmin(UserDto $self): bool

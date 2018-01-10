@@ -3,6 +3,7 @@
 namespace Intra\Service\User;
 
 use Intra\Service\Mail\MailingDto;
+use Intra\Service\Mail\MailRecipient;
 use Intra\Service\Mail\MailSendService;
 
 class UserMailService
@@ -18,11 +19,7 @@ class UserMailService
         $title = "[{$type}] {$user_dto->name}님";
         $html = $app['twig']->render('users/template/join_mail.twig', ['item' => $user_dto]);
 
-        $receivers = [];
-        $user_manager_all = $_ENV['user_policy_user_manager'];
-        if ($user_manager_all) {
-            $receivers = array_merge($receivers, explode(',', $user_manager_all));
-        }
+        $receivers = MailRecipient::getMails(MailRecipient::USER_JOIN);
         $receivers = array_unique($receivers);
 
         $mailing_dto = new MailingDto();

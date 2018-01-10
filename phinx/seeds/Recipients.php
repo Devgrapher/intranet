@@ -9,6 +9,7 @@ class Recipients extends AbstractSeed
     public function run()
     {
         $recipients = [
+            ['keyword' => MailRecipient::USER_JOIN, 'name' => '회원가입'],
             ['keyword' => MailRecipient::HOLIDAY, 'name' => '휴가'],
             ['keyword' => MailRecipient::PAYMENT, 'name' => '결제요청'],
             ['keyword' => MailRecipient::SUPPORT_ALL, 'name' => '지원요청 - 전체'],

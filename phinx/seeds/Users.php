@@ -14,7 +14,7 @@ class Users extends AbstractSeed
                 'id' => 'admin',
                 'pass' => '',
                 'name' => '관리자',
-                'email' => 'admin@ridi.com',
+                'email' => 'test@ridi.com',
                 'team' => '',
                 'on_date' => '2000-01-01',
                 'off_date' => '9999-01-01',
