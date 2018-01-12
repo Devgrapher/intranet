@@ -1,0 +1,25 @@
+
+.label-mon {
+    color: #222;
+    background-color: #BBDEFB;
+}
+
+.label-tue {
+    color: #222;
+    background-color: #64B5F6;
+}
+
+.label-wen {
+    color: #222;
+    background-color: #2196F3;
+}
+
+.label-thu {
+    color: #fff;
+    background-color: #1976D2;
+}
+
+.label-fri {
+    color: #fff;
+    background-color: #0D47A1;
+}

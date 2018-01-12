@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Grid, Col, Row, Table, Button } from 'react-bootstrap';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import { getUsers } from '../api/users';
 
 class UserAssigner extends React.Component {
   constructor() {
@@ -22,16 +22,16 @@ class UserAssigner extends React.Component {
 
   async componentDidMount() {
     const res = await Promise.all([
-      await axios(this.props.apiUrl),
-      await axios('/users/list'),
+      await this.props.getApi(),
+      await getUsers(),
     ]);
 
-    const { roles, assigned } = res[0].data;
+    const { roles, assigned } = res[0];
     this.setState({
       loading: false,
       roles,
       assigned,
-      users: res[1].data,
+      users: res[1],
     });
   }
 
@@ -45,11 +45,7 @@ class UserAssigner extends React.Component {
 
   async handleSave() {
     this.setState({ loading: true });
-
-    await axios.post(this.props.apiUrl, {
-      assigned: this.state.assigned,
-    });
-
+    await this.props.updateApi(this.state.assigned);
     this.setState({ loading: false });
   }
 
@@ -105,7 +101,8 @@ class UserAssigner extends React.Component {
 }
 
 UserAssigner.propTypes = {
-  apiUrl: PropTypes.string.isRequired,
+  getApi: PropTypes.func.isRequired,
+  updateApi: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
 };
 

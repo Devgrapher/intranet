@@ -67,9 +67,7 @@ class SupportMailService
         }
 
         $receivers = array_merge($receivers, MailRecipient::getMails(MailRecipient::SUPPORT_ALL));
-        if (isset($_ENV["recipients_support_admin_$target"])) {
-            $receivers = array_merge($receivers, explode(',', $_ENV["recipients_support_admin_$target"]));
-        }
+        $receivers = array_merge($receivers, MailRecipient::getMails(MailRecipient::getSupportEventName($target)));
         $receivers = array_unique($receivers);
 
         $mailing_dto = new MailingDto();

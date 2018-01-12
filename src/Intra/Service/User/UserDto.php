@@ -9,19 +9,20 @@ class UserDto extends BaseDto
     public $uid;
     public $id;
     public $name;
-    public $email;
+    public $name_en;
+    public $personcode;
+    public $birth;
     public $team;
-    public $team_detail;
     public $position;
-    public $outer_call;
     public $inner_call;
     public $mobile;
-    public $birth;
     public $image;
     public $on_date;
+    public $email;
+    public $trainee_off_date;
     public $off_date;
-    public $personcode;
     public $ridibooks_id;
+    public $military_service;
     public $is_admin;
     /**
      * @var []

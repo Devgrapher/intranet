@@ -9,6 +9,7 @@ class Recipients extends AbstractSeed
     public function run()
     {
         $recipients = [
+            ['keyword' => MailRecipient::USER_JOIN, 'name' => '회원가입'],
             ['keyword' => MailRecipient::HOLIDAY, 'name' => '휴가'],
             ['keyword' => MailRecipient::PAYMENT, 'name' => '결제요청'],
             ['keyword' => MailRecipient::SUPPORT_ALL, 'name' => '지원요청 - 전체'],
@@ -19,6 +20,7 @@ class Recipients extends AbstractSeed
             ['keyword' => MailRecipient::SUPPORT_GIFT_CARD_PURCHASE, 'name' => '지원요청 - 상품권구매'],
             ['keyword' => MailRecipient::SUPPORT_TRAINING, 'name' => '지원요청 - 사외수강'],
             ['keyword' => MailRecipient::SUPPORT_VPN, 'name' => '지원요청 - VPN신청'],
+            ['keyword' => MailRecipient::SUPPORT_USB, 'name' => '지원요청 - USB신청'],
         ];
 
         $this->table('recipients')

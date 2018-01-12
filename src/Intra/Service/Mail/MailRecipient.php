@@ -5,16 +5,18 @@ use Intra\Model\RecipientModel;
 
 class MailRecipient
 {
+    const USER_JOIN = 'user_join';
     const PAYMENT = 'payment';
     const HOLIDAY = 'holiday';
     const SUPPORT_ALL = 'support_all';
     const SUPPORT_DEVICE = 'support_device';
-    const SUPPORT_FAMILY_EVENT = 'support_familiyevent';
-    const SUPPORT_BUISINESS_CARD = 'support_bussinesscard';
+    const SUPPORT_FAMILY_EVENT = 'support_familyevent';
+    const SUPPORT_BUISINESS_CARD = 'support_businesscard';
     const SUPPORT_DEPOT = 'support_depot';
     const SUPPORT_GIFT_CARD_PURCHASE = 'support_giftcard_purchase';
     const SUPPORT_TRAINING = 'support_training';
     const SUPPORT_VPN = 'support_vpn';
+    const SUPPORT_USB = 'support_usb';
 
     public static function getAllWithUsers(): array
     {
@@ -47,10 +49,15 @@ class MailRecipient
     public static function getMails(string $event): array
     {
         $users = RecipientModel::where('keyword', $event)->first()->users;
-        if ($users) {
+        if (!$users) {
             return [];
         }
 
         return $users->pluck('email')->toArray();
+    }
+
+    public static function getSupportEventName($target): string
+    {
+        return 'support_' . strtolower($target);
     }
 }

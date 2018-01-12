@@ -24,6 +24,7 @@ class UserPolicy
     const SUPPORT_ADMIN_GIFT_CARD_PURCHASE = 'support_giftcard_purchase_admin';
     const SUPPORT_ADMIN_TRAINING = 'support_training_admin';
     const SUPPORT_ADMIN_VPN = 'support_vpn_admin';
+    const SUPPORT_ADMIN_USB = 'support_usb_admin';
     const RECEIPTS_ADMIN = 'receipts_admin';
     const TA = 'ta';
     const GUEST = 'guest';
@@ -140,8 +141,13 @@ class UserPolicy
 
         return self::checkPermission($self, [
             self::SUPPORT_ADMIN_ALL,
-            'support_' . strtolower($target) . '_admin',
+            self::getSupportPolicyName($target),
         ]);
+    }
+
+    public static function getSupportPolicyName($target)
+    {
+        return 'support_' . strtolower($target) . '_admin';
     }
 
     public static function isReceiptsAdmin(UserDto $self): bool

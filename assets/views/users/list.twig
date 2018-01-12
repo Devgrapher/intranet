@@ -24,7 +24,9 @@
     }
   </style>
   <script>
-    require(["bootstrap", "bootstrap-table.editable"], function () {
+    require(['jquery', 'bootstrap', 'bootstrap-table.locale', 'bootstrap-table.editable', 'bootstrap-table.export', 'bootstrap-table.datetimepicker'], function () {
+      var EMPTY_TEXT = '[내용없음]';
+
       function getRowStyle(row) {
         if (row['on_date'] === '9999-01-01' && row['off_date'] === '9999-01-01') {
           return { classes: 'info' };
@@ -35,41 +37,89 @@
         return {};
       }
 
-      $.getJSON( "/users/jeditable_key/team", function( teamList ) {
+      var editableDateOption = {
+        type: 'date',
+        format: 'yyyy-mm-dd',
+        clear: false,
+        datepicker: {
+          autoclose: true,
+          todayBtn: true,
+        },
+      };
+
+      $.getJSON( '/users/jeditable_key/team', function( teamList ) {
         $('#tb_users').bootstrapTable({
           url: '/users/list',
           editableUrl: '/users/edit',
+          locale: 'ko-KR',
+          toolbar: '#toolbar',
+          showLoading: true,
+          showExport: true,
+          exportDataType: 'all',
+          exportTypes: ['csv'],
+          exportOptions: {
+            fileName: 'ridi_users',
+            onCellData: function ($cell, rowIndex, colIndex, result) {
+              return result === EMPTY_TEXT ? null : result;
+            },
+          },
           search: true,
           pagination: true,
           pageSize: 25,
           pageList: [25, 50, 100],
-          editableEmptytext: '[내용없음]',
+          editableEmptytext: EMPTY_TEXT,
           rowStyle: getRowStyle,
           idField: 'uid',
           columns: [
             { field: 'id', sortable: true, editable: true },
             { field: 'name', sortable: true, editable: true },
-            { field: 'email', sortable: true, editable: true },
+            { field: 'name_en', sortable: true, editable: true },
+            { field: 'personcode', sortable: true, editable: true },
+            { field: 'birth', sortable: true, editable: editableDateOption },
             {
               field: 'team',
               sortable: true,
               editable: {
                 type: 'select',
-                prepend: { none: "--------------" },
+                prepend: { [null]: EMPTY_TEXT },
                 source: teamList,
-              }
+              },
             },
-            { field: 'team_detail', sortable: true, editable: true },
-            { field: 'position', sortable: true, editable: true },
-            { field: 'outer_call', sortable: true, editable: true },
+            {
+              field: 'position',
+              sortable: true,
+              editable: {
+                type: 'select',
+                prepend: { [null]: EMPTY_TEXT },
+                source: [ 'CEO', 'CTO', 'COO', 'CDO', '본부장', '팀장', '기타' ],
+              },
+            },
             { field: 'inner_call', sortable: true, editable: true },
             { field: 'mobile', sortable: true, editable: true },
-            { field: 'birth', sortable: true, editable: true },
-            { field: 'on_date', sortable: true, editable: true },
-            { field: 'off_date', sortable: true, editable: true },
-            { field: 'personcode', sortable: true, editable: true },
-            { field: 'ridibooks_id', sortable: true, editable: true }
-          ]
+            { field: 'on_date', sortable: true, editable: editableDateOption },
+            { field: 'email', sortable: true, editable: true },
+            { field: 'trainee_off_date', sortable: true, editable: editableDateOption },
+            { field: 'off_date', sortable: true, editable: editableDateOption },
+            { field: 'years_of_service', sortable: true, editable: true },
+            { field: 'day_of_service', sortable: true, editable: true },
+            { field: 'ridibooks_id', sortable: true, editable: true },
+            {
+              field: 'military_service',
+              sortable: true,
+              editable: {
+                type: 'select',
+                prepend: { [null]: EMPTY_TEXT },
+                source: [ '병역필', '산업기능요원' , '전문연구요원' ],
+              },
+            },
+          ],
+          onPreBody: function (datas) {
+            datas.forEach(function (data) {
+              var diffTime = new Date() - new Date(data.on_date);
+              data.day_of_service = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+              data.years_of_service = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
+            });
+          }
         });
 
         $('#tb_users').on('all.bs.table', function () {
@@ -82,21 +132,26 @@
 
       $('#btn_see_all').click(function () {
         $('#tb_users').bootstrapTable('refresh');
+        $('#tb_users').bootstrapTable('resetSearch', '');
       });
 
       $('#btn_see_outer').click(function () {
         $('#tb_users').bootstrapTable('refresh', {
           query: { outer: '1' }
         });
+        $('#tb_users').bootstrapTable('resetSearch', '');
       });
     });
   </script>
 {% endblock %}
 
 {% block body %}
-  <div>
-    <button id="btn_see_all" class="btn btn-default">직원만 보기</button>
-    <button id="btn_see_outer" class="btn btn-default">퇴사자만 보기</button>
+  <h1>직원 목록</h1>
+  <div id="toolbar">
+    <div class="btn-group" role="group">
+      <button id="btn_see_all" class="btn btn-default">직원만 보기</button>
+      <button id="btn_see_outer" class="btn btn-default">퇴사자만 보기</button>
+    </div>
   </div>
   <table id="tb_users">
     <thead>
@@ -111,38 +166,39 @@
         <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
            data-content="이름이 TA로 시작하면 조직도, 전사주간 조회불가"></i>
       </th>
-      <th data-field="email" data-sortable="true" data-editable="true">이메일</th>
+      <th data-field="name_en" data-sortable="true" data-editable="true">
+        영문이름
+      </th>
+      <th data-field="personcode" data-sortable="true" data-editable="true">사원번호</th>
+      <th data-field="birth" data-sortable="true" data-editable="true">생년월일</th>
       <th data-field="team" data-sortable="true" data-editable="true">
         팀
         <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
            data-content="엑셀 다운로드시 표시 됨"></i>
-      </th>
-      <th data-field="team_detail" data-sortable="true" data-editable="true">
-        팀 세부
-        <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
-           data-content="'인사팀' or else"></i>
       </th>
       <th data-field="position" data-sortable="true" data-editable="true">
         직급
         <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
            data-content="'CEO', '본부장', '팀장', 'CTO', 'COO', 'CDO', '기타' 중 하나이면 승인자(결제요청 등)으로 지정가능"></i>
       </th>
-      <th data-field="outer_call" data-sortable="true" data-editable="true">외부전화</th>
       <th data-field="inner_call" data-sortable="true" data-editable="true">내선전화</th>
       <th data-field="mobile" data-sortable="true" data-editable="true">휴대폰</th>
-      <th data-field="birth" data-sortable="true" data-editable="true">생일</th>
       <th data-field="on_date" data-sortable="true" data-editable="true">
         입사일
         <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
            data-content="입사일이 입력이 되어야 로그인가능"></i>
       </th>
+      <th data-field="email" data-sortable="true" data-editable="true">이메일</th>
+      <th data-field="trainee_off_date" data-sortable="true" data-editable="true">수습종료일</th>
       <th data-field="off_date" data-sortable="true" data-editable="true">
         퇴사일
         <i class="glyphicon glyphicon-question-sign" data-toggle="popover" title=""
            data-content="퇴사일이 입력되면 해당 날짜 이후 로그인 불가"></i>
       </th>
-      <th data-field="personcode" data-sortable="true" data-editable="true">사원번호</th>
+      <th data-field="years_of_service" data-sortable="true">근속년수</th>
+      <th data-field="date_of_service" data-sortable="true">재직일수</th>
       <th data-field="ridibooks_id" data-sortable="true" data-editable="true">리디북스아이디</th>
+      <th data-field="military_service" data-sortable="true" data-editable="true">병역사항</th>
     </tr>
     </thead>
   </table>

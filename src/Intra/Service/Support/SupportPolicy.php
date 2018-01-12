@@ -41,6 +41,7 @@ class SupportPolicy
     const TYPE_DELIVERY = 'delivery';
     const TYPE_PRESENT = 'present';
     const TYPE_VPN = 'vpn';
+    const TYPE_USB = 'usb';
     const TYPE_BUSSINESSTRIP = 'bussinesstrip';
 
     const COLUMN_TITLES = [
@@ -54,6 +55,7 @@ class SupportPolicy
         self::TYPE_DELIVERY => '등기우편/퀵/해외배송',
         self::TYPE_PRESENT => '외부손님선물',
         self::TYPE_VPN => 'VPN 신청',
+        self::TYPE_USB => 'USB 신청',
         self::TYPE_BUSSINESSTRIP => '출장 신청',
     ];
 
@@ -65,6 +67,7 @@ class SupportPolicy
         self::TYPE_GIFT_CARD_PURCHASE => 'gift_card_purchase',
         self::TYPE_TRAINING => 'training',
         self::TYPE_VPN => 'vpn',
+        self::TYPE_USB => 'usb',
     ];
 
     const CODES = [
@@ -75,6 +78,7 @@ class SupportPolicy
         self::TYPE_DEVICE => 'hp',
         self::TYPE_TRAINING => 'tr',
         self::TYPE_VPN => 'vn',
+        self::TYPE_USB => 'ub',
     ];
 
     /**
@@ -231,6 +235,11 @@ class SupportPolicy
             return
 'VPN 사용 승인 완료 후 아래 링크에서 사용 메뉴얼 확인하여 주세요
 [<a href="https://ridicorp.sharepoint.com/intranet/SitePages/VPN%20%EC%82%AC%EC%9A%A9%EC%95%88%EB%82%B4.aspx">VPN 사용 안내</a>]';
+        } elseif ($target == self::TYPE_USB) {
+            return 'usb사용 절차
+1. 인트라넷 - 지원요청 - usb사용 신청 페이지 접속
+2. 부서장 - bws팀 순으로 권한 승인 요청
+3. 권한 승인 완료 시 bws팀 안내에 따라 정보보호 서약서 서명 후 usb 사용';
         } else {
             return '';
         }
@@ -472,6 +481,22 @@ class SupportPolicy
                 ),
                 '사용시작일' => new SupportColumnDate('vpn_start_date', date('Y-m-d')),
                 '사용종료일' => new SupportColumnDate('vpn_end_date', date('Y-m-d')),
+            ],
+            self::TYPE_USB => [
+                '일련번호' => new SupportColumnReadonly('uuid'),
+                '일련번호2' => new SupportColumnReadonly('id'),
+                '요청일' => (new SupportColumnReadonly('reg_date'))->setOrderingColumn(),
+                '요청자' => new SupportColumnRegisterUser('uid'),
+                '요청자 메일' => new SupportColumnRegisterEmail('email'),
+                '부서' => new SupportColumnByValueCallback('team', $get_team_by_uid),
+                '승인' => new SupportColumnAccept('is_accepted'),
+                '승인자' => new SupportColumnAcceptUser('accept_uid', 'is_accepted'),
+                '승인시각' => new SupportColumnAcceptDatetime('accepted_datetime', 'is_accepted'),
+                $hr . ' 처리' => new SupportColumnComplete('is_completed', $is_human_manage_team),
+                $hr . ' 처리자' => new SupportColumnCompleteUser('completed_uid', 'is_completed'),
+                $hr . ' 처리시각' => new SupportColumnCompleteDatetime('completed_datetime', 'is_completed'),
+                '사용시작일' => new SupportColumnDate('usb_start_date', date('Y-m-d')),
+                '사용종료일' => new SupportColumnDate('usb_end_date', date('Y-m-d')),
             ]
         ];
 

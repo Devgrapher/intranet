@@ -87,304 +87,307 @@
   </style>
   <script>
     require(["jquery", "jquery.jeditable", "jquery.fileupload", 'bootstrap.datatables', 'jquery.cookie'], function ($) {
-      var selectMonth = $('input#select-month');
-      selectMonth.datepicker({
-        changeMonth: true,
-        changeYear: true,
-        onClose: function(dateText, inst) {
-          $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-        },
-        monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-      });
-      selectMonth.datepicker('option', 'dateFormat', 'yy-mm');
-
-      var datatable = $('table[datatable]').DataTable({
-        "paging": false,
-        "ordering": false,
-        "autoWidth": false,
-        "language": {
-          "emptyTable": "데이터가 없습니다."
-        }
-      });
-
-      var columnVisible = {};
-      var columnWidths = [15, 90, 70, 80, 80, 100, 100, 120, 100, 240, 100, 80, 240, 300, 60, 100, 100, 100, 60, 140, 100, 140, 100, 300, 100, 100, 40];
-
-      function setAllColumnWidth() {
-        var index = 0;
-        var allWidth = 0;
-        columnWidths.forEach(function (width, i) {
-          if (columnVisible[i] === false) {
-            return;
-          }
-
-          var thSelector = '.tbody-scroll th:nth-of-type('+(index+1)+')';
-          var tdSelector = '.tbody-scroll td:nth-of-type('+(index+1)+')';
-          $(thSelector + ', ' + tdSelector).css('width', width+'px');
-
-          var inputSelector = tdSelector + ' input';
-          var selectSelector = tdSelector + ' select';
-          $(inputSelector + ', ' + selectSelector).each(function () {
-            var groupNum = $(this).siblings('[type!=hidden]').length+1;
-            $(this).css('width', (width-2*groupNum)/groupNum+'px');
-          });
-          ++index;
-          allWidth += width;
+      setTimeout(function($) { 
+        var selectMonth = $('input#select-month');
+        selectMonth.datepicker({
+          changeMonth: true,
+          changeYear: true,
+          onClose: function(dateText, inst) {
+            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+          },
+          monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
         });
+        selectMonth.datepicker('option', 'dateFormat', 'yy-mm');
 
-        $('.tbody-scroll').css('width', (allWidth+(2*index)+20)+'px');
-        {% if payments|length == 0 %}
-          $('.tbody-scroll tbody td').css('width', (allWidth+(2*index-2))+'px');
-          $('.tbody-scroll tbody td').css('background-color', '#ddd');
-        {% endif %}
-
-        $('table[datatable]').css('table-layout', 'fixed');
-      }
-
-      function setColumnVisible(index, isVisible) {
-          var column = datatable.column(index);
-          column.visible(isVisible, false);
-          columnVisible[index] = isVisible;
-      }
-
-      var isAllChecked = true;
-      $('input.toggle-vis').each(function () {
-        setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
-        isAllChecked = isAllChecked && $(this).is(":checked");
-      });
-      $('#col-toggle-add').prop('checked', isAllChecked);
-      setAllColumnWidth();
-
-      $('input.toggle-vis').on('change', function (e) {
-        setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
-        var isAllChecked = true;
-        $('input.toggle-vis').each(function () {
-            isAllChecked = isAllChecked && $(this).is(":checked");
-        });
-        $('#col-toggle-add').prop('checked', isAllChecked);
-
-        setAllColumnWidth();
-      });
-
-      $('#col-toggle-add').on('change', function (e) {
-          var isChecked = $(this).is(":checked");
-          $('input.toggle-vis').each(function () {
-              $(this).prop('checked', isChecked);
-              $(this).trigger('change');
-          });
-      });
-
-      $('th').on('click', function () {
-        var column = datatable.column(this);
-        column.nodes().to$().toggleClass('js_column_fold');
-        $(column.header()).toggleClass('js_column_fold');
-        $(column.footer()).toggleClass('js_column_fold');
-      });
-      $('table th')
-        .click(function () {
-          var index = datatable.column(this).index();
-          var $this = $(this);
-          var key = 'payment_column_' + index;
-          var val = null;
-          if ($this.hasClass('js_column_fold')) {
-            val = '1';
-          }
-          $.cookie(key, val);
-        })
-        .each(function () {
-          var index = datatable.column(this).index();
-          var key = 'payment_column_' + index;
-
-          var cookied_value = $.cookie(key);
-          if (cookied_value !== undefined) {
-            if (cookied_value == '1') {
-              var column = datatable.column(this);
-              column.nodes().to$().addClass('js_column_fold');
-              $(column.header()).addClass('js_column_fold');
-              $(column.footer()).addClass('js_column_fold');
-            }
+        var datatable = $('table[datatable]').DataTable({
+          "paging": false,
+          "ordering": false,
+          "autoWidth": false,
+          "deferRender": true,
+          "language": {
+            "emptyTable": "데이터가 없습니다."
           }
         });
-      $("input").on("keypress", function (e) {
-        return e.which != 13;
-      });
-      $('#js_pay_date_input').on('change', function () {
-        var pay_type_str = $(this).val();
-        if (pay_type_str == '선택해주세요') {
 
-        }
-        else if (pay_type_str == '긴급') {
-          var date_str = false;
-          while (1) {
-            date_str = false;
-            var date = prompt('날짜를 입력해주세요(예시 : 2010/3/2)\n\n** 주의 **\n지정일이 휴일인 경우 지급이 누락될 수 있습니다!\n꼭 확인 후 입력부탁드립니다');
-            if (!date) {
-              $(this).val('선택해주세요');
+        var columnVisible = {};
+        var columnWidths = [15, 90, 70, 80, 80, 100, 100, 120, 100, 240, 100, 80, 240, 300, 60, 100, 100, 100, 60, 140, 100, 140, 100, 300, 100, 100, 40];
+
+        function setAllColumnWidth() {
+          var index = 0;
+          var allWidth = 0;
+          columnWidths.forEach(function (width, i) {
+            if (columnVisible[i] === false) {
               return;
             }
-            try {
-              var date_obj = new Date(date);
-              date_str = date_obj.getFullYear() + '-' + (date_obj.getMonth() + 1) + '-' + date_obj.getDate();
-            }
-            catch (e) {
-            }
-            if (date_str) {
-              break;
-            }
-          }
-          if (date_str) {
-            $('option:selected', this).text('긴급(' + date_str + ')');
-            $('input[name=pay_date]').val(date_str);
-          }
-          else {
-            $('input[name=pay_date]').val('');
-          }
+
+            var thSelector = '.tbody-scroll th:nth-of-type('+(index+1)+')';
+            var tdSelector = '.tbody-scroll td:nth-of-type('+(index+1)+')';
+            $(thSelector + ', ' + tdSelector).css('width', width+'px');
+
+            var inputSelector = tdSelector + ' input';
+            var selectSelector = tdSelector + ' select';
+            $(inputSelector + ', ' + selectSelector).each(function () {
+              var groupNum = $(this).siblings('[type!=hidden]').length+1;
+              $(this).css('width', (width-2*groupNum)/groupNum+'px');
+            });
+            ++index;
+            allWidth += width;
+          });
+
+          $('.tbody-scroll').css('width', (allWidth+(2*index)+20)+'px');
+          {% if payments|length == 0 %}
+            $('.tbody-scroll tbody td').css('width', (allWidth+(2*index-2))+'px');
+            $('.tbody-scroll tbody td').css('background-color', '#ddd');
+          {% endif %}
+
+          $('table[datatable]').css('table-layout', 'fixed');
         }
-        else {
-          $.post('/payments/get_pay_date_by_str', {pay_type_str: pay_type_str}, function (dat) {
-            $('input[name=pay_date]').val(dat);
+
+        function setColumnVisible(index, isVisible) {
+            var column = datatable.column(index);
+            column.visible(isVisible, false);
+            columnVisible[index] = isVisible;
+        }
+
+        var isAllChecked = true;
+        $('input.toggle-vis').each(function () {
+          setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
+          isAllChecked = isAllChecked && $(this).is(":checked");
+        });
+        $('#col-toggle-add').prop('checked', isAllChecked);
+        setAllColumnWidth();
+
+        $('input.toggle-vis').on('change', function (e) {
+          setColumnVisible($(this).attr('data-column'), $(this).is(":checked"));
+          var isAllChecked = true;
+          $('input.toggle-vis').each(function () {
+              isAllChecked = isAllChecked && $(this).is(":checked");
+          });
+          $('#col-toggle-add').prop('checked', isAllChecked);
+
+          setAllColumnWidth();
+        });
+
+        $('#col-toggle-add').on('change', function (e) {
+            var isChecked = $(this).is(":checked");
+            $('input.toggle-vis').each(function () {
+                $(this).prop('checked', isChecked);
+                $(this).trigger('change');
+            });
+        });
+
+        $('th').on('click', function () {
+          var column = datatable.column(this);
+          column.nodes().to$().toggleClass('js_column_fold');
+          $(column.header()).toggleClass('js_column_fold');
+          $(column.footer()).toggleClass('js_column_fold');
+        });
+        $('table th')
+          .click(function () {
+            var index = datatable.column(this).index();
+            var $this = $(this);
+            var key = 'payment_column_' + index;
+            var val = null;
+            if ($this.hasClass('js_column_fold')) {
+              val = '1';
+            }
+            $.cookie(key, val);
           })
-        }
-      }).trigger('change');
+          .each(function () {
+            var index = datatable.column(this).index();
+            var key = 'payment_column_' + index;
 
-      $('#js_category_input').on('change', function () {
-        var category = $(this).val();
-        if (category == '기타') {
-          var category_detail = prompt('상세한 내역 입력해주세요');
-          if (!category_detail) {
-            category_detail = '기타';
-          }
-          else {
-            category_detail = '기타(' + category_detail + ')';
-          }
-          $('option:selected', this).text(category_detail);
-          //$(this).trigger("change");
-          category = category_detail;
-        }
-        $('input[name=category]').val(category);
-      }).trigger('change');
-
-      $('.js_payments_check').click(function () {
-        var $checked = $(this).prop('checked');
-        $('.js_payment_check').prop('checked', $checked);
-      });
-      $('.js_edit_all').change(function () {
-        var select_button = $(this);
-        var key = select_button.data('key');
-        var value = select_button.val();
-        select_button.val(0);
-
-        var checkboxes = $('.js_payment_check:checked');
-        var checkbox_count = checkboxes.length;
-        checkboxes.each(function () {
-          var row = $(this);
-          var paymentid = row.data('paymentid');
-          var arg = {key: key, value: value};
-          $.ajax('/payments/paymentid/' + paymentid, {
-            method: 'put',
-            data: arg,
-            success: function () {
-              checkbox_count--;
-              if (checkbox_count == 0) {
-                location.reload();
+            var cookied_value = $.cookie(key);
+            if (cookied_value !== undefined) {
+              if (cookied_value == '1') {
+                var column = datatable.column(this);
+                column.nodes().to$().addClass('js_column_fold');
+                $(column.header()).addClass('js_column_fold');
+                $(column.footer()).addClass('js_column_fold');
               }
             }
           });
+        $("input").on("keypress", function (e) {
+          return e.which != 13;
         });
-      });
-      // Change this to the location of your server-side upload handler:
-      var url = '/payments/file_upload';
-      $('.js_fileupload').each(function () {
-        var paymentid = $(this).data('paymentid');
-        var $progress = $('div.progress-bar');
-        $(this).fileupload({
-          formData: {paymentid: paymentid},
-          dropZone: $(this),
-          url: url,
-          dataType: 'json',
-          done: function () {
-            $progress.css('width', '0');
-            document.location.reload();
-          },
-          progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $progress.css('width', progress + '%');
+        $('#js_pay_date_input').on('change', function () {
+          var pay_type_str = $(this).val();
+          if (pay_type_str == '선택해주세요') {
+
           }
-        })
-          .prop('disabled', !$.support.fileInput)
-          .parent()
-          .addClass($.support.fileInput ? undefined : 'disabled');
+          else if (pay_type_str == '긴급') {
+            var date_str = false;
+            while (1) {
+              date_str = false;
+              var date = prompt('날짜를 입력해주세요(예시 : 2010/3/2)\n\n** 주의 **\n지정일이 휴일인 경우 지급이 누락될 수 있습니다!\n꼭 확인 후 입력부탁드립니다');
+              if (!date) {
+                $(this).val('선택해주세요');
+                return;
+              }
+              try {
+                var date_obj = new Date(date);
+                date_str = date_obj.getFullYear() + '-' + (date_obj.getMonth() + 1) + '-' + date_obj.getDate();
+              }
+              catch (e) {
+              }
+              if (date_str) {
+                break;
+              }
+            }
+            if (date_str) {
+              $('option:selected', this).text('긴급(' + date_str + ')');
+              $('input[name=pay_date]').val(date_str);
+            }
+            else {
+              $('input[name=pay_date]').val('');
+            }
+          }
+          else {
+            $.post('/payments/get_pay_date_by_str', {pay_type_str: pay_type_str}, function (dat) {
+              $('input[name=pay_date]').val(dat);
+            })
+          }
+        }).trigger('change');
 
-      });
-      $('.payment td[data-key]').each(function () {
-        var tr_object = $(this).parentsUntil('table').filter('tr');
-        var is_editable_by_admin = '{{ editable | e('js') }}';
-        var is_editable_by_user = tr_object.hasClass('js_is_editable');
-        if (!(is_editable_by_admin || is_editable_by_user)) {
-          return;
-        }
+        $('#js_category_input').on('change', function () {
+          var category = $(this).val();
+          if (category == '기타') {
+            var category_detail = prompt('상세한 내역 입력해주세요');
+            if (!category_detail) {
+              category_detail = '기타';
+            }
+            else {
+              category_detail = '기타(' + category_detail + ')';
+            }
+            $('option:selected', this).text(category_detail);
+            //$(this).trigger("change");
+            category = category_detail;
+          }
+          $('input[name=category]').val(category);
+        }).trigger('change');
 
-        var paymentid = tr_object.data('paymentid');
-        var key = $(this).data('key');
-        var is_keyselect = ($(this).data('keyselect') != undefined);
-        var submitdata = {key: key};
-        var args = {submitdata: submitdata, method: 'PUT'};
+        $('.js_payments_check').click(function () {
+          var $checked = $(this).prop('checked');
+          $('.js_payment_check').prop('checked', $checked);
+        });
+        $('.js_edit_all').change(function () {
+          var select_button = $(this);
+          var key = select_button.data('key');
+          var value = select_button.val();
+          select_button.val(0);
 
-        if (key == 'price') {
-          args['data'] = function (value) {
-            return value.replace(/\D/gi, '');
-          };
-        }
+          var checkboxes = $('.js_payment_check:checked');
+          var checkbox_count = checkboxes.length;
+          checkboxes.each(function () {
+            var row = $(this);
+            var paymentid = row.data('paymentid');
+            var arg = {key: key, value: value};
+            $.ajax('/payments/paymentid/' + paymentid, {
+              method: 'put',
+              data: arg,
+              success: function () {
+                checkbox_count--;
+                if (checkbox_count == 0) {
+                  location.reload();
+                }
+              }
+            });
+          });
+        });
+        // Change this to the location of your server-side upload handler:
+        var url = '/payments/file_upload';
+        $('.js_fileupload').each(function () {
+          var paymentid = $(this).data('paymentid');
+          var $progress = $('div.progress-bar');
+          $(this).fileupload({
+            formData: {paymentid: paymentid},
+            dropZone: $(this),
+            url: url,
+            dataType: 'json',
+            done: function () {
+              $progress.css('width', '0');
+              document.location.reload();
+            },
+            progressall: function (e, data) {
+              var progress = parseInt(data.loaded / data.total * 100, 10);
+              $progress.css('width', progress + '%');
+            }
+          })
+            .prop('disabled', !$.support.fileInput)
+            .parent()
+            .addClass($.support.fileInput ? undefined : 'disabled');
 
-        if (is_keyselect) {
-          args['type'] = 'select';
-          args['loadurl'] = '/payments/const/' + key;
-          args['submit'] = "OK";
-        }
+        });
+        $('.payment td[data-key]').each(function () {
+          var tr_object = $(this).parentsUntil('table').filter('tr');
+          var is_editable_by_admin = '{{ editable | e('js') }}';
+          var is_editable_by_user = tr_object.hasClass('js_is_editable');
+          if (!(is_editable_by_admin || is_editable_by_user)) {
+            return;
+          }
 
-        $(this).editable('/payments/paymentid/' + paymentid, args);
-      });
+          var paymentid = tr_object.data('paymentid');
+          var key = $(this).data('key');
+          var is_keyselect = ($(this).data('keyselect') != undefined);
+          var submitdata = {key: key};
+          var args = {submitdata: submitdata, method: 'PUT'};
 
-      $('select[name=js_super_edit]')
-        .val({{ currentUid }})
-        .trigger("change")
-        .change(function () {
-          location.href = '/payments/uid/' + $(this).val();
+          if (key == 'price') {
+            args['data'] = function (value) {
+              return value.replace(/\D/gi, '');
+            };
+          }
+
+          if (is_keyselect) {
+            args['type'] = 'select';
+            args['loadurl'] = '/payments/const/' + key;
+            args['submit'] = "OK";
+          }
+
+          $(this).editable('/payments/paymentid/' + paymentid, args);
         });
 
-      var rejectPaymentid = undefined;
-      $('.co-reject').click(function() {
-        $('#rejectModal').modal('show');
-        rejectPaymentid = $(this).attr("data-paymentid");
-      });
+        $('select[name=js_super_edit]')
+          .val({{ currentUid }})
+          .trigger("change")
+          .change(function () {
+            location.href = '/payments/uid/' + $(this).val();
+          });
 
-      $('#rejectConfirm').click(function () {
-        if (rejectPaymentid === undefined) {
-          return;
-        }
+        var rejectPaymentid = undefined;
+        $('.co-reject').click(function() {
+          $('#rejectModal').modal('show');
+          rejectPaymentid = $(this).attr("data-paymentid");
+        });
 
-        $.ajax('/payments/paymentid/' + rejectPaymentid + '?key=is_manager_rejected&value=1', {
-          method: 'DELETE',
-          data: $('#rejectModal textarea').val(),
-          success: function (data) {
-            $('#rejectModal').modal('hide');
-            alert('반려되었습니다');
-            location.reload();
-          },
-          error: function (xhr, status, error) {
-            alert(xhr.responseText);
+        $('#rejectConfirm').click(function () {
+          if (rejectPaymentid === undefined) {
+            return;
+          }
+
+          $.ajax('/payments/paymentid/' + rejectPaymentid + '?key=is_manager_rejected&value=1', {
+            method: 'DELETE',
+            data: $('#rejectModal textarea').val(),
+            success: function (data) {
+              $('#rejectModal').modal('hide');
+              alert('반려되었습니다');
+              location.reload();
+            },
+            error: function (xhr, status, error) {
+              alert(xhr.responseText);
+            }
+          });
+        });
+
+        $('#today-select').change(function () {
+          var selected = $(this).val();
+          if (selected == 'all') {
+            window.location.href = '/payments/today';
+          } else if (selected != 'none') {
+            window.location.href = '/payments/today/' + selected;
           }
         });
-      });
-
-      $('#today-select').change(function () {
-        var selected = $(this).val();
-        if (selected == 'all') {
-          window.location.href = '/payments/today';
-        } else if (selected != 'none') {
-          window.location.href = '/payments/today/' + selected;
-        }
-      });
+      }, 500, $);
     });
   </script>
 {% endblock %}

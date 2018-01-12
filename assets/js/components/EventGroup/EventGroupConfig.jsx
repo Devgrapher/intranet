@@ -1,17 +1,21 @@
 import moment from 'moment';
 import React from 'react';
-import axios from 'axios';
-import { Button, Col, Grid, Table, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Grid, Label, Table, Row } from 'react-bootstrap';
+import { getEventGroups, addEventGroup, updateEventGroup, deleteEventGroup } from '../../api/admin';
+import { getSections } from '../../api/rooms';
+import { getUsers } from '../../api/users';
 import EventGroupEditModal from './EventGroupEditModal';
+import '../../../css/eventGroup.css';
 
-const DAY_MAP = ['일', '월', '화', '수', '목', '금', '토'];
-const daysOfWeekStrToArray = (indexes) => {
-  if (indexes === '' || indexes === null) {
-    return DAY_MAP.join(',');
-  }
-
-  return indexes.split(',').map(day => DAY_MAP[day]).join(',');
-};
+const DAY_MAP = [
+  { name: '일', style: 'label-default' },
+  { name: '월', style: 'label-mon' },
+  { name: '화', style: 'label-tue' },
+  { name: '수', style: 'label-wen' },
+  { name: '목', style: 'label-thu' },
+  { name: '금', style: 'label-fri' },
+  { name: '토', style: 'label-default' },
+];
 
 class EventGroupConfig extends React.Component {
   constructor() {
@@ -19,7 +23,7 @@ class EventGroupConfig extends React.Component {
 
     this.state = {
       showModal: false,
-      editing: null,
+      editingId: null,
       eventGroups: [],
       loading: true,
       loadingForEach: {},
@@ -37,31 +41,51 @@ class EventGroupConfig extends React.Component {
 
   async componentDidMount() {
     const res = await Promise.all([
-      await axios('/admin/event_group'),
-      await axios('/rooms/section'),
-      await axios('/users/list'),
+      await getEventGroups(),
+      await getSections(),
+      await getUsers(),
     ]);
 
-    const [
-      { data: eventGroups },
-      { data: rooms },
-      { data: users },
-    ] = res;
+    const [eventGroups, sections, users] = res;
 
     this.setState({
       loading: false,
       eventGroups: eventGroups.map(eventGroup => this.convertEventGroupFromServerData(eventGroup)),
-      rooms,
+      rooms: sections,
       users,
     });
   }
 
-  getUserName(uid) {
+  convertUserName(uid) {
     return this.state.users.find(user => user.uid === uid).name;
   }
 
-  getRoomName(roomId) {
-    return this.state.rooms.find(room => room.key === roomId).name;
+  convertRoomName(roomId) {
+    const room = this.state.rooms.find(_room => _room.id === roomId);
+    if (!room) {
+      return `알 수 없는 room (id=${roomId})`;
+    }
+
+    return (
+      <div>
+        {room.name}
+        {' '}
+        {room.is_visible === 1 ? <Label bsStyle="success">노출</Label> : <Label bsStyle="default">숨김</Label>}
+      </div>
+    );
+  }
+
+  convertDaysOfWeek(indexes) {
+    let days;
+
+    // If index is null value, it includes all days, excluding Saturday and Sunday.
+    if (indexes === '' || indexes === null) {
+      days = [1, 2, 3, 4, 5];
+    } else {
+      days = indexes.split(',');
+    }
+
+    return days.map(day => <Label key={day} className={DAY_MAP[day].style}>{DAY_MAP[day].name}</Label>);
   }
 
   convertEventGroupFromServerData(serverData) {
@@ -78,123 +102,127 @@ class EventGroupConfig extends React.Component {
     };
   }
 
-  convertServerDataFromEventGroup(eventGroup) {
-    return {
-      id: eventGroup.id,
-      uid: eventGroup.uid,
-      room_id: eventGroup.roomId,
-      from_date: eventGroup.fromDate,
-      to_date: eventGroup.toDate,
-      days_of_week: eventGroup.daysOfWeek,
-      from_time: eventGroup.fromTime,
-      to_time: eventGroup.toTime,
-      desc: eventGroup.desc,
-    };
-  }
-
   handleCreateModalOpen() {
     this.setState({
-      editing: null,
+      editingId: null,
       showModal: true,
     });
   }
 
   handleEditModalOpen(id) {
     this.setState({
-      editing: id,
+      editingId: id,
       showModal: true,
     });
   }
 
   handleModalClose(edited) {
     if (edited) {
-      if (this.state.editing) {
-        this.handleEdit(this.state.editing, edited);
+      if (this.state.editingId) {
+        this.handleEdit(this.state.editingId, edited);
       } else {
         this.handleAdd(edited);
       }
     }
 
     this.setState({
-      editing: null,
+      editingId: null,
       showModal: false,
     });
   }
 
-  async handleEdit(id, edited) {
+  async handleEdit(eventGroupId, edited) {
     this.setState({
-      loadingForEach: Object.assign({}, this.state.loadingForEach, { [id]: true }),
+      loadingForEach: Object.assign({}, this.state.loadingForEach, { [eventGroupId]: true }),
     });
 
-    const res = await axios.post(`/admin/event_group/${id}`, {
-      uid: edited.uid,
-      room_id: edited.roomId,
-      from_date: edited.fromDate,
-      to_date: edited.toDate,
-      days_of_week: edited.daysOfWeek,
-      from_time: edited.fromTime,
-      to_time: edited.toTime,
-      desc: edited.desc,
-    });
+    const result = await updateEventGroup(
+      eventGroupId,
+      edited.uid,
+      edited.roomId,
+      edited.fromDate,
+      edited.toDate,
+      edited.daysOfWeek,
+      edited.fromTime,
+      edited.toTime,
+      edited.desc,
+    );
 
     this.setState({
       eventGroups: this.state.eventGroups.map(eventGroup => (
-        eventGroup.id === id ? this.convertEventGroupFromServerData(res.data) : eventGroup
+        eventGroup.id === eventGroupId ? this.convertEventGroupFromServerData(result) : eventGroup
       )),
       loadingForEach: Object.assign({}, this.state.loadingForEach, {
-        [id]: false,
+        [eventGroupId]: false,
       }),
     });
   }
 
-  async handleDelete(id) {
+  async handleDelete(eventGroupId) {
     this.setState({
       loadingForEach: Object.assign({}, this.state.loadingForEach, {
-        [id]: true,
+        [eventGroupId]: true,
       }),
     });
 
-    await axios.delete(`/admin/event_group/${id}`);
+    await deleteEventGroup(eventGroupId);
 
     this.setState({
-      eventGroups: this.state.eventGroups.filter(eventGroup => eventGroup.id !== id),
+      eventGroups: this.state.eventGroups.filter(eventGroup => eventGroup.id !== eventGroupId),
       loadingForEach: Object.assign({}, this.state.loadingForEach, {
-        [id]: false,
+        [eventGroupId]: false,
       }),
     });
   }
 
   async handleAdd(eventGroup) {
-    const res = await axios.post('/admin/event_group', this.convertServerDataFromEventGroup(eventGroup));
+    this.setState({ loading: true });
+
+    const result = await addEventGroup(
+      eventGroup.uid,
+      eventGroup.roomId,
+      eventGroup.fromDate,
+      eventGroup.toDate,
+      eventGroup.daysOfWeek,
+      eventGroup.fromTime,
+      eventGroup.toTime,
+      eventGroup.desc,
+    );
 
     this.setState({
-      eventGroups: this.state.eventGroups.concat(this.convertEventGroupFromServerData(res.data)),
+      loading: false,
+      eventGroups: this.state.eventGroups.concat(this.convertEventGroupFromServerData(result)),
     });
   }
 
   renderModal() {
-    if (this.state.editing === null) {
+    const roomList = this.state.rooms.map(room => ({
+      key: room.id,
+      label: room.is_visible === 1 ? room.name : `[숨김] ${room.name}`,
+    }));
+
+    if (this.state.editingId === null) {
       return (
         <EventGroupEditModal
+          title="예약 생성"
           show={this.state.showModal}
-          title="예약 편집"
-          rooms={this.state.rooms}
+          rooms={roomList}
           users={this.state.users}
           onClose={this.handleModalClose}
         />
       );
     }
 
-    const editingEvent = this.state.eventGroups.filter(eventGroup => eventGroup.id === this.state.editing)[0];
+    const editingEvent = this.state.eventGroups.find(eventGroup => eventGroup.id === this.state.editingId);
 
     return (
       <EventGroupEditModal
-        {...editingEvent}
         title="예약 편집"
         show={this.state.showModal}
-        rooms={this.state.rooms}
+        rooms={roomList}
         users={this.state.users}
         onClose={this.handleModalClose}
+        {...editingEvent}
       />
     );
   }
@@ -212,10 +240,10 @@ class EventGroupConfig extends React.Component {
       return (
         <tr key={eventGroup.id}>
           <td>{eventGroup.id}</td>
-          <td>{this.getUserName(eventGroup.uid)}</td>
-          <td>{this.getRoomName(eventGroup.roomId)}</td>
+          <td>{this.convertUserName(eventGroup.uid)}</td>
+          <td>{this.convertRoomName(eventGroup.roomId)}</td>
           <td>{`${eventGroup.fromDate} ~ ${eventGroup.toDate}`}</td>
-          <td>{daysOfWeekStrToArray(eventGroup.daysOfWeek)}</td>
+          <td>{this.convertDaysOfWeek(eventGroup.daysOfWeek)}</td>
           <td>{`${eventGroup.fromTime} ~ ${eventGroup.toTime}`}</td>
           <td>{eventGroup.desc}</td>
           <td>
@@ -231,6 +259,11 @@ class EventGroupConfig extends React.Component {
     return (
       <div>
         { this.renderModal() }
+
+        <Alert bsStyle="warning">
+          <p><b>정기 예약 생성 시, 이미 존재하는 예약들과 시간이 겹쳐서 생성될 수 있습니다.</b></p>
+        </Alert>
+
         <Grid>
           <Row>
             <Col>

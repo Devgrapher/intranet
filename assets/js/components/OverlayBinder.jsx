@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Overlay, Popover } from 'react-bootstrap';
+import { Overlay, Tooltip } from 'react-bootstrap';
 
 
 class OverlayBinder extends React.Component {
@@ -20,7 +20,7 @@ class OverlayBinder extends React.Component {
           container={this}
           target={() => ReactDOM.findDOMNode(this.ref)}
         >
-          <Popover id={id} style={{ width }}>{ text }</Popover>
+          <Tooltip id={id} style={{ width }}>{ text }</Tooltip>
         </Overlay>
       </div>
     );
