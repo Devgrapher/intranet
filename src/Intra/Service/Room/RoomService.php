@@ -24,8 +24,8 @@ class RoomService
     public static function getEvents($from, $to, $room_ids)
     {
         return RoomEventModel::whereIn('room_id', $room_ids)
-            ->where('from', '>=', $from)
-            ->where('to', '<', $to)
+            ->where('from', '<', $to)
+            ->where('to', '>', $from)
             ->get([
                 'id',
                 'from as start_date',
@@ -44,12 +44,19 @@ class RoomService
         return array_merge($events, $event_groups);
     }
 
-    public static function addEvent(int $room_id, string $desc, string $from, string $to, int $uid)
+    private static function checkEventExists($from, $to, $room_id, $except_event_id = null)
     {
         $old_events = self::getAllEvents($from, $to, [$room_id]);
-        if (count($old_events) > 0) {
-            throw new \Exception('이미 다른 사람이 예약한 시간입니다 새로고침 해주세요.');
+        foreach ($old_events as $event) {
+            if ($event['id'] !== $except_event_id) {
+                throw new \Exception('이미 다른 사람이 예약한 시간입니다 새로고침 해주세요.');
+            }
         }
+    }
+
+    public static function addEvent(int $room_id, string $desc, string $from, string $to, int $uid)
+    {
+        self::checkEventExists($from, $to, $room_id);
 
         $new = RoomEventModel::create([
             'uid' => $uid,
@@ -64,6 +71,13 @@ class RoomService
 
     public static function editEvent(int $id, array $update, int $uid = null)
     {
+        $from = $update['from'];
+        $to = $update['to'];
+        $room_id = $update['room_id'];
+        if (isset($from) && isset($to) && isset($room_id)) {
+            self::checkEventExists($from, $to, $room_id, $id);
+        }
+
         if (isset($uid)) {
             $where = ['id' => $id, 'uid' => $uid];
         } else {
@@ -100,15 +114,23 @@ class RoomService
         $events = [];
         $start = strtotime($from);
         $end = strtotime($to);
-        while ($start < $end) {
+
+        $day_index = $start;
+        while ($day_index < $end) {
             foreach ($event_groups as $event_group) {
                 $days = explode(',', $event_group['days_of_week']);
-                if (in_array(date('w', $start), $days)) {
-                    $from_date = date('Y-m-d', $start);
+                if (in_array(date('w', $day_index), $days)) {
+                    $from_date = date('Y-m-d', $day_index);
+                    $start_date = $from_date . ' ' . $event_group['from_time'];
+                    $end_date = $from_date . ' ' . $event_group['to_time'];
+                    if (strtotime($start_date) < $start || $end < strtotime($end_date)) {
+                        continue;
+                    }
+
                     $events[] = [
-                        'id' => $event_group['id'] + $start,
-                        'start_date' => $from_date . ' ' . $event_group['from_time'],
-                        'end_date' => $from_date . ' ' . $event_group['to_time'],
+                        'id' => $event_group['id'] + $day_index,
+                        'start_date' => $start_date,
+                        'end_date' => $end_date,
                         'text' => $event_group['desc'],
                         'room_id' => $event_group['room_id'],
                         'days_of_week' => $event_group['days_of_week'],
@@ -117,7 +139,7 @@ class RoomService
                 }
             }
 
-            $start = strtotime('+1 day', $start);
+            $day_index = strtotime('+1 day', $day_index);
         }
 
         return $events;

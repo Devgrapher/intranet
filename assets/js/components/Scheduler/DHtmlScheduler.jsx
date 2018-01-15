@@ -75,6 +75,7 @@ class DHtmlScheduler extends React.Component {
     if (result !== 1) {
       alert(result);
       this.resetEditingEvent(eventId);
+      return false;
     }
 
     return true;
@@ -168,6 +169,7 @@ class DHtmlScheduler extends React.Component {
     editing.start_date = this.editingDateFrom;
     editing.end_date = this.editingDateTo;
     editing.room_id = this.editingRoomId;
+    this.scheduler.updateEvent(eventId);
   }
 
   isDuplicatedEvent(eventId) {
