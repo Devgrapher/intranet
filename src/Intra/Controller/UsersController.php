@@ -27,6 +27,7 @@ class UsersController implements ControllerProviderInterface
         $controller_collection->get('/', [$this, 'index']);
         $controller_collection->get('/list', [$this, 'getList']);
         $controller_collection->get('/myinfo', [$this, 'myInfo']);
+        $controller_collection->get('/{user_id}/info', [$this, 'getInfo']);
         $controller_collection->post('/edit', [$this, 'edit']);
         $controller_collection->get('/image_upload', [$this, 'getUploadImage']);
         $controller_collection->get('/image_upload/{uid}', [$this, 'getUploadImage']);
@@ -132,6 +133,23 @@ class UsersController implements ControllerProviderInterface
         $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
 
         return $app['twig']->render('users/myinfo.twig', ['info' => $dto]);
+    }
+
+    public function getInfo(Request $request)
+    {
+        $user_id = $request->get('user_id');
+
+        if ($user_id != 'me') {
+            return Response::create("server error", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $dto = UserSession::getSelfDto();
+
+        $service = new UserImageFileService();
+        $image_location = $service->getLastFileLocation($dto->uid);
+        $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
+
+        return JsonResponse::create($dto);
     }
 
     public function edit(Request $request)
