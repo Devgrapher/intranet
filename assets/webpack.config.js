@@ -14,6 +14,7 @@ const common = {
     eventGroup: ['babel-polyfill', './js/components/EventGroup'],
     scheduler: ['babel-polyfill', './js/components/Scheduler'],
     holiday_adjust: './js/components/HolidayAdjust',
+    my_info: ['babel-polyfill', './js/components/MyInfo'],
   },
   output: {
     path: path.join(__dirname, '../web/static/dist'),
@@ -63,7 +64,7 @@ const common = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
-      chunks: ['policy', 'recipient', 'room', 'eventGroup', 'scheduler', 'holiday_adjust'],
+      chunks: ['policy', 'recipient', 'room', 'eventGroup', 'scheduler', 'holiday_adjust', 'my_info'],
       minChunk: 2,
     }),
     new ExtractTextPlugin({

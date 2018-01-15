@@ -126,13 +126,7 @@ class UsersController implements ControllerProviderInterface
 
     public function myInfo(Application $app)
     {
-        $dto = UserSession::getSelfDto();
-
-        $service = new UserImageFileService();
-        $image_location = $service->getLastFileLocation($dto->uid);
-        $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
-
-        return $app['twig']->render('users/myinfo.twig', ['info' => $dto]);
+        return $app['twig']->render('users/myinfo.twig');
     }
 
     public function getInfo(Request $request)
