@@ -148,9 +148,11 @@ class UsersController implements ControllerProviderInterface
 
     public function edit(Request $request)
     {
-        $uid = $request->get('pk');
-        $name = $request->get('name');
-        $value = $request->get('value');
+        $data = json_decode($request->getContent(), true);
+
+        $uid = $data['pk'];
+        $name = $data['name'];
+        $value = $data['value'];
 
         if (UserEditService::updateInfo($uid, $name, $value) !== null) {
             return Response::create($value, Response::HTTP_OK);
@@ -211,11 +213,10 @@ class UsersController implements ControllerProviderInterface
                 'image/jpg'
             );
             UserEditService::updateInfo($uid, 'image', $new_file['location']);
+            return JsonResponse::create($service->getLastFileLocation($uid));
         } catch (\Exception $e) {
             return new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
-
-        return JsonResponse::create('success');
     }
 
     public function updateExtraAjax(Request $request)
