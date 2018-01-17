@@ -8,7 +8,7 @@ class MyInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      info: {},
+      info: undefined,
       inputValues: {},
       editMode: {},
       saving: {},
@@ -173,8 +173,104 @@ class MyInfo extends React.Component {
     );
   }
 
-  render() {
+  renderContent() {
     const { info, inputValues, editMode } = this.state;
+    if (!info) {
+      return (
+        <div className="progress">
+          <div
+            className="progress-bar progress-bar-striped active"
+            role="progressbar"
+            aria-valuenow="100"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style={{ width: '100%' }}
+          >
+            로딩중..
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="form-horizontal">
+        <dl>
+          <div className="form-group">
+            <div className="col-sm-10 col-sm-offset-2">
+              <Dropzone
+                ref={(ref) => {
+                  this.dropzone = ref;
+                }}
+                style={{
+                  display: 'inline-block',
+                  border: 'none',
+                  marginBottom: 8,
+                }}
+                accept="image/jpeg, image/png, image/gif"
+                multiple={false}
+                onDrop={(...args) => this.onDropImage(...args)}
+              >
+                <img
+                  className="img-responsive img-rounded"
+                  src={info.image || 'https://placehold.it/300x300'}
+                  alt=""
+                />
+              </Dropzone>
+              <div>
+                <button
+                  className="btn btn-default btn-xs"
+                  onClick={() => this.dropzone.open()}
+                >
+                  <i className="glyphicon glyphicon-upload" />
+                  <span>사진 변경</span>
+                  <span style={{ display: 'none' }}>{this.state.uploadProgress}%</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {this.renderDataListItem({ name: '이름', key: 'name', readOnly: true })}
+          {this.renderDataListItem({ name: '팀', key: 'team', readOnly: true })}
+          {this.renderDataListItem({ name: '생년월일', key: 'birth' })}
+          {this.renderDataListItem({ name: '전화번호', key: 'mobile' })}
+          {this.renderDataListItem({ name: '이메일', key: 'email', readOnly: true })}
+
+          <div className="form-group">
+            <dt className="col-sm-2 control-label">소개</dt>
+            <dd className="col-sm-10">
+              <div className="input-group">
+                <textarea
+                  className="form-control input-sm"
+                  style={{
+                    resize: 'vertical',
+                    minHeight: 100,
+                  }}
+                  value={editMode.comment ? (inputValues.comment || '') : (info.comment || '[내용이 없습니다.]')}
+                  onChange={e => this.updateInputValue('comment', e.target.value)}
+                  readOnly={!editMode.comment}
+                />
+                {editMode.comment ? (
+                  <span className="input-group-addon btn-group-vertical">
+                    {this.renderSaveCancelButton('comment')}
+                  </span>
+                ) : (
+                  <span className="input-group-addon btn-group">
+                    <button
+                      className="btn btn-default btn-sm"
+                      onClick={() => this.setEditMode('comment', true)}
+                    >
+                      편집
+                    </button>
+                  </span>
+                )}
+              </div>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    );
+  }
+
+  render() {
     return (
       <div className="container">
         <div className="row">
@@ -182,81 +278,7 @@ class MyInfo extends React.Component {
             <div className="page-header">
               <h1>내정보</h1>
             </div>
-            <div className="form-horizontal">
-              <dl>
-                <div className="form-group">
-                  <div className="col-sm-10 col-sm-offset-2">
-                    <Dropzone
-                      ref={(ref) => {
-                        this.dropzone = ref;
-                      }}
-                      style={{
-                        display: 'inline-block',
-                        border: 'none',
-                        marginBottom: 8,
-                      }}
-                      accept="image/jpeg, image/png, image/gif"
-                      multiple={false}
-                      onDrop={(...args) => this.onDropImage(...args)}
-                    >
-                      <img
-                        className="img-responsive img-rounded"
-                        src={info.image || 'https://placehold.it/300x300'}
-                        alt=""
-                      />
-                    </Dropzone>
-                    <div>
-                      <button
-                        className="btn btn-default btn-xs"
-                        onClick={() => this.dropzone.open()}
-                      >
-                        <i className="glyphicon glyphicon-upload" />
-                        <span>사진 변경</span>
-                        <span style={{ display: 'none' }}>{this.state.uploadProgress}%</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {this.renderDataListItem({ name: '이름', key: 'name', readOnly: true })}
-                {this.renderDataListItem({ name: '팀', key: 'team', readOnly: true })}
-                {this.renderDataListItem({ name: '생년월일', key: 'birth' })}
-                {this.renderDataListItem({ name: '전화번호', key: 'mobile' })}
-                {this.renderDataListItem({ name: '이메일', key: 'email', readOnly: true })}
-
-                <div className="form-group">
-                  <dt className="col-sm-2 control-label">소개</dt>
-                  <dd className="col-sm-10">
-                    <div className="input-group">
-                      <textarea
-                        className="form-control input-sm"
-                        style={{
-                          resize: 'vertical',
-                          minHeight: 100,
-                        }}
-                        value={editMode.comment ? (inputValues.comment || '') : (info.comment || '[내용이 없습니다.]')}
-                        onChange={e => this.updateInputValue('comment', e.target.value)}
-                        readOnly={!editMode.comment}
-                      />
-                      {editMode.comment ? (
-                        <span className="input-group-addon btn-group-vertical">
-                          {this.renderSaveCancelButton('comment')}
-                        </span>
-                      ) : (
-                        <span className="input-group-addon btn-group">
-                          <button
-                            className="btn btn-default btn-sm"
-                            onClick={() => this.setEditMode('comment', true)}
-                          >
-                            편집
-                          </button>
-                        </span>
-                      )}
-                    </div>
-                  </dd>
-                </div>
-              </dl>
-            </div>
+            {this.renderContent()}
           </div>
         </div>
       </div>
