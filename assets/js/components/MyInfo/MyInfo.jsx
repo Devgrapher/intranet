@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
+import cn from 'classnames';
 import '../../../css/myInfo.css';
 
 class MyInfo extends React.Component {
@@ -120,12 +121,16 @@ class MyInfo extends React.Component {
     return (
       <React.Fragment>
         <button
+          className="btn btn-primary btn-sm"
+          type="button"
           disabled={this.state.saving[key]}
           onClick={() => this.save(key)}
         >
           {this.state.saving[key] ? '기록 중..' : '저장'}
         </button>
         <button
+          className="btn btn-default btn-sm"
+          type="button"
           disabled={this.state.saving[key]}
           onClick={() => this.setEditMode(key, false)}
         >
@@ -138,30 +143,32 @@ class MyInfo extends React.Component {
   renderDataListItem({ name, key, readOnly = false }) {
     const { info, inputValues, editMode } = this.state;
     return (
-      <div>
-        <dt>{name}</dt>
-        {editMode[key] ? (
-          <dd>
+      <div className="form-group">
+        <dt className="col-sm-2 control-label">{name}</dt>
+        <dd className="col-sm-10">
+          <div className={cn({ 'input-group': !readOnly })}>
             <input
-              value={inputValues[key] || ''}
+              className="form-control input-sm"
+              value={(editMode[key] ? inputValues[key] : info[key]) || ''}
               onChange={e => this.updateInputValue(key, e.target.value)}
+              readOnly={readOnly || !editMode[key]}
             />
-            <span>
-              {this.renderSaveCancelButton(key)}
-            </span>
-          </dd>
-        ) : (
-          <dd>
-            <span>{info[key]}</span>
-            {!readOnly && (
-              <button
-                onClick={() => this.setEditMode(key, true)}
-              >
-                편집
-              </button>
-            )}
-          </dd>
-        )}
+            {!readOnly && (editMode[key] ? (
+              <span className="input-group-btn">
+                {this.renderSaveCancelButton(key)}
+              </span>
+            ) : (
+              <span className="input-group-btn">
+                <button
+                  className="btn btn-default btn-sm"
+                  onClick={() => this.setEditMode(key, true)}
+                >
+                  편집
+                </button>
+              </span>
+            ))}
+          </div>
+        </dd>
       </div>
     );
   }
@@ -169,62 +176,89 @@ class MyInfo extends React.Component {
   render() {
     const { info, inputValues, editMode } = this.state;
     return (
-      <div>
-        <div>
-          <Dropzone
-            ref={(ref) => {
-              this.dropzone = ref;
-            }}
-            style={{ border: 'none' }}
-            accept="image/jpeg, image/png, image/gif"
-            multiple={false}
-            onDrop={(...args) => this.onDropImage(...args)}
-          >
-            <img
-              src={info.image || 'https://placehold.it/300x300'}
-              alt=""
-            />
-          </Dropzone>
-          <button
-            onClick={() => this.dropzone.open()}
-          >
-            <i className="glyphicon glyphicon-upload" />
-            <span>사진 변경</span>
-            <span style={{ display: 'none' }}>{this.state.uploadProgress}%</span>
-          </button>
-        </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-xs-12 col-sm-12 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
+            <div className="page-header">
+              <h1>내정보</h1>
+            </div>
+            <div className="form-horizontal">
+              <dl>
+                <div className="form-group">
+                  <div className="col-sm-10 col-sm-offset-2">
+                    <Dropzone
+                      ref={(ref) => {
+                        this.dropzone = ref;
+                      }}
+                      style={{
+                        display: 'inline-block',
+                        border: 'none',
+                        marginBottom: 8,
+                      }}
+                      accept="image/jpeg, image/png, image/gif"
+                      multiple={false}
+                      onDrop={(...args) => this.onDropImage(...args)}
+                    >
+                      <img
+                        className="img-responsive img-rounded"
+                        src={info.image || 'https://placehold.it/300x300'}
+                        alt=""
+                      />
+                    </Dropzone>
+                    <div>
+                      <button
+                        className="btn btn-default btn-xs"
+                        onClick={() => this.dropzone.open()}
+                      >
+                        <i className="glyphicon glyphicon-upload" />
+                        <span>사진 변경</span>
+                        <span style={{ display: 'none' }}>{this.state.uploadProgress}%</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-        <dl>
-          {this.renderDataListItem({ name: '이름', key: 'name', readOnly: true })}
-          {this.renderDataListItem({ name: '팀', key: 'team', readOnly: true })}
-          {this.renderDataListItem({ name: '생년월일', key: 'birth' })}
-          {this.renderDataListItem({ name: '전화번호', key: 'mobile' })}
-          {this.renderDataListItem({ name: '이메일', key: 'email', readOnly: true })}
-          <div>
-            <dt>소개</dt>
-            {editMode.comment ? (
-              <dd>
-                <textarea
-                  rows="5"
-                  value={inputValues.comment || ''}
-                  onChange={e => this.updateInputValue('comment', e.target.value)}
-                />
-                <span>
-                  {this.renderSaveCancelButton('comment')}
-                </span>
-              </dd>
-            ) : (
-              <dd>
-                <span>{info.comment || '[내용이 없습니다.]'}</span>
-                <button
-                  onClick={() => this.setEditMode('comment', true)}
-                >
-                  편집
-                </button>
-              </dd>
-            )}
+                {this.renderDataListItem({ name: '이름', key: 'name', readOnly: true })}
+                {this.renderDataListItem({ name: '팀', key: 'team', readOnly: true })}
+                {this.renderDataListItem({ name: '생년월일', key: 'birth' })}
+                {this.renderDataListItem({ name: '전화번호', key: 'mobile' })}
+                {this.renderDataListItem({ name: '이메일', key: 'email', readOnly: true })}
+
+                <div className="form-group">
+                  <dt className="col-sm-2 control-label">소개</dt>
+                  <dd className="col-sm-10">
+                    <div className="input-group">
+                      <textarea
+                        className="form-control input-sm"
+                        style={{
+                          resize: 'vertical',
+                          minHeight: 100,
+                        }}
+                        value={editMode.comment ? (inputValues.comment || '') : (info.comment || '[내용이 없습니다.]')}
+                        onChange={e => this.updateInputValue('comment', e.target.value)}
+                        readOnly={!editMode.comment}
+                      />
+                      {editMode.comment ? (
+                        <span className="input-group-addon btn-group-vertical">
+                          {this.renderSaveCancelButton('comment')}
+                        </span>
+                      ) : (
+                        <span className="input-group-addon btn-group">
+                          <button
+                            className="btn btn-default btn-sm"
+                            onClick={() => this.setEditMode('comment', true)}
+                          >
+                            편집
+                          </button>
+                        </span>
+                      )}
+                    </div>
+                  </dd>
+                </div>
+              </dl>
+            </div>
           </div>
-        </dl>
+        </div>
       </div>
     );
   }
