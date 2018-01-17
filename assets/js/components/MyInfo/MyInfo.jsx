@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import cn from 'classnames';
-import '../../../css/myInfo.css';
 
 class MyInfo extends React.Component {
   constructor(props) {
