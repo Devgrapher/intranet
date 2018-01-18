@@ -15,11 +15,9 @@ class MyInfo extends React.Component {
     };
   }
 
-  componentDidMount() {
-    (async () => {
-      const { data: info } = await axios.get('/users/me/info');
-      this.setState({ info });
-    })();
+  async componentDidMount() {
+    const { data: info } = await axios.get('/users/me');
+    this.setState({ info });
   }
 
   async onDropImage(files) {
