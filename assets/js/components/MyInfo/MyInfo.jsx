@@ -193,6 +193,7 @@ class MyInfo extends React.Component {
                 }}
                 accept="image/jpeg, image/png, image/gif"
                 multiple={false}
+                disabled={this.state.saving.image}
                 onDrop={(...args) => this.onDropImage(...args)}
               >
                 <img
