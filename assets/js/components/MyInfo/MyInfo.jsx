@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import cn from 'classnames';
 
@@ -11,42 +11,35 @@ class MyInfo extends React.Component {
       inputValues: {},
       editMode: {},
       saving: {},
-      uploadProgress: 0,
     };
   }
 
   async componentDidMount() {
-    const { data: info } = await axios.get('/users/me');
-    this.setState({ info });
+    this.setState({ info: await this.props.api.getMe() });
   }
 
   async onDropImage(files) {
-    if (!files || !files.length) {
-      return;
-    }
-
-    const file = files[0];
-
-    if (file.size > 5000000) { // 5MB
-      alert('파일 용량은 5메가를 초과할 수 없습니다.');
-      return;
-    }
-
-    const data = new FormData();
-    data.append('uid', this.state.info.uid);
-    data.append('files[]', file);
-
     try {
-      const { data: imageUrl } = await axios.post('/users/image_upload', data, {
-        onUploadProgress: (progressEvent) => {
-          const uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          this.setState({ uploadProgress });
-        },
-      });
+      this.setSaving('image', true);
+
+      if (!files || !files.length) {
+        return;
+      }
+
+      const file = files[0];
+
+      if (file.size > 5000000) { // 5MB
+        alert('파일 용량은 5메가를 초과할 수 없습니다.');
+        return;
+      }
+
+      const imageUrl = await this.props.api.updateImage(this.state.info.uid, file);
       alert('업로드 완료');
       this.updateInfo('image', imageUrl);
     } catch (err) {
       alert('서버와 통신 중 문제가 발생했습니다');
+    } finally {
+      this.setSaving('image', false);
     }
   }
 
@@ -91,14 +84,10 @@ class MyInfo extends React.Component {
   }
 
   async save(key) {
-    this.setSaving(key, true);
-    const { info, inputValues } = this.state;
     try {
-      const { data: result } = await axios.post('/users/edit', {
-        pk: info.uid,
-        name: key,
-        value: inputValues[key],
-      });
+      this.setSaving(key, true);
+      const { info, inputValues } = this.state;
+      const result = await this.props.api.updateUser(info.uid, key, inputValues[key]);
       this.updateInfo(key, result);
       this.setEditMode(key, false);
     } catch (err) {
@@ -215,11 +204,11 @@ class MyInfo extends React.Component {
               <div>
                 <button
                   className="btn btn-default btn-xs"
+                  disabled={this.state.saving.image}
                   onClick={() => this.dropzone.open()}
                 >
                   <i className="glyphicon glyphicon-upload" />
                   <span>사진 변경</span>
-                  <span style={{ display: 'none' }}>{this.state.uploadProgress}%</span>
                 </button>
               </div>
             </div>
@@ -282,5 +271,9 @@ class MyInfo extends React.Component {
     );
   }
 }
+
+MyInfo.propTypes = {
+  api: PropTypes.objectOf(PropTypes.func).isRequired,
+};
 
 export default MyInfo;
