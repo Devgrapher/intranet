@@ -26,7 +26,7 @@ class UsersController implements ControllerProviderInterface
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/', [$this, 'index']);
         $controller_collection->get('/list', [$this, 'getList']);
-        $controller_collection->get('/myinfo', [$this, 'myInfo']);
+        $controller_collection->get('/me', [$this, 'getMe']);
         $controller_collection->post('/edit', [$this, 'edit']);
         $controller_collection->get('/image_upload', [$this, 'getUploadImage']);
         $controller_collection->get('/image_upload/{uid}', [$this, 'getUploadImage']);
@@ -123,22 +123,28 @@ class UsersController implements ControllerProviderInterface
         return $app['twig']->render('users/list.twig');
     }
 
-    public function myInfo(Application $app)
+    public function getMe(Request $request, Application $app)
     {
+        if (!in_array('application/json', $request->getAcceptableContentTypes())) {
+            return $app['twig']->render('users/me.twig');
+        }
+
         $dto = UserSession::getSelfDto();
 
         $service = new UserImageFileService();
         $image_location = $service->getLastFileLocation($dto->uid);
         $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
 
-        return $app['twig']->render('users/myinfo.twig', ['info' => $dto]);
+        return JsonResponse::create($dto);
     }
 
     public function edit(Request $request)
     {
-        $uid = $request->get('pk');
-        $name = $request->get('name');
-        $value = $request->get('value');
+        $data = json_decode($request->getContent(), true);
+
+        $uid = $data['pk'];
+        $name = $data['name'];
+        $value = $data['value'];
 
         if (UserEditService::updateInfo($uid, $name, $value) !== null) {
             return Response::create($value, Response::HTTP_OK);
@@ -199,11 +205,10 @@ class UsersController implements ControllerProviderInterface
                 'image/jpg'
             );
             UserEditService::updateInfo($uid, 'image', $new_file['location']);
+            return JsonResponse::create($service->getLastFileLocation($uid));
         } catch (\Exception $e) {
             return new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
-
-        return JsonResponse::create('success');
     }
 
     public function updateExtraAjax(Request $request)

@@ -48,7 +48,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('original_filename', 'string', ['length' => 255])
             ->addColumn('location', 'string', ['length' => 255])
             ->addColumn('reg_date', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
-            ->addColumn('is_delete', 'boolean')
+            ->addColumn('is_delete', 'boolean', ['null' => true])
             ->addForeignKey('uid', 'users', 'uid')
             ->create();
     }
