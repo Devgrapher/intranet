@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MyInfo from './MyInfo';
+import Me from './Me';
 import * as api from '../../api/users';
 
 ReactDOM.render(
-  <MyInfo api={api} />,
+  <Me api={api} />,
   document.getElementById('content'),
 );

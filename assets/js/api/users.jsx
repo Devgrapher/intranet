@@ -27,12 +27,9 @@ const getUsers = async () => {
   return users;
 };
 
-const dummy = '';
-
 export {
   getMe,
   getUsers,
   updateImage,
   updateUser,
-  dummy,
 };

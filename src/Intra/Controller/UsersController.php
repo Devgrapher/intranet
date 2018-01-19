@@ -26,7 +26,6 @@ class UsersController implements ControllerProviderInterface
         $controller_collection = $app['controllers_factory'];
         $controller_collection->get('/', [$this, 'index']);
         $controller_collection->get('/list', [$this, 'getList']);
-        $controller_collection->get('/myinfo', [$this, 'myInfo']);
         $controller_collection->get('/me', [$this, 'getMe']);
         $controller_collection->post('/edit', [$this, 'edit']);
         $controller_collection->get('/image_upload', [$this, 'getUploadImage']);
@@ -124,13 +123,12 @@ class UsersController implements ControllerProviderInterface
         return $app['twig']->render('users/list.twig');
     }
 
-    public function myInfo(Application $app)
+    public function getMe(Request $request, Application $app)
     {
-        return $app['twig']->render('users/myinfo.twig');
-    }
+        if (!in_array('application/json', $request->getAcceptableContentTypes())) {
+            return $app['twig']->render('users/me.twig');
+        }
 
-    public function getMe()
-    {
         $dto = UserSession::getSelfDto();
 
         $service = new UserImageFileService();

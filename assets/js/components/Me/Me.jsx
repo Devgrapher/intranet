@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import cn from 'classnames';
 
-class MyInfo extends React.Component {
+class Me extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -273,8 +273,8 @@ class MyInfo extends React.Component {
   }
 }
 
-MyInfo.propTypes = {
+Me.propTypes = {
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
 
-export default MyInfo;
+export default Me;

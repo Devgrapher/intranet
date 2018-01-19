@@ -97,7 +97,7 @@ class MenuService
                     new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
                     new Link('보도자료 관리', '/press/', new OnlyPressManager()),
                 ], 'wrench'),
-                new Link('내정보', '/users/myinfo', new PublicAuth(), null, 'user'),
+                new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),
             ];
         }
