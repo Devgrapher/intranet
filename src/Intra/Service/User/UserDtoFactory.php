@@ -57,6 +57,16 @@ class UserDtoFactory
     /**
      * @return UserDto[]
      */
+    public static function createTeamUserDtos($team_name)
+    {
+        $dicts = UserModel::getDictsWithTeam($team_name);
+
+        return self::createFromDatabaseDicts($dicts);
+    }
+
+    /**
+     * @return UserDto[]
+     */
     public static function createManagerUserDtos()
     {
         $dicts = UserModel::getDictsOfManager();

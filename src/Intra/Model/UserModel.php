@@ -115,12 +115,12 @@ class UserModel extends BaseModel
         return 1;
     }
 
-    public static function getDictsWithTeam($team)
+    public static function getDictsWithTeam($team_name)
     {
         $where = [];
         $where['on_date'] = sqlLesserEqual(sqlNow());
         $where['off_date'] = sqlGreaterEqual(sqlNow());
-        $where['team'] = sqlLike($team);
+        $where['team'] = sqlLike($team_name);
 
         return self::getDb()->sqlDicts('select * from users where ? order by name', sqlWhere($where));
     }

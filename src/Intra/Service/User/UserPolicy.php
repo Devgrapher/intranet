@@ -115,6 +115,11 @@ class UserPolicy
         return self::checkPermission($self, [self::USER_MANAGER]);
     }
 
+    public static function isTeamManager(UserDto $self): bool
+    {
+        return $self->position === '팀장';
+    }
+
     public static function isPostAdmin(UserDto $self): bool
     {
         if (self::isSuperAdmin($self)) {

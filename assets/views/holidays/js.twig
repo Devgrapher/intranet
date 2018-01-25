@@ -12,7 +12,7 @@
       .val({{ target_user_dto.uid }})
       .trigger('change')
       .change(function () {
-        location.href = '/holidays/uid/' + $(this).val();
+        location.href = '/holidays/?uid=' + $(this).val();
       });
     $('input').on('keypress', function (e) {
       return e.which != 13;

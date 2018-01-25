@@ -13,8 +13,17 @@ class UserHolidayStat
     public function getHolidaysAllUsers($year)
     {
         $begin = date($year . '/1/1');
-        $end = date(($year) . '/12/31');
-        $holidays = $this->user_holiday_model->getHolidaysByUserYearly(null, $begin, $end);
+        $end = date($year . '/12/31');
+        $holidays = $this->user_holiday_model->getHolidaysByUser(null, $begin, $end);
+
+        return $holidays;
+    }
+
+    public function getHolidaysTeamUsers($team_name, $year)
+    {
+        $begin = date($year . '/1/1');
+        $end = date($year . '/12/31');
+        $holidays = $this->user_holiday_model->getHolidaysByTeam($team_name, $begin, $end);
 
         return $holidays;
     }
