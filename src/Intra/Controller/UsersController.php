@@ -140,11 +140,9 @@ class UsersController implements ControllerProviderInterface
 
     public function edit(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-
-        $uid = $data['pk'];
-        $name = $data['name'];
-        $value = $data['value'];
+        $uid = $request->get('pk');
+        $name = $request->get('name');
+        $value = $request->get('value');
 
         if (UserEditService::updateInfo($uid, $name, $value) !== null) {
             return Response::create($value, Response::HTTP_OK);

@@ -10,6 +10,13 @@ $app->before(function (Request $request) {
     return UserPolicy::assertRestrictedPath($request);
 });
 
+$app->before(function (Request $request) {
+    if ($request->getContentType() === 'json') {
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace(is_array($data) ? $data : array());
+    }
+});
+
 $app->get('/', function (Application $app) {
     $subRequest = Request::create('/posts/notice', 'GET');
 
