@@ -23,30 +23,40 @@ class HolidaysController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller_collection = $app['controllers_factory'];
-        $controller_collection->get('/', [$this, 'index']);
-        $controller_collection->get('/uid/{uid}', [$this, 'index']);
-        $controller_collection->get('/uid/{uid}/year/{year}', [$this, 'index']);
-        $controller_collection->post('uid/{uid}', [$this, 'add']);
-        $controller_collection->put('uid/{uid}', [$this, 'edit']);
-        $controller_collection->delete('uid/{uid}/{holidayid}', [$this, 'del']);
+        $controller_collection->get('/', [$this, 'get']);
+        $controller_collection->post('/uid/{uid}', [$this, 'add']);
+        $controller_collection->put('/uid/{uid}', [$this, 'edit']);
+        $controller_collection->delete('/uid/{uid}/{holidayid}', [$this, 'del']);
         $controller_collection->get('/download/{year}', [$this, 'download']);
         $controller_collection->get('/downloadRemain/{year}', [$this, 'downloadRemain']);
 
         return $controller_collection;
     }
 
-    public function index(Request $request, Application $app)
+    public function get(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
 
-        $uid = $request->get('uid');
-        if (!intval($uid)) {
+        $year = intval($request->get('year'));
+        if (!$year) {
+            $year = intval(date('Y'));
+        }
+
+        $team_name = $request->get('team');
+        if ($team_name) {
+            return $this->getByTeam($request, $app, $team_name, $year);
+        }
+
+        $uid = intval($request->get('uid'));
+        if (!$uid) {
             $uid = $self->uid;
         }
-        $year = $request->get('year');
-        if (!intval($year)) {
-            $year = date('Y');
-        }
+        return $this->getByUser($request, $app, $uid, $year);
+    }
+
+    public function getByUser(Request $request, Application $app, int $uid, int $year)
+    {
+        $self = UserSession::getSelfDto();
 
         $is_holiday_master = UserPolicy::isHolidayEditable($self);
         $editable = $is_holiday_master;
@@ -110,11 +120,60 @@ class HolidaysController implements ControllerProviderInterface
         ]);
     }
 
+    public function getByTeam(Request $request, Application $app, String $team_name, int $year)
+    {
+        $self = UserSession::getSelfDto();
+
+        if (!UserPolicy::isTeamManager($self) || $team_name !== $self->team) {
+            return new Response("권한이 없습니다.", Response::HTTP_FORBIDDEN);
+        }
+
+        if (!in_array('application/json', $request->getAcceptableContentTypes())) {
+            return $app['twig']->render('holidays/team.twig');
+        }
+
+        $user_holiday = new UserHolidayStat();
+        $holidays = $user_holiday->getHolidaysTeamUsers($team_name, $year);
+
+        $users = UserDtoFactory::createTeamUserDtos($team_name);
+        $summaries = array_map(function ($user) use ($year) {
+            $user_holiday = new UserHoliday($user);
+            $user_holiday_policy = new UserHolidayPolicy($user);
+
+            $joinYear = $user_holiday->getYearByYearly(1);
+            $yearly = $year - $joinYear + 1;
+
+            $fullCost = $user_holiday_policy->getAvailableCost($yearly);
+            $usedCost = $user_holiday_policy->getUsedCost($yearly);
+            $modCost = $user_holiday_policy->getModCost($year);
+            $remainCost = $fullCost - $usedCost + $modCost;
+
+            return [
+                'uid' => $user->uid,
+                'personcode' => $user->personcode,
+                'name' => $user->name,
+                'on_date' => $user->on_date,
+                'off_date' => $user->off_date,
+                'full_cost' => $fullCost,
+                'used_cost' => $usedCost,
+                'mod_cost' => $modCost,
+                'remain_cost' => $remainCost,
+            ];
+        }, $users);
+
+        return $app->json([
+            'team_name' => $team_name,
+            'year' => $year,
+            'summaries' => $summaries,
+            'holidays' => $holidays,
+        ]);
+    }
+
     public function add(Request $request)
     {
         try {
             if (UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
-                $uid = $request->get('uid');
+                $uid = intval($request->get('uid'));
                 $dto = UserDtoFactory::createByUid($uid);
             } else {
                 $dto = UserSession::getSelfDto();
@@ -146,13 +205,13 @@ class HolidaysController implements ControllerProviderInterface
     {
         try {
             if (UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
-                $uid = $request->get('uid');
+                $uid = intval($request->get('uid'));
                 $dto = UserDtoFactory::createByUid($uid);
             } else {
                 $dto = UserSession::getSelfDto();
             }
 
-            $holidayid = $request->get('holidayid');
+            $holidayid = intval($request->get('holidayid'));
             $key = $request->get('key');
             $value = $request->get('value');
 
@@ -179,14 +238,14 @@ class HolidaysController implements ControllerProviderInterface
     {
         try {
             if (UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
-                $uid = $request->get('uid');
+                $uid = intval($request->get('uid'));
                 $dto = UserDtoFactory::createByUid($uid);
             } else {
                 $dto = UserSession::getSelfDto();
             }
 
             $user_holiday = new UserHoliday($dto);
-            $holidayid = $request->get('holidayid');
+            $holidayid = intval($request->get('holidayid'));
 
             //finalize
             $db = IntraDb::getGnfDb();
@@ -214,9 +273,9 @@ class HolidaysController implements ControllerProviderInterface
         }
 
         //input
-        $year = $request->get('year');
-        if (!intval($year)) {
-            $year = date('Y');
+        $year = intval($request->get('year'));
+        if (!$year) {
+            $year = intval(date('Y'));
         }
 
         $user_holiday = new UserHolidayStat();
@@ -253,9 +312,9 @@ class HolidaysController implements ControllerProviderInterface
             return new Response("권한이 없습니다", 403);
         }
 
-        $year = $request->get('year');
-        if (!intval($year)) {
-            $year = date('Y');
+        $year = intval($request->get('year'));
+        if (!$year) {
+            $year = intval(date('Y'));
         }
 
         $rows = [

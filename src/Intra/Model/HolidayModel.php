@@ -32,7 +32,7 @@ class HolidayModel
      *
      * @return UserHolidayDto[]
      */
-    public function getHolidaysByUserYearly($user, $begin, $end)
+    public function getHolidaysByUser($user, $begin, $end)
     {
         if ($user == null) {
             $where = [
@@ -46,6 +46,35 @@ class HolidayModel
                 'date' => sqlBetween($begin, $end),
             ];
         }
+
+        return $this->db->sqlObjects('
+          select
+            holidays.*,
+            user.personcode,
+            user.name as uid_name,
+            manager.name as manager_uid_name,
+            keeper.name as keeper_uid_name
+          from holidays
+            LEFT JOIN users user on holidays.uid = user.uid
+            LEFT JOIN users manager on holidays.manager_uid = manager.uid
+            LEFT JOIN users keeper on holidays.keeper_uid = keeper.uid
+          where ? order by holidays.uid asc, date asc', sqlWhere($where));
+    }
+
+    /**
+     * @param         $team_name
+     * @param         $begin
+     * @param         $end
+     *
+     * @return UserHolidayDto[]
+     */
+    public function getHolidaysByTeam($team_name, $begin, $end)
+    {
+        $where = [
+            'hidden' => 0,
+            'user.team' => $team_name,
+            'date' => sqlBetween($begin, $end),
+        ];
 
         return $this->db->sqlObjects('
           select

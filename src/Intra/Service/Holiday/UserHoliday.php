@@ -41,7 +41,7 @@ class UserHoliday
     {
         $begin = date('Y/m/d', $this->user_holiday_policy->getYearlyBeginTimestamp($yearly));
         $end = date('Y/m/d', $this->user_holiday_policy->getYearlyEndTimestamp($yearly));
-        $holidays = $this->user_holiday_model->getHolidaysByUserYearly($this->user, $begin, $end);
+        $holidays = $this->user_holiday_model->getHolidaysByUser($this->user, $begin, $end);
 
         return $holidays;
     }

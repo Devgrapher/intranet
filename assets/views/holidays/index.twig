@@ -42,9 +42,9 @@
         {{ target_user_dto.name }}
       </h2>
       <h4>
-        <a href='/holidays/uid/{{ target_user_dto.uid }}/year/{{ yearPrev }}'>{{ yearPrev }}</a>
+        <a href='/holidays/?uid={{ target_user_dto.uid }}&year={{ yearPrev }}'>{{ yearPrev }}</a>
         / {{ year }} /
-        <a href='/holidays/uid/{{ target_user_dto.uid }}/year/{{ yearNext }}'>{{ yearNext }}</a>
+        <a href='/holidays/?uid={{ target_user_dto.uid }}&year={{ yearNext }}'>{{ yearNext }}</a>
       </h4>
 
       <table class="table table-striped table-hover table-condensed">

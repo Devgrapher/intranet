@@ -19,7 +19,7 @@ class RoomsController implements ControllerProviderInterface
         $controller_collection->get('/section', [$this, 'getSections']);
         $controller_collection->get('/event', [$this, 'getEvents']);
         $controller_collection->post('/event', [$this, 'addEvent']);
-        $controller_collection->post('/event/{id}', [$this, 'modEvent']);
+        $controller_collection->post('/event/{id}', [$this, 'editEvent']);
         $controller_collection->delete('/event/{id}', [$this, 'delEvent']);
 
         return $controller_collection;
@@ -95,7 +95,7 @@ class RoomsController implements ControllerProviderInterface
         }
     }
 
-    public function modEvent(Request $request)
+    public function editEvent(Request $request)
     {
         $id = $request->get('id');
 
@@ -120,7 +120,7 @@ class RoomsController implements ControllerProviderInterface
                 RoomService::editEvent($id, $update, $user->uid);
             }
         } catch (\Exception $e) {
-            return '예약 변경이 실패했습니다. 개발팀에 문의주세요';
+            return $e->getMessage();
         }
 
         return 1;
