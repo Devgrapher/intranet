@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Graze\Silex\ControllerProvider\TrailingSlashControllerProvider;
 use Intra\Service\User\UserPolicy;
 use Silex\Application;
 use Silex\ControllerCollection;
@@ -53,3 +54,7 @@ $app->mount('/admin', function (ControllerCollection $admin) use ($app) {
     $admin->mount('/event_group', (new Intra\Controller\Admin\EventGroupController())->connect($app));
     $admin->mount('/press', (new Intra\Controller\Admin\PressController())->connect($app));
 });
+
+$trailingSlashControllerProvider = new TrailingSlashControllerProvider();
+$app->register($trailingSlashControllerProvider);
+$app->mount('/', $trailingSlashControllerProvider);

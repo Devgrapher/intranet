@@ -19,7 +19,7 @@
           return value;
         };
 
-        $(this).editable('/admin/press/', args);
+        $(this).editable('/admin/press', args);
       });
     });
   </script>
@@ -29,7 +29,7 @@
   {% if manager %}
     <form
       attrajax
-      data-aa-url='/admin/press/'
+      data-aa-url='/admin/press'
       data-aa-method='post'
       data-aa-datatype="text"
       data-aa-success-if-result-is="success"
