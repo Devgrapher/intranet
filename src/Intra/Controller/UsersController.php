@@ -28,8 +28,6 @@ class UsersController implements ControllerProviderInterface
         $controller_collection->get('/list', [$this, 'getList']);
         $controller_collection->get('/me', [$this, 'getMe']);
         $controller_collection->post('/edit', [$this, 'edit']);
-        $controller_collection->get('/image_upload', [$this, 'getUploadImage']);
-        $controller_collection->get('/image_upload/{uid}', [$this, 'getUploadImage']);
         $controller_collection->post('/image_upload', [$this, 'uploadImage']);
         $controller_collection->post('/{userid}/updateExtra/{key}/{value}', [$this, 'updateExtraAjax']);
         $controller_collection->get('/jeditable_key/{key}', [$this, 'jeditableKey']);
@@ -98,29 +96,25 @@ class UsersController implements ControllerProviderInterface
     {
         $self = UserSession::getSelfDto();
         if (!UserPolicy::isUserManager($self) && !UserPolicy::isPolicyRecipientEditable($self)) {
-            return '권한이 없습니다';
+            return Response::create('권한이 없습니다.', Response::HTTP_UNAUTHORIZED);
         }
 
-        if (in_array('application/json', $request->getAcceptableContentTypes())) {
-            $user_dtos = UserDtoFactory::createAllUserDtos();
-            if ($request->get('outer')) {
-                $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
-                    $type = (new UserDtoHandler($item))->getType();
+        $user_dtos = UserDtoFactory::createAllUserDtos();
+        if ($request->get('outer')) {
+            $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
+                $type = (new UserDtoHandler($item))->getType();
 
-                    return $type == UserType::OUTER;
-                }));
-            } else {
-                $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
-                    $type = (new UserDtoHandler($item))->getType();
+                return $type == UserType::OUTER;
+            }));
+        } else {
+            $user_dtos = array_values(array_filter($user_dtos, function (UserDto $item) {
+                $type = (new UserDtoHandler($item))->getType();
 
-                    return $type != UserType::OUTER;
-                }));
-            }
-
-            return $app->json($user_dtos);
+                return $type != UserType::OUTER;
+            }));
         }
 
-        return $app['twig']->render('users/list.twig');
+        return $app->json($user_dtos);
     }
 
     public function getMe(Request $request, Application $app)
@@ -149,33 +143,6 @@ class UsersController implements ControllerProviderInterface
         } else {
             return Response::create("server error", Response::HTTP_SERVICE_UNAVAILABLE);
         }
-    }
-
-    public function getUploadImage(Request $request, Application $app)
-    {
-        if (!UserSession::isUserManager()) {
-            return '권한이 없습니다';
-        }
-
-        $uid = $request->get('uid');
-        if (!$uid) {
-            $dto = UserSession::getSelfDto();
-        } else {
-            $dto = UserDtoFactory::createByUid($uid);
-        }
-
-        $service = new UserImageFileService();
-        $image_location = $service->getLastFileLocation($dto->uid);
-        $dto->image = $image_location ? $image_location : 'https://placehold.it/300x300';
-
-        $users = UserDtoFactory::createAvailableUserDtos();
-
-        return $app['twig']->render('users/image_upload.twig', [
-            'uid' => $dto->uid,
-            'name' => $dto->name,
-            'image' => $dto->image ? $dto->image : null,
-            'users' => $users,
-        ]);
     }
 
     public function uploadImage(Request $request)

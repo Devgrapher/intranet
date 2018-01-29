@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Intra\Service\User\UserPolicy;
 use Silex\Application;
+use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -35,13 +36,20 @@ $app->mount('/users', new Intra\Controller\UsersController());
 $app->mount('/usersession', new Intra\Controller\UserSessionController());
 $app->mount('/weekly', new Intra\Controller\WeeklyController());
 $app->mount('/flextime', new Intra\Controller\FlexTimeController());
-$app->mount('/holidayadmin', new Intra\Controller\HolidayAdminController());
 $app->mount('/rooms', new Intra\Controller\RoomsController());
+$app->mount('/support', new Intra\Controller\SupportController());
 $app->get('/focus/', function (Application $app) {
     $subRequest = Request::create('/rooms/', 'GET', ['type' => 'focus']);
 
     return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 });
 
-$app->mount('/support', new Intra\Controller\SupportController());
-$app->mount('/admin', new Intra\Controller\AdminController());
+$app->mount('/admin', function (ControllerCollection $admin) use ($app) {
+    $admin->mount('/policy', (new Intra\Controller\Admin\PolicyController())->connect($app));
+    $admin->mount('/recipient', (new Intra\Controller\Admin\RecipientController())->connect($app));
+    $admin->mount('/user', (new Intra\Controller\Admin\UserController())->connect($app));
+    $admin->mount('/holiday', (new Intra\Controller\Admin\HolidayController())->connect($app));
+    $admin->mount('/room', (new Intra\Controller\Admin\RoomController())->connect($app));
+    $admin->mount('/event_group', (new Intra\Controller\Admin\EventGroupController())->connect($app));
+    $admin->mount('/press', (new Intra\Controller\Admin\PressController())->connect($app));
+});

@@ -32,7 +32,7 @@ class HolidayAdjust extends React.Component {
   }
 
   componentDidMount() {
-    axios('/holidayadmin/list')
+    axios('/admin/holiday/list')
       .then((res) => {
         this.userList = res.data.userList;
         this.managerList = res.data.managerList;
@@ -91,7 +91,7 @@ class HolidayAdjust extends React.Component {
     this.setState(Object.assign({}, this.state, {
       loading: true,
     }));
-    axios.get(`/holidayadmin/uid/${uid}`)
+    axios.get(`/admin/holiday/uid/${uid}`)
       .then((res) => {
         if (res.status === 200) {
           const rows = res.data.map((row) => {
@@ -133,7 +133,7 @@ class HolidayAdjust extends React.Component {
       loading: true,
     }));
     const { uid } = this.state;
-    axios.post(`/holidayadmin/uid/${uid}`, data)
+    axios.post(`/admin/holiday/uid/${uid}`, data)
       .then((res) => {
         if (res.status === 201) {
           const newRow = res.data;
@@ -156,7 +156,7 @@ class HolidayAdjust extends React.Component {
     this.setState(Object.assign({}, this.state, {
       loading: true,
     }));
-    axios.delete(`/holidayadmin/uid/${uid}/id/${id}`)
+    axios.delete(`/admin/holiday/uid/${uid}/id/${id}`)
       .then((res) => {
         if (res.status === 200) {
           this.setState(Object.assign({}, this.state, {

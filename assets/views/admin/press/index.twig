@@ -12,14 +12,14 @@
         var id = $(this).parent().data('pressid');
         var key = $(this).data('key');
         var submitdata = {id: id, key: key};
-        var args = {submitdata: submitdata};
+        var args = {submitdata: submitdata, ajaxoptions: {type: 'PATCH'}};
 
         args['data'] = function (value) {
           edited = true;
           return value;
         };
 
-        $(this).editable('/press/edit', args);
+        $(this).editable('/admin/press/', args);
       });
     });
   </script>
@@ -29,7 +29,7 @@
   {% if manager %}
     <form
       attrajax
-      data-aa-url='/press/add'
+      data-aa-url='/admin/press/'
       data-aa-method='post'
       data-aa-datatype="text"
       data-aa-success-if-result-is="success"
@@ -78,7 +78,8 @@
             <td>
               <input type='button' value='삭제'
                      attrajax
-                     data-aa-url='/press/del/{{ press.id }}'
+                     data-aa-url='/admin/press/{{ press.id }}'
+                     data-aa-method='delete'
                      data-aa-confirm='정말 삭제하시겠습니까?'
                      data-aa-datatype="text"
                      data-aa-success-if-result-is="success"

@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
 
-namespace Intra\Controller;
+namespace Intra\Controller\Admin;
 
 use Intra\Model\HolidayAdjustModel;
 use Intra\Service\User\UserDtoFactory;
@@ -12,35 +13,34 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class HolidayAdminController implements ControllerProviderInterface
+class HolidayController implements ControllerProviderInterface
 {
     public function connect(Application $app)
     {
         $controller_collection = $app['controllers_factory'];
-        $controller_collection->get('/', [$this, 'index']);
-        $controller_collection->get('/list', [$this, 'getList']);
+
+        $controller_collection->get('/', [$this, 'get']);
         $controller_collection->get('/uid/{uid}', [$this, 'get']);
         $controller_collection->get('/uid/{uid}/year/{year}', [$this, 'get']);
-        $controller_collection->post('uid/{uid}', [$this, 'add']);
-        $controller_collection->delete('uid/{uid}/id/{id}', [$this, 'del']);
+        $controller_collection->get('/list', [$this, 'getList']);
+        $controller_collection->post('/uid/{uid}', [$this, 'post']);
+        $controller_collection->delete('/uid/{uid}/id/{id}', [$this, 'delete']);
+
+        $controller_collection->before(function () {
+            if (!UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
+                return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
+            }
+        });
 
         return $controller_collection;
-    }
-
-    public function index(Request $request, Application $app)
-    {
-        if (!UserPolicy::isHolidayEditable(UserSession::getSelfDto())) {
-            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
-        }
-
-        return $app['twig']->render('holidays/admin.twig', []);
     }
 
     public function get(Request $request, Application $app)
     {
         $self = UserSession::getSelfDto();
-        if (!UserPolicy::isHolidayEditable($self)) {
-            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
+
+        if (!in_array('application/json', $request->getAcceptableContentTypes())) {
+            return $app['twig']->render('admin/holidays/index.twig');
         }
 
         $uid = $request->get('uid');
@@ -55,11 +55,6 @@ class HolidayAdminController implements ControllerProviderInterface
 
     public function getList(Request $request, Application $app)
     {
-        $self = UserSession::getSelfDto();
-        if (!UserPolicy::isHolidayEditable($self)) {
-            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
-        }
-
         $userList = UserDtoFactory::createAvailableUserDtos();
         $managerList = UserDtoFactory::createManagerUserDtos();
 
@@ -69,12 +64,9 @@ class HolidayAdminController implements ControllerProviderInterface
         ], Response::HTTP_OK);
     }
 
-    public function add(Request $request)
+    public function post(Request $request)
     {
         $self = UserSession::getSelfDto();
-        if (!UserPolicy::isHolidayEditable($self)) {
-            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
-        }
 
         $data = json_decode($request->getContent(), true);
         $uid = $data['uid'];
@@ -97,13 +89,8 @@ class HolidayAdminController implements ControllerProviderInterface
         return JsonResponse::create($new, Response::HTTP_CREATED);
     }
 
-    public function del(Request $request)
+    public function delete(Request $request)
     {
-        $self = UserSession::getSelfDto();
-        if (!UserPolicy::isHolidayEditable($self)) {
-            return Response::create('unauthorized', Response::HTTP_UNAUTHORIZED);
-        }
-
         $id = $request->get('id');
         $flextime = HolidayAdjustModel::find($id);
         if ($flextime) {
