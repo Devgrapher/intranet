@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Button, Modal } from 'react-bootstrap';
 import DHtmlScheduler from './DHtmlScheduler';
 
-class Scheduler extends React.Component {
+class RoomSchedule extends React.Component {
   constructor() {
     super();
 
@@ -84,4 +84,4 @@ class Scheduler extends React.Component {
   }
 }
 
-export default Scheduler;
+export default RoomSchedule;

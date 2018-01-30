@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RoomConfig from './RoomConfig';
+import Room from '../components/RoomSchedule';
 
 ReactDOM.render(
-  <RoomConfig />,
+  <Room />,
   document.getElementById('content'),
 );

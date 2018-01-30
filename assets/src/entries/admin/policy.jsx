@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HolidayTeam from './HolidayTeam';
+import Policy from '../../components/Policy';
 
 ReactDOM.render(
-  <HolidayTeam />,
+  <Policy />,
   document.getElementById('content'),
 );

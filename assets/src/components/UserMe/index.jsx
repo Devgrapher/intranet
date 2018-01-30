@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import cn from 'classnames';
+import * as api from '../../api/users';
 
 class Me extends React.Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class Me extends React.Component {
   }
 
   async componentDidMount() {
-    this.setState({ info: await this.props.api.getMe() });
+    this.setState({ info: await api.getMe() });
   }
 
   async onDropImage(files) {
@@ -33,7 +33,7 @@ class Me extends React.Component {
         return;
       }
 
-      const imageUrl = await this.props.api.updateImage(this.state.info.uid, file);
+      const imageUrl = await api.updateImage(this.state.info.uid, file);
       alert('업로드 완료');
       this.updateInfo('image', imageUrl);
     } catch (err) {
@@ -87,7 +87,7 @@ class Me extends React.Component {
     try {
       this.setSaving(key, true);
       const { info, inputValues } = this.state;
-      const result = await this.props.api.updateUser(info.uid, key, inputValues[key]);
+      const result = await api.updateUser(info.uid, key, inputValues[key]);
       this.updateInfo(key, result);
       this.setEditMode(key, false);
     } catch (err) {
@@ -272,9 +272,5 @@ class Me extends React.Component {
     );
   }
 }
-
-Me.propTypes = {
-  api: PropTypes.objectOf(PropTypes.func).isRequired,
-};
 
 export default Me;

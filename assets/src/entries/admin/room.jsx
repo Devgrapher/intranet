@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Me from './Me';
-import * as api from '../../api/users';
+import Room from '../../components/RoomConfig';
 
 ReactDOM.render(
-  <Me api={api} />,
+  <Room />,
   document.getElementById('content'),
 );

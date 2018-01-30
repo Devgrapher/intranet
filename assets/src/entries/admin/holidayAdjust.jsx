@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import EventGroupConfig from './EventGroupConfig';
+import HolidayAdjust from '../../components/HolidayAdjust';
 
 ReactDOM.render(
-  <EventGroupConfig />,
+  <HolidayAdjust />,
   document.getElementById('content'),
 );

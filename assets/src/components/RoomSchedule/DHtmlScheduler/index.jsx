@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import { getSections, addEvent, updateEvent, deleteEvent } from '../../api/rooms';
-import { LOCALE, CONFIG } from './const';
-import '../../../lib/dhtmlxScheduler/dhtmlxscheduler';
-import '../../../lib/dhtmlxScheduler/ext/dhtmlxscheduler_limit';
-import '../../../lib/dhtmlxScheduler/ext/dhtmlxscheduler_units';
-import '../../../lib/dhtmlxScheduler/dhtmlxscheduler.css';
-import '../../../lib/dhtmlxScheduler/dhtmlxscheduler_flat.css';
-import '../../../css/scheduler.css';
+import { getSections, addEvent, updateEvent, deleteEvent } from '../../../api/rooms';
+import { LOCALE, CONFIG } from '../const';
+import '../../../../lib/dhtmlxScheduler/dhtmlxscheduler';
+import '../../../../lib/dhtmlxScheduler/ext/dhtmlxscheduler_limit';
+import '../../../../lib/dhtmlxScheduler/ext/dhtmlxscheduler_units';
+import '../../../../lib/dhtmlxScheduler/dhtmlxscheduler.css';
+import '../../../../lib/dhtmlxScheduler/dhtmlxscheduler_flat.css';
+import './style.less';
 
 class DHtmlScheduler extends React.Component {
   constructor() {

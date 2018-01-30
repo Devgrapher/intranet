@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Scheduler from './Scheduler';
+import UserMe from '../components/UserMe';
 
 ReactDOM.render(
-  <Scheduler />,
+  <UserMe />,
   document.getElementById('content'),
 );

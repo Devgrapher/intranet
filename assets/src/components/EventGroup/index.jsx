@@ -5,7 +5,7 @@ import { getEventGroups, addEventGroup, updateEventGroup, deleteEventGroup } fro
 import { getSections } from '../../api/rooms';
 import { getUsers } from '../../api/users';
 import EventGroupEditModal from './EventGroupEditModal';
-import '../../../css/eventGroup.css';
+import './style.less';
 
 const DAY_MAP = [
   { name: '일', style: 'label-default' },
@@ -17,7 +17,7 @@ const DAY_MAP = [
   { name: '토', style: 'label-default' },
 ];
 
-class EventGroupConfig extends React.Component {
+class EventGroup extends React.Component {
   constructor() {
     super();
 
@@ -300,4 +300,4 @@ class EventGroupConfig extends React.Component {
   }
 }
 
-export default EventGroupConfig;
+export default EventGroup;
