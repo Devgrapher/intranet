@@ -15,7 +15,7 @@ $app->before(function (Request $request) {
 $app->before(function (Request $request) {
     if ($request->getContentType() === 'json') {
         $data = json_decode($request->getContent(), true);
-        $request->request->replace(is_array($data) ? $data : array());
+        $request->request->replace(is_array($data) ? $data : []);
     }
 });
 

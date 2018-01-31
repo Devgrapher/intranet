@@ -8,8 +8,8 @@ use Intra\Service\Auth\ExceptTaAuth;
 use Intra\Service\Auth\OnlyHolidayEditable;
 use Intra\Service\Auth\OnlyPolicyRecipientEditable;
 use Intra\Service\Auth\OnlyPressManager;
-use Intra\Service\Auth\OnlyUserManager;
 use Intra\Service\Auth\OnlyTeamManager;
+use Intra\Service\Auth\OnlyUserManager;
 use Intra\Service\Auth\PublicAuth;
 use Intra\Service\Support\SupportPolicy;
 use Intra\Service\User\UserSession;
@@ -38,7 +38,7 @@ class MenuService
                         new Link('월급날 (급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     ]),
                     new LinkList('근태관리', [
-                        new Link('팀 휴가현황', '/holidays/?team='.UserSession::getSelfDto()->team, new OnlyTeamManager()),
+                        new Link('팀 휴가현황', '/holidays/?team=' . UserSession::getSelfDto()->team, new OnlyTeamManager()),
                         new Link('휴가신청', '/holidays/', new ExceptStudioD()),
                         new Link('얼리파마', '/flextime/', new ExceptOuter()),
                     ]),
