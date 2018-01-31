@@ -8,14 +8,14 @@ const TARGET = process.env.npm_lifecycle_event;
 
 const common = {
   entry: {
-    policy: ['babel-polyfill', './js/components/Policy'],
-    recipient: ['babel-polyfill', './js/components/Recipient'],
-    room: ['babel-polyfill', './js/components/Room'],
-    eventGroup: ['babel-polyfill', './js/components/EventGroup'],
-    scheduler: ['babel-polyfill', './js/components/Scheduler'],
-    holiday_adjust: './js/components/HolidayAdjust',
-    holiday_team: ['babel-polyfill', './js/components/HolidayTeam'],
-    me: ['babel-polyfill', './js/components/Me'],
+    adminEventGroup: ['babel-polyfill', './src/entries/admin/eventGroup'],
+    adminHolidayAdjust: ['babel-polyfill', './src/entries/admin/holidayAdjust'],
+    adminPolicy: ['babel-polyfill', './src/entries/admin/policy'],
+    adminRecipient: ['babel-polyfill', './src/entries/admin/recipient'],
+    adminRoom: ['babel-polyfill', './src/entries/admin/room'],
+    holidayTeam: ['babel-polyfill', './src/entries/holidayTeam'],
+    room: ['babel-polyfill', './src/entries/room'],
+    userMe: ['babel-polyfill', './src/entries/userMe'],
   },
   output: {
     path: path.join(__dirname, '../web/static/dist'),
@@ -29,15 +29,16 @@ const common = {
   module: {
     rules: [
       {
-        test: /\.jsx$/,
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components|lib)/,
         enforce: 'pre',
         use: {
           loader: 'eslint-loader',
         },
       },
       {
-        test: /\.jsx$/,
-        exclude: /(node_modules|bower_components)/,
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components|lib)/,
         use: {
           loader: 'babel-loader',
           query: {
@@ -46,7 +47,7 @@ const common = {
         },
       },
       {
-        test: /\.css|less$/,
+        test: /\.(css|less)$/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader', 'less-loader'],
@@ -65,7 +66,6 @@ const common = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
-      chunks: ['policy', 'recipient', 'room', 'eventGroup', 'scheduler', 'holiday_adjust', 'holiday_team', 'me'],
       minChunk: 2,
     }),
     new ExtractTextPlugin({

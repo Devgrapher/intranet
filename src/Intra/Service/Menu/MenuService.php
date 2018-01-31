@@ -8,8 +8,8 @@ use Intra\Service\Auth\ExceptTaAuth;
 use Intra\Service\Auth\OnlyHolidayEditable;
 use Intra\Service\Auth\OnlyPolicyRecipientEditable;
 use Intra\Service\Auth\OnlyPressManager;
-use Intra\Service\Auth\OnlyUserManager;
 use Intra\Service\Auth\OnlyTeamManager;
+use Intra\Service\Auth\OnlyUserManager;
 use Intra\Service\Auth\PublicAuth;
 use Intra\Service\Support\SupportPolicy;
 use Intra\Service\User\UserSession;
@@ -38,7 +38,7 @@ class MenuService
                         new Link('월급날 (급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     ]),
                     new LinkList('근태관리', [
-                        new Link('팀 휴가현황', '/holidays/?team='.UserSession::getSelfDto()->team, new OnlyTeamManager()),
+                        new Link('팀 휴가현황', '/holidays/?team=' . UserSession::getSelfDto()->team, new OnlyTeamManager()),
                         new Link('휴가신청', '/holidays/', new ExceptStudioD()),
                         new Link('얼리파마', '/flextime/', new ExceptOuter()),
                     ]),
@@ -93,11 +93,11 @@ class MenuService
                 new LinkList('관리자', [
                     new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
                     new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
-                    new Link('직원 목록', '/users/list', new OnlyUserManager()),
-                    new Link('휴가 조정', '/holidayadmin/', new OnlyHolidayEditable()),
+                    new Link('직원 목록', '/admin/user', new OnlyUserManager()),
+                    new Link('휴가 조정', '/admin/holiday', new OnlyHolidayEditable()),
                     new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
                     new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
-                    new Link('보도자료 관리', '/press/', new OnlyPressManager()),
+                    new Link('보도자료 관리', '/admin/press', new OnlyPressManager()),
                 ], 'wrench'),
                 new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),

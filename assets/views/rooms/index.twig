@@ -2,7 +2,7 @@
 
 {% block head %}
   {{ parent() }}
-  <link rel="stylesheet" href="{{ asset('scheduler.css') }}">
+  <link rel="stylesheet" href="{{ asset('room.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -11,5 +11,5 @@
     window.userName = '{{ name }}';
   </script>
   <script type="text/javascript" src="{{ asset('common.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('scheduler.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('room.js') }}"></script>
 {% endblock %}

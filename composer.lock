@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fb90509856b24f127b61d13529207b5a",
-    "content-hash": "54c435f35f01a7a5920e421169c8f9c9",
+    "content-hash": "a48498108af11d919d6d01a033ace537",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -85,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-06-30 19:39:55"
+            "time": "2017-06-30T19:39:55+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -153,7 +152,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2016-12-30 15:59:45"
+            "time": "2016-12-30T15:59:45+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -223,7 +222,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2016-10-29 11:16:17"
+            "time": "2016-10-29T11:16:17+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -290,7 +289,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2017-01-03 10:49:41"
+            "time": "2017-01-03T10:49:41+00:00"
         },
         {
             "name": "doctrine/common",
@@ -363,7 +362,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2017-01-13 14:02:13"
+            "time": "2017-01-13T14:02:13+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -434,7 +433,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-01-23 23:17:10"
+            "time": "2017-01-23T23:17:10+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -501,7 +500,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06 14:35:42"
+            "time": "2015-11-06T14:35:42+00:00"
         },
         {
             "name": "doctrine/lexer",
@@ -555,7 +554,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09 13:34:57"
+            "time": "2014-09-09T13:34:57+00:00"
         },
         {
             "name": "gnf/gnfcache",
@@ -588,7 +587,7 @@
                 }
             ],
             "description": "A lightweight cache library",
-            "time": "2015-02-24 07:13:30"
+            "time": "2015-02-24T07:13:30+00:00"
         },
         {
             "name": "gnf/namespace-router",
@@ -625,7 +624,55 @@
                 }
             ],
             "description": "Silex Routing Extension Driven By Namespace",
-            "time": "2016-11-21 08:38:31"
+            "time": "2016-11-21T08:38:31+00:00"
+        },
+        {
+            "name": "graze/silex-trailing-slash-handler",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/graze/silex-trailing-slash-handler.git",
+                "reference": "5c6d7cde35ff7ada6a455288b2a7b14716498163"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/graze/silex-trailing-slash-handler/zipball/5c6d7cde35ff7ada6a455288b2a7b14716498163",
+                "reference": "5c6d7cde35ff7ada6a455288b2a7b14716498163",
+                "shasum": ""
+            },
+            "require": {
+                "silex/silex": "^2"
+            },
+            "require-dev": {
+                "graze/standards": "^2.0",
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "^5.1.1",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.1",
+                "symfony/debug": "^2.8|^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Graze\\Silex\\ControllerProvider\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Samuel Parkinson",
+                    "email": "sam.james.parkinson@gmail.com"
+                },
+                {
+                    "name": "Graze Developers",
+                    "email": "developers@graze.com"
+                }
+            ],
+            "description": "Handle requests missing a trailing slash in Silex by appending a slash and issuing an internal sub-request.",
+            "time": "2017-09-26T09:46:38+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -677,7 +724,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15 19:28:39"
+            "time": "2016-07-15T19:28:39+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -728,7 +775,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20 10:07:11"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -793,7 +840,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -844,7 +891,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-20 03:37:09"
+            "time": "2015-05-20T03:37:09+00:00"
         },
         {
             "name": "guzzlehttp/streams",
@@ -894,7 +941,7 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-10-12 19:18:40"
+            "time": "2014-10-12T19:18:40+00:00"
         },
         {
             "name": "illuminate/container",
@@ -937,7 +984,7 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-21 16:09:27"
+            "time": "2017-01-21T16:09:27+00:00"
         },
         {
             "name": "illuminate/contracts",
@@ -979,7 +1026,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-18 20:23:54"
+            "time": "2017-01-18T20:23:54+00:00"
         },
         {
             "name": "illuminate/database",
@@ -1039,7 +1086,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2017-01-23 23:03:28"
+            "time": "2017-01-23T23:03:28+00:00"
         },
         {
             "name": "illuminate/pagination",
@@ -1083,7 +1130,7 @@
             ],
             "description": "The Illuminate Pagination package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-15 01:21:06"
+            "time": "2017-01-15T01:21:06+00:00"
         },
         {
             "name": "illuminate/support",
@@ -1140,7 +1187,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-24 13:12:44"
+            "time": "2017-01-24T13:12:44+00:00"
         },
         {
             "name": "mailgun/mailgun-php",
@@ -1181,7 +1228,7 @@
                 }
             ],
             "description": "The Mailgun SDK provides methods for all API functions.",
-            "time": "2015-05-06 17:52:51"
+            "time": "2015-05-06T17:52:51+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -1236,7 +1283,7 @@
                 "json",
                 "jsonpath"
             ],
-            "time": "2016-12-03 22:08:25"
+            "time": "2016-12-03T22:08:25+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -1289,7 +1336,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2017-01-16 07:55:07"
+            "time": "2017-01-16T07:55:07+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -1337,7 +1384,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-11-07 23:38:38"
+            "time": "2016-11-07T23:38:38+00:00"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -1394,7 +1441,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2015-05-01 07:00:55"
+            "time": "2015-05-01T07:00:55+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -1440,7 +1487,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11 15:10:35"
+            "time": "2015-09-11T15:10:35+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1490,7 +1537,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "psr/log",
@@ -1537,7 +1584,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10 12:19:37"
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "react/promise",
@@ -1580,19 +1627,19 @@
                 "promise",
                 "promises"
             ],
-            "time": "2016-12-22 14:09:01"
+            "time": "2016-12-22T14:09:01+00:00"
         },
         {
             "name": "ridibooks/platform-common",
             "version": "v0.1.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ridibooks/platform-common.git",
+                "url": "https://github.com/ridi/platform-common.git",
                 "reference": "a1f9df7de84a7ce19c79d5caec5c061f84619c07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ridibooks/platform-common/zipball/a1f9df7de84a7ce19c79d5caec5c061f84619c07",
+                "url": "https://api.github.com/repos/ridi/platform-common/zipball/a1f9df7de84a7ce19c79d5caec5c061f84619c07",
                 "reference": "a1f9df7de84a7ce19c79d5caec5c061f84619c07",
                 "shasum": ""
             },
@@ -1625,19 +1672,19 @@
                 }
             ],
             "description": "Ridibooks Platform's Common PHP Library",
-            "time": "2017-01-12 15:08:08"
+            "time": "2017-01-12T15:08:08+00:00"
         },
         {
             "name": "ridibooks/platform-gnfdb",
             "version": "v0.1.10",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ridibooks/platform-gnfdb.git",
+                "url": "https://github.com/ridi/platform-gnfdb.git",
                 "reference": "02fae5c7b3ec5100358811f8d139079d0c18e7ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ridibooks/platform-gnfdb/zipball/02fae5c7b3ec5100358811f8d139079d0c18e7ea",
+                "url": "https://api.github.com/repos/ridi/platform-gnfdb/zipball/02fae5c7b3ec5100358811f8d139079d0c18e7ea",
                 "reference": "02fae5c7b3ec5100358811f8d139079d0c18e7ea",
                 "shasum": ""
             },
@@ -1667,7 +1714,7 @@
                 }
             ],
             "description": "A Database library",
-            "time": "2016-11-16 02:39:24"
+            "time": "2016-11-16T02:39:24+00:00"
         },
         {
             "name": "sentry/sentry",
@@ -1728,7 +1775,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2016-12-14 21:57:27"
+            "time": "2016-12-14T21:57:27+00:00"
         },
         {
             "name": "silex/silex",
@@ -1813,7 +1860,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2016-11-06 18:09:06"
+            "time": "2016-11-06T18:09:06+00:00"
         },
         {
             "name": "symfony/asset",
@@ -1869,7 +1916,7 @@
             ],
             "description": "Symfony Asset Component",
             "homepage": "https://symfony.com",
-            "time": "2017-10-24 14:05:06"
+            "time": "2017-10-24T14:05:06+00:00"
         },
         {
             "name": "symfony/debug",
@@ -1926,7 +1973,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:32:22"
+            "time": "2017-01-02T20:32:22+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1986,7 +2033,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:32:22"
+            "time": "2017-01-02T20:32:22+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -2039,7 +2086,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-08 20:47:33"
+            "time": "2017-01-08T20:47:33+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -2121,7 +2168,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-12 21:36:33"
+            "time": "2017-01-12T21:36:33+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2180,7 +2227,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-11-14 01:06:16"
+            "time": "2016-11-14T01:06:16+00:00"
         },
         {
             "name": "symfony/routing",
@@ -2255,7 +2302,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-01-02 20:32:22"
+            "time": "2017-01-02T20:32:22+00:00"
         },
         {
             "name": "symfony/translation",
@@ -2319,7 +2366,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:32:22"
+            "time": "2017-01-02T20:32:22+00:00"
         },
         {
             "name": "twig/twig",
@@ -2385,7 +2432,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2017-09-27 18:10:31"
+            "time": "2017-09-27T18:10:31+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -2435,7 +2482,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-09-01 10:05:43"
+            "time": "2016-09-01T10:05:43+00:00"
         }
     ],
     "packages-dev": [
@@ -2490,7 +2537,7 @@
             ],
             "description": "Deployment Tool",
             "homepage": "https://deployer.org",
-            "time": "2017-06-23 03:47:09"
+            "time": "2017-06-23T03:47:09+00:00"
         },
         {
             "name": "deployer/phar-update",
@@ -2546,7 +2593,7 @@
                 "phar",
                 "update"
             ],
-            "time": "2017-01-27 06:03:35"
+            "time": "2017-01-27T06:03:35+00:00"
         },
         {
             "name": "deployer/recipes",
@@ -2612,7 +2659,7 @@
                 "recipes",
                 "slack"
             ],
-            "time": "2017-03-27 16:28:47"
+            "time": "2017-03-27T16:28:47+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -2666,7 +2713,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14 21:17:01"
+            "time": "2015-06-14T21:17:01+00:00"
         },
         {
             "name": "fzaninotto/faker",
@@ -2716,7 +2763,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2017-08-15 16:48:10"
+            "time": "2017-08-15T16:48:10+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2758,7 +2805,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2017-01-26 22:05:40"
+            "time": "2017-01-26T22:05:40+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2812,7 +2859,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27 11:43:31"
+            "time": "2015-12-27T11:43:31+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -2857,7 +2904,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30 07:12:33"
+            "time": "2016-09-30T07:12:33+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -2904,7 +2951,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-11-25 06:54:22"
+            "time": "2016-11-25T06:54:22+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -2967,7 +3014,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-11-21 14:58:47"
+            "time": "2016-11-21T14:58:47+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3030,7 +3077,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-01-20 15:06:43"
+            "time": "2017-01-20T15:06:43+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -3077,7 +3124,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03 07:40:28"
+            "time": "2016-10-03T07:40:28+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -3118,7 +3165,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -3162,7 +3209,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12 18:03:57"
+            "time": "2016-05-12T18:03:57+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -3211,7 +3258,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2016-11-15 14:06:22"
+            "time": "2016-11-15T14:06:22+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -3293,7 +3340,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-01-28 06:14:33"
+            "time": "2017-01-28T06:14:33+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3352,7 +3399,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-12-08 20:27:08"
+            "time": "2016-12-08T20:27:08+00:00"
         },
         {
             "name": "robmorgan/phinx",
@@ -3418,7 +3465,7 @@
                 "migrations",
                 "phinx"
             ],
-            "time": "2017-01-23 08:53:20"
+            "time": "2017-01-23T08:53:20+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -3463,7 +3510,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2016-02-13 06:45:14"
+            "time": "2016-02-13T06:45:14+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -3527,7 +3574,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29 09:50:25"
+            "time": "2017-01-29T09:50:25+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -3579,7 +3626,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08 07:14:41"
+            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -3629,7 +3676,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-11-26 07:53:53"
+            "time": "2016-11-26T07:53:53+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -3696,7 +3743,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-11-19 08:54:04"
+            "time": "2016-11-19T08:54:04+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -3747,7 +3794,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12 03:26:01"
+            "time": "2015-10-12T03:26:01+00:00"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -3793,7 +3840,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2016-11-19 07:35:10"
+            "time": "2016-11-19T07:35:10+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -3846,7 +3893,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-11-19 07:33:16"
+            "time": "2016-11-19T07:33:16+00:00"
         },
         {
             "name": "sebastian/resource-operations",
@@ -3888,7 +3935,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2015-07-28 20:34:47"
+            "time": "2015-07-28T20:34:47+00:00"
         },
         {
             "name": "sebastian/version",
@@ -3931,7 +3978,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-10-03 07:35:21"
+            "time": "2016-10-03T07:35:21+00:00"
         },
         {
             "name": "symfony/config",
@@ -3987,7 +4034,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-02 20:32:22"
+            "time": "2017-01-02T20:32:22+00:00"
         },
         {
             "name": "symfony/console",
@@ -4050,7 +4097,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-08 20:47:33"
+            "time": "2017-01-08T20:47:33+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -4099,7 +4146,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-08 20:47:33"
+            "time": "2017-01-08T20:47:33+00:00"
         },
         {
             "name": "symfony/finder",
@@ -4148,7 +4195,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-01 21:01:25"
+            "time": "2017-06-01T21:01:25+00:00"
         },
         {
             "name": "symfony/process",
@@ -4197,7 +4244,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-22 12:32:03"
+            "time": "2017-05-22T12:32:03+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -4252,7 +4299,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-03 13:51:32"
+            "time": "2017-01-03T13:51:32+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -4302,7 +4349,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23 20:04:58"
+            "time": "2016-11-23T20:04:58+00:00"
         }
     ],
     "aliases": [],

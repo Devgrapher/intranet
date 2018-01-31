@@ -151,7 +151,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('media', 'string', ['length' => 255])
             ->addColumn('title', 'string', ['length' => 255])
             ->addColumn('link_url', 'string', ['length' => 255])
-            ->addColumn('node', 'string', ['length' => 255])
+            ->addColumn('note', 'string', ['length' => 255])
             ->create();
     }
 

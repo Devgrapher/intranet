@@ -165,7 +165,7 @@ class SupportPolicy
 3. 기타 장애문의
   -사무환경 및 사무집기 장애 문의';
 
-            //'경조 지원'
+        //'경조 지원'
         } elseif ($target == self::TYPE_FAMILY_EVENT) {
             return
 '1. 공통
@@ -183,7 +183,7 @@ class SupportPolicy
     C. 비상연락망 : 본인 -> 팀장 -> 인사팀 -> 대표이사
   -경조휴가일 계산 : 휴일포함 (경조사 발생일 기준, 결혼에 한해 평일 기준 5일 적용)';
 
-            //'명함 신청'
+        //'명함 신청'
         } elseif ($target == self::TYPE_BUSINESS_CARD) {
             return
 '1. 공통
@@ -199,13 +199,13 @@ class SupportPolicy
   -직급(한글/영문) : 필요한 경우 기재
   -PHONE(내선) : 내선번호 있는 경우 기재';
 
-            //'구매 요청'
+        //'구매 요청'
         } elseif ($target == self::TYPE_DEPOT) {
             return
 '1. 업무 상 필요한 자산 및 비품 구매 요청
 2. 수령희망일은 배송기간 감안하여 설정';
 
-            //'상품권 구매'
+        //'상품권 구매'
         } elseif ($target == self::TYPE_GIFT_CARD_PURCHASE) {
             return
 '<b>입금계좌 : 기업은행 477-016864-01-057 리디 주식회사</b>
