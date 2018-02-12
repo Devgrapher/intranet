@@ -51,6 +51,7 @@ class HolidaysController implements ControllerProviderInterface
         if (!$uid) {
             $uid = $self->uid;
         }
+
         return $this->getByUser($request, $app, $uid, $year);
     }
 

@@ -24,7 +24,7 @@ class MenuService
         $right_menu_list = [];
 
         if (UserSession::isLogined()) {
-            if (true) {
+            if ($_ENV['INTRA_DOMAIN'] == 'ridi.com') {
                 $left_menu_list = [
                     new Link('직원찾기', '/users/', new ExceptStudioD()),
                     new Link('RIDI PUBLIC', self::RIDI_GUIDE_URL, null, '_blank'),
