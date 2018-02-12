@@ -29,11 +29,10 @@ class MenuService
                     new Link('직원찾기', '/users/', new ExceptStudioD()),
                     new Link('RIDI PUBLIC', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
-                    new Link('회의실', '/rooms/', new ExceptTaAuth()),
+                    new Link('회의실', '/rooms/', new ExceptTaAuth(), null, 'time'),
                     new LinkList('업무용 서비스', [
                         new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
                         new Link('Confluence (위키)', 'https://ridicorp.atlassian.net', null, '_blank'),
-                        new Link('모두싸인 (전자계약)', 'https://modusign.co.kr', null, '_blank'),
                         new Link('비즈플레이 (개인영수관리)', 'https://www.bizplay.co.kr', null, '_blank'),
                         new Link('월급날 (급여관리)', 'http://htms.himgt.net', new ExceptOuter(), '_blank'),
                     ]),
@@ -55,8 +54,8 @@ class MenuService
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_USB), '/support/' . SupportPolicy::TYPE_USB, new ExceptOuter()),
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_BUSSINESSTRIP), '/support/' . SupportPolicy::TYPE_BUSSINESSTRIP, new ExceptOuter(), '_blank'),
                     ]),
-                    new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3', 'story.op2'])),
-                    new Link('비용정산', '/receipts/', new ExceptOuter()),
+                    new Link('결제요청', '/payments/', (new ExceptTaAuth())->accept(['hr.ta', 'device.ta3', 'story.op2']), null),
+                    new Link('비용정산', '/receipts/', new ExceptOuter(), null, 'piggy-bank'),
                     new Link('조직도', '/organization/chart', new ExceptOuter(), '_blank'),
                 ];
             } else {

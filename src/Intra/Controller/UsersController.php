@@ -170,6 +170,7 @@ class UsersController implements ControllerProviderInterface
                 'image/jpg'
             );
             UserEditService::updateInfo($uid, 'image', $new_file['location']);
+
             return JsonResponse::create($service->getLastFileLocation($uid));
         } catch (\Exception $e) {
             return new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
