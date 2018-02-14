@@ -53,6 +53,7 @@ $app->mount('/admin', function (ControllerCollection $admin) use ($app) {
     $admin->mount('/room', (new Intra\Controller\Admin\RoomController())->connect($app));
     $admin->mount('/event_group', (new Intra\Controller\Admin\EventGroupController())->connect($app));
     $admin->mount('/press', (new Intra\Controller\Admin\PressController())->connect($app));
+    $admin->mount('/payment', (new Intra\Controller\Admin\PaymentController())->connect($app));
 });
 
 $trailingSlashControllerProvider = new TrailingSlashControllerProvider();

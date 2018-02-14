@@ -6,6 +6,7 @@ use Intra\Service\Auth\ExceptOuter;
 use Intra\Service\Auth\ExceptStudioD;
 use Intra\Service\Auth\ExceptTaAuth;
 use Intra\Service\Auth\OnlyHolidayEditable;
+use Intra\Service\Auth\OnlyPaymentAdmin;
 use Intra\Service\Auth\OnlyPolicyRecipientEditable;
 use Intra\Service\Auth\OnlyPressManager;
 use Intra\Service\Auth\OnlyTeamManager;
@@ -97,6 +98,7 @@ class MenuService
                     new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
                     new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
                     new Link('보도자료 관리', '/admin/press', new OnlyPressManager()),
+                    new Link('결제', '/admin/payment', new OnlyPaymentAdmin()),
                 ], 'wrench'),
                 new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),
