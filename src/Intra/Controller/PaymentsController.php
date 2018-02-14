@@ -27,6 +27,7 @@ class PaymentsController implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controller_collection = $app['controllers_factory'];
+
         $controller_collection->get('/', [$this, 'index']);
         $controller_collection->get('/uid/{uid}/month/{month}', [$this, 'index']);
         $controller_collection->get('/uid/{uid}', [$this, 'index']);
@@ -35,10 +36,13 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->get('/today/confirmed', [$this, 'index'])->value('type', 'todayConfirmed');
         $controller_collection->get('/today/unconfirmed', [$this, 'index'])->value('type', 'todayUnconfirmed');
         $controller_collection->get('/month', [$this, 'index'])->value('type', 'month');
+
         $controller_collection->post('/uid/{uid}', [$this, 'add']);
-        $controller_collection->match('/paymentid/{paymentid}', [$this, 'edit'])->method('PUT|POST');
+        $controller_collection->match('/paymentid/{paymentid}', [$this, 'edit'])->method('PUT|PATCH|POST');
         $controller_collection->delete('/paymentid/{paymentid}', [$this, 'del']);
+
         $controller_collection->get('/const/{key}', [$this, 'getConst']);
+
         $controller_collection->get('/download/{month}', [$this, 'download']);
         $controller_collection->post('/downloadActiveCategory', [$this, 'downloadActiveCategory']);
         $controller_collection->post('/downloadActiveMonth', [$this, 'downloadActiveMonth']);
@@ -47,9 +51,11 @@ class PaymentsController implements ControllerProviderInterface
         $controller_collection->post('/downloadTodayBankTransfer', [$this, 'downloadTodayBankTransfer']);
         $controller_collection->get('/downloadRemain/{month}', [$this, 'downloadRemain']);
         $controller_collection->post('/downloadTaxDate', [$this, 'downloadTaxDate']);
+
         $controller_collection->get('/file/{fileid}', [$this, 'downloadFile']);
         $controller_collection->delete('/file/{fileid}', [$this, 'deleteFile']);
         $controller_collection->post('/file_upload', [$this, 'uploadFile']);
+
         $controller_collection->post('/get_pay_date_by_str', [$this, 'getPayDateByStr']);
 
         return $controller_collection;
@@ -70,15 +76,27 @@ class PaymentsController implements ControllerProviderInterface
             }
             $type = ($request->get('type'));
             $month = UserPaymentRequestFilter::parseMonth($month);
-            $param = $request->get('param');
+            $params = $request->query->all();
 
             $user_dto_object = new UserDtoHandler(UserDtoFactory::createByUid($uid));
             $target_user_dto = $user_dto_object->exportDto();
 
             $payment_service = new UserPaymentService($target_user_dto);
-            $twig_param = $payment_service->index($month, $type, $param);
+            $data = $payment_service->index($month, $type, $params);
 
-            return $app['twig']->render('payments/index.twig', $twig_param);
+            if (in_array('application/json', $request->getAcceptableContentTypes())) {
+                return JsonResponse::create($data);
+            }
+
+            if (in_array('text/csv', $request->getAcceptableContentTypes())) {
+                $payment_stat_service = new UserPaymentStatService();
+                if (isset($params['bankTransferOnly']) && $params['bankTransferOnly']) {
+                    return $payment_stat_service->getBankTransferCsvRespose($data['payments']);
+                }
+                return $payment_stat_service->getCsvRespose($data['payments']);
+            }
+
+            return $app['twig']->render('payments/index.twig', $data);
         } catch (\Exception $e) {
             return Response::create($e->getMessage(), Response::HTTP_OK);
         }

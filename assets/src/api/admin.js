@@ -88,11 +88,14 @@ const deleteEventGroup = async (eventGroupID) => {
 export {
   getPolicy,
   updatePolicy,
+
   getRecipient,
   updateRecipient,
+
   addRoomSection,
   updateRoomSection,
   deleteRoomSection,
+
   getEventGroups,
   addEventGroup,
   updateEventGroup,

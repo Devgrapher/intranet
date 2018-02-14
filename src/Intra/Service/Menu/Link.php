@@ -13,6 +13,8 @@ class Link implements LinkInterface
     public $url;
     public $target;
     public $glyphicon;
+    public $label;
+    public $label_type;
 
     /**
      * Link constructor.
@@ -22,8 +24,10 @@ class Link implements LinkInterface
      * @param AuthMultiplexer      $auth_checker
      * @param null                 $target
      * @param null                 $glyphicon
+     * @param String               $label
+     * @param String               $label_type
      */
-    public function __construct($title, $url, $auth_checker = null, $target = null, $glyphicon = null)
+    public function __construct($title, $url, $auth_checker = null, $target = null, $glyphicon = null, $label = null, $label_type = 'default')
     {
         /*
          * @var AuthMultiplexer
@@ -37,6 +41,8 @@ class Link implements LinkInterface
         $this->is_visible = $auth_checker->multiplexingAuth(UserSession::getSelfDto());
         $this->target = $target;
         $this->glyphicon = $glyphicon;
+        $this->label = $label;
+        $this->label_type = $label_type;
     }
 
     public function getHtml(): string
@@ -50,6 +56,9 @@ class Link implements LinkInterface
             $html .= '<span class="glyphicon glyphicon-' . $this->glyphicon . '"></span> ';
         }
         $html .= $this->title;
+        if (!empty($this->label)) {
+            $html .= ' <span class="label label-' . $this->label_type . '">' . $this->label . '</span>';
+        }
         $html .= '</a></li>';
 
         return $html;

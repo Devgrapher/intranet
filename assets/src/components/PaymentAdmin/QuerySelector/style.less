@@ -1,0 +1,44 @@
+.query-selector {
+  .btn-group {
+    & > .dropdown-menu {
+      min-width: 0;
+
+      & > li > button {
+        display: block;
+        padding: 3px 20px;
+        clear: both;
+        font-weight: 400;
+        line-height: 1.42857143;
+        color: #333;
+        white-space: nowrap;
+        border: none;
+        width: 100%;
+        text-align: left;
+        background: none;
+
+        &:focus,
+        &:hover {
+          color: #262626;
+          text-decoration: none;
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+
+  .query-selector__container,
+  .query-selector__query-type {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .query-selector__query-type {
+    margin: 0;
+    padding: 0 .25rem;
+
+    & > * {
+      margin: 0 .25rem;
+    }
+  }
+}

@@ -128,7 +128,7 @@ class UserPaymentService
         }
     }
 
-    public function index($month, $type, $param)
+    public function index($month, $type, $params)
     {
         $return = [
             'user' => $this->user,
@@ -161,7 +161,7 @@ class UserPaymentService
 
         if ($type == 'remain') {
             if (UserPolicy::isPaymentAdmin($self)) {
-                $return['title'] = '모든 미결제 항목(관리자)';
+                $return['title'] = '모든 미결제 항목 (관리자)';
                 $payment_dicts = $queued_payment_dicts;
             } else {
                 $return['title'] = '모든 미승인 목록';
@@ -190,8 +190,47 @@ class UserPaymentService
             }
         } elseif ($type == 'month') {
             if (UserPolicy::isPaymentAdmin($self)) {
-                $return['title'] = "귀속월($param)";
-                $payment_dicts = $this->payment_model->payMonth($param);
+                $return['title'] = "귀속월 ($month)";
+                $payment_dicts = $this->payment_model->payMonth($month);
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'monthQueued') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $return['title'] = "귀속월 ($month) (미결제)";
+                $payment_dicts = $this->payment_model->payMonthQueued($month);
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'taxDate') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $return['title'] = "세금 계산서 기간 ($month)";
+                $payment_dicts = $this->payment_model->getAllPaymentsByTaxDate(date('Y-m-1', strtotime($month)));
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'team') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $team = $params['team'];
+                $return['title'] = "귀속부서 ($team)";
+                $payment_dicts = $this->payment_model->getAllPaymentsByActiveTeam($team);
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'category') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $category = $params['category'];
+                $return['title'] = "분류 ($category)";
+                $payment_dicts = $this->payment_model->getAllPaymentsByActiveCategory($category);
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'requestDate') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $beginDate = $params['begin_date'];
+                $endDate = $params['end_date'];
+                $return['title'] = "요청일 ($beginDate ~ $endDate)";
+                $payment_dicts = $this->payment_model->getAllPaymentsByActiveRequestDate($beginDate, $endDate);
             } else {
                 $payment_dicts = [];
             }

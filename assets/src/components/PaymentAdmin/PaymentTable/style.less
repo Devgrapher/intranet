@@ -1,0 +1,347 @@
+.payment-table {
+  @import "variables";
+
+  .btn-group {
+    & > .dropdown-menu {
+      min-width: 0;
+
+      & > li {
+        & > * {
+          display: block;
+          padding: 3px 20px;
+          clear: both;
+          font-weight: 400;
+          line-height: 1.42857143;
+          color: #333;
+          white-space: nowrap;
+          border: none;
+          width: 100%;
+          text-align: left;
+          background: none;
+        }
+
+        &:focus,
+        &:hover {
+          color: #262626;
+          text-decoration: none;
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+
+  th, td {
+    white-space: nowrap;
+    word-break: keep-all;
+
+    small {
+      opacity: .75;
+    }
+
+    div {
+      font-size: inherit;
+    }
+
+    &.request-date {}
+    &.register-name {}
+    &.manager {}
+    &.account-book-registered {}
+
+    &.month {}
+    &.team {}
+    &.team-detail {}
+    &.product {}
+    &.category {}
+    &.desc {}
+    &.file {}
+
+    &.company-name {}
+    &.price {}
+    &.pay-date {}
+
+    &.tax {}
+
+    &.bank {}
+    &.bank-account {}
+    &.bank-account-owner {}
+
+    &.note {}
+
+    &.status {}
+  }
+
+  th {
+    font-size: 1.3rem;
+
+    &.request-date {}
+    &.register-name {}
+    &.manager {
+      small {
+        &:before { content: '('; }
+        &:after { content: ')'; }
+      }
+    }
+    &.account-book-registered {}
+
+    &.month {}
+    &.team {}
+    &.team-detail {}
+    &.product {}
+    &.category {}
+    &.desc {}
+    &.file {}
+
+    &.company-name {}
+    &.price {}
+    &.pay-date {}
+
+    &.tax {}
+
+    &.bank {}
+    &.bank-account {}
+    &.bank-account-owner {}
+
+    &.note {}
+
+    &.status {
+      small {
+        &:before { content: '('; }
+        &:after { content: ')'; }
+      }
+    }
+  }
+
+  td {
+    position: relative;
+
+    .glyphicon {
+      &:only-child {
+        line-height: inherit;
+        top: 0;
+      }
+
+      &.positive {
+        color: @brand-success;
+      }
+
+      &.negative {
+        color: @gray-light;
+      }
+    }
+
+    .label {
+      .glyphicon {
+        color: inherit;
+      }
+    }
+
+    & > .label {
+      display: inline-block;
+      line-height: inherit;
+    }
+
+    &:not(:last-child) {
+      border-right: 1px solid #eee;
+    }
+
+    &.request-date {}
+    &.register-name {}
+    &.manager {
+      .name { margin: 0 .25rem; }
+      .accepted-date {
+        opacity: .8;
+        &:before { content: '('; }
+        &:after { content: ')'; }
+      }
+      > .editor.popover > .popover-content > form .form-group {
+        &.manager_uid {
+          min-width: 15rem;
+        }
+      }
+    }
+    &.account-book-registered {
+      text-align: center;
+      > .editor.popover {
+        min-width: 0;
+      }
+    }
+
+    &.month {}
+    &.team {
+      white-space: normal;
+
+      & > .name {
+        display: inline-block;
+        margin-right: .25rem;
+      }
+
+      & > .sub {
+        display: inline-block;
+        white-space: nowrap;
+
+        .name {
+          margin-right: .25rem;
+        }
+
+        .detail {
+          font-weight: 800;
+        }
+      }
+
+      > .editor.popover > .popover-content > form .form-group {
+        min-width: 25rem;
+      }
+    }
+    &.product {}
+    &.category {
+      white-space: normal;
+      min-width: 12rem;
+
+      .name {
+        margin-right: .5rem;
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+      .description {
+        display: inline-block;
+      }
+
+      > .editor.popover > .popover-content > form .form-group {
+        min-width: 25rem;
+      }
+    }
+    &.desc {
+      white-space: pre-line;
+      word-break: normal;
+      min-width: 20rem;
+      font-size: 1rem;
+    }
+    &.file {
+      input[type='file'] {
+        display: none;
+      }
+
+      .btn {
+        &.upload {
+          visibility: hidden;
+
+          .glyphicon {
+            line-height: inherit;
+            top: 0;
+          }
+        }
+      }
+
+      & > .btn-group:not(:hover):not(.open) > .btn {
+        background-color: transparent;
+        border-color: transparent;
+
+        &.upload {
+          opacity: .75;
+        }
+
+        &.download {
+          color: @brand-primary;
+
+          .caret {
+            visibility: hidden;
+          }
+        }
+      }
+
+      .dropdown-menu > li {
+        &.file {
+          display: flex;
+          flex-flow: row nowrap;
+
+          .name {
+            flex: 1;
+          }
+
+          .btn.remove {
+            visibility: hidden;
+            width: auto;
+            color: @brand-danger;
+            opacity: .25;
+
+            &:hover {
+              opacity: 1;
+            }
+          }
+
+          &:hover {
+            .btn.remove {
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+
+    &.company-name { white-space: normal; min-width: 10rem }
+    &.price {
+      text-align: right;
+      > .value {
+        > .fractional {
+          margin-left: .1rem;
+          &.empty {
+            color: rgba(0, 0, 0, .2);
+          }
+        }
+      }
+    }
+    &.pay-date {}
+
+    &.tax {
+      text-align: center;
+      .tax-date { margin-left: .25rem; }
+    }
+
+    &.bank {}
+    &.bank-account {}
+    &.bank-account-owner {}
+
+    &.note {
+      white-space: pre-line;
+      word-break: normal;
+      min-width: 20rem;
+      font-size: 1rem;
+    }
+
+    &.status {
+      text-align: center;
+      .acceptor-name {
+        margin: 0 .25rem;
+      }
+      .accepted-date {
+        opacity: .8;
+        &:before { content: '('; }
+        &:after { content: ')'; }
+      }
+      > .editor.popover {
+        min-width: 0;
+      }
+    }
+  }
+
+  tr {
+    &.empty {
+      background: none !important;
+
+      td {
+        text-align: center;
+      }
+    }
+
+    &:hover {
+      td {
+        &.file {
+          .btn.upload {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

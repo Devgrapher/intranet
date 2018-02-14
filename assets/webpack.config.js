@@ -8,14 +8,15 @@ const TARGET = process.env.npm_lifecycle_event;
 
 const common = {
   entry: {
-    adminEventGroup: ['babel-polyfill', './src/entries/admin/eventGroup'],
-    adminHolidayAdjust: ['babel-polyfill', './src/entries/admin/holidayAdjust'],
-    adminPolicy: ['babel-polyfill', './src/entries/admin/policy'],
-    adminRecipient: ['babel-polyfill', './src/entries/admin/recipient'],
-    adminRoom: ['babel-polyfill', './src/entries/admin/room'],
-    holidayTeam: ['babel-polyfill', './src/entries/holidayTeam'],
-    room: ['babel-polyfill', './src/entries/room'],
-    userMe: ['babel-polyfill', './src/entries/userMe'],
+    adminEventGroup: './src/entries/admin/eventGroup',
+    adminHolidayAdjust: './src/entries/admin/holidayAdjust',
+    adminPayment: './src/entries/admin/payment',
+    adminPolicy: './src/entries/admin/policy',
+    adminRecipient: './src/entries/admin/recipient',
+    adminRoom: './src/entries/admin/room',
+    holidayTeam: './src/entries/holidayTeam',
+    room: './src/entries/room',
+    userMe: './src/entries/userMe',
   },
   output: {
     path: path.join(__dirname, '../web/static/dist'),
@@ -29,21 +30,20 @@ const common = {
   module: {
     rules: [
       {
+        enforce: 'pre',
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components|lib)/,
-        enforce: 'pre',
-        use: {
-          loader: 'eslint-loader',
+        loader: 'eslint-loader',
+        options: {
+          parser: 'babel-eslint',
         },
       },
       {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components|lib)/,
-        use: {
-          loader: 'babel-loader',
-          query: {
-            presets: ['env', 'react', 'stage-2'],
-          },
+        loader: 'babel-loader',
+        options: {
+          presets: ['babel-preset-react-app'],
         },
       },
       {

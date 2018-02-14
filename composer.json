@@ -8,7 +8,7 @@
     "mailgun/mailgun-php": "^1.7.2",
     "phpoffice/phpexcel": "^1.8",
     "ridibooks/platform-common": "^0.1.0",
-    "ridibooks/platform-gnfdb": "^0.1.0",
+    "ridibooks/platform-gnfdb": "^0.1.11",
     "sentry/sentry": "^1.5",
     "silex/silex": "^2.0",
     "symfony/asset": "^3.3",

@@ -166,6 +166,14 @@ class PaymentModel extends BaseModel
         return ['month' => $pay_month];
     }
 
+    private function getPayMonthQueuedWhere($pay_month)
+    {
+        return [
+            'status' => ["결제 대기중"],
+            'month' => $pay_month,
+        ];
+    }
+
     public function todayQueuedCount()
     {
         $where = $this->getTodayQueuedWhere();
@@ -353,6 +361,20 @@ class PaymentModel extends BaseModel
             'payments.uid' => 'users.uid'
         ];
         $where = $this->getPayMonthWhere($pay_month);
+
+        return $this->db->sqlDicts(
+            'select payments.*, users.name from ? where ? order by `pay_date` asc, paymentid asc',
+            sqlLeftJoin($table),
+            sqlWhere($where)
+        );
+    }
+
+    public function payMonthQueued($pay_month)
+    {
+        $table = [
+            'payments.uid' => 'users.uid'
+        ];
+        $where = $this->getPayMonthQueuedWhere($pay_month);
 
         return $this->db->sqlDicts(
             'select payments.*, users.name from ? where ? order by `pay_date` asc, paymentid asc',
