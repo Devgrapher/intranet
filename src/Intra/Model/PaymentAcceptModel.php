@@ -11,6 +11,17 @@ class PaymentAcceptModel extends BaseModel
         return self::getDb()->sqlDicts('select * from payment_accept where ?', sqlWhere(['paymentid' => $payment_ids]));
     }
 
+    public static function get($uid, $user_type)
+    {
+        return self::getDb()->sqlDicts(
+            'select * from payment_accept where ?',
+            sqlWhere([
+                'uid' => $uid,
+                'user_type' => $user_type,
+            ])
+        );
+    }
+
     public static function insert(PaymentAcceptDto $payment_accept_dto)
     {
         $rows = $payment_accept_dto->exportDatabaseInsert();

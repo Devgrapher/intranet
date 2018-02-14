@@ -124,8 +124,11 @@ class UserPaymentRowInstance
 
     private function accept($user_type, $uid)
     {
-        $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
-        PaymentAcceptModel::insert($payment_accept_dto);
+        $old = PaymentAcceptModel::get($uid, $user_type);
+        if (count($old) === 0) {
+            $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
+            PaymentAcceptModel::insert($payment_accept_dto);
+        }
 
         return 1;
     }

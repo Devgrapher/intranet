@@ -93,6 +93,7 @@ class PaymentsController implements ControllerProviderInterface
                 if (isset($params['bankTransferOnly']) && $params['bankTransferOnly']) {
                     return $payment_stat_service->getBankTransferCsvRespose($data['payments']);
                 }
+
                 return $payment_stat_service->getCsvRespose($data['payments']);
             }
 
