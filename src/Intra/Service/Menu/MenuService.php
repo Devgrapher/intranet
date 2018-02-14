@@ -98,7 +98,7 @@ class MenuService
                     new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
                     new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
                     new Link('보도자료 관리', '/admin/press', new OnlyPressManager()),
-                    new Link('결제', '/admin/payment', new OnlyPaymentAdmin()),
+                    new Link('결제', '/admin/payment', new OnlyPaymentAdmin(), null, null, 'beta', 'primary'),
                 ], 'wrench'),
                 new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
                 new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),

@@ -7,13 +7,17 @@ class LinkList implements LinkInterface
     public $is_visible;
     public $title;
     public $glyphicon;
+    public $label;
+    public $label_type;
     public $link_list;
 
-    public function __construct(string $title, array $link_list, string $glyphicon = null)
+    public function __construct(string $title, array $link_list, string $glyphicon = null, string $label = null, string $label_type = 'default')
     {
         $this->title = $title;
         $this->link_list = $link_list;
         $this->glyphicon = $glyphicon;
+        $this->label = $label;
+        $this->label_type = $label_type;
 
         $this->is_visible = false;
         foreach ($link_list as $link) {
@@ -35,6 +39,9 @@ class LinkList implements LinkInterface
             $html .= '<span class="glyphicon glyphicon-' . $this->glyphicon . '"></span> ';
         }
         $html .= $this->title;
+        if (!empty($this->label)) {
+            $html .= ' <span class="label label-' . $this->label_type . '">' . $this->label . '</span>';
+        }
         $html .= '<span class="caret"></span></a>';
         $html .= '<ul class="dropdown-menu">';
         foreach ($this->link_list as $link) {
