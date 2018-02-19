@@ -11,11 +11,12 @@ class PaymentAcceptModel extends BaseModel
         return self::getDb()->sqlDicts('select * from payment_accept where ?', sqlWhere(['paymentid' => $payment_ids]));
     }
 
-    public static function get($uid, $user_type)
+    public static function get($payment_id, $uid, $user_type)
     {
         return self::getDb()->sqlDicts(
             'select * from payment_accept where ?',
             sqlWhere([
+                'paymentid' => $payment_id,
                 'uid' => $uid,
                 'user_type' => $user_type,
             ])
