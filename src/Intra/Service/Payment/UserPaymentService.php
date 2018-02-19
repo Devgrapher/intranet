@@ -227,10 +227,19 @@ class UserPaymentService
             }
         } elseif ($type == 'requestDate') {
             if (UserPolicy::isPaymentAdmin($self)) {
-                $beginDate = $params['begin_date'];
-                $endDate = $params['end_date'];
-                $return['title'] = "요청일 ($beginDate ~ $endDate)";
-                $payment_dicts = $this->payment_model->getAllPaymentsByActiveRequestDate($beginDate, $endDate);
+                $begin_date = $params['begin_date'];
+                $end_date = $params['end_date'];
+                $return['title'] = "요청일 ($begin_date ~ $end_date)";
+                $payment_dicts = $this->payment_model->getAllPaymentsByActiveRequestDate($begin_date, $end_date);
+            } else {
+                $payment_dicts = [];
+            }
+        } elseif ($type == 'payDate') {
+            if (UserPolicy::isPaymentAdmin($self)) {
+                $begin_date = $params['begin_date'];
+                $end_date = $params['end_date'];
+                $return['title'] = "결제일 ($begin_date ~ $end_date)";
+                $payment_dicts = $this->payment_model->getAllPaymentsByPayDate($begin_date, $end_date);
             } else {
                 $payment_dicts = [];
             }

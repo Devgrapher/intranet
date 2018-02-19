@@ -460,7 +460,7 @@ class PaymentModel extends BaseModel
         );
     }
 
-    public function getAllPaymentsByActiveRequestDate($requestDateStart, $requestDateEnd)
+    public function getAllPaymentsByActiveRequestDate($begin_date, $end_date)
     {
         $tables = [
             'payments.uid' => 'users.uid'
@@ -469,8 +469,22 @@ class PaymentModel extends BaseModel
         return $this->db->sqlDicts(
             'select users.name, payments.* from ? where payments.`request_date` >= ? and `request_date` <= ? order by pay_date asc, uid asc',
             sqlLeftJoin($tables),
-            $requestDateStart,
-            $requestDateEnd
+            $begin_date,
+            $end_date
+        );
+    }
+
+    public function getAllPaymentsByPayDate($begin_date, $end_date)
+    {
+        $tables = [
+            'payments.uid' => 'users.uid'
+        ];
+
+        return $this->db->sqlDicts(
+            'select users.name, payments.* from ? where payments.`pay_date` >= ? and `pay_date` <= ? order by pay_date asc, uid asc',
+            sqlLeftJoin($tables),
+            $begin_date,
+            $end_date
         );
     }
 }
