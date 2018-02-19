@@ -1,6 +1,11 @@
 .payment-table {
   @import "variables";
 
+  .small() {
+    opacity: .75;
+    font-size: 85%;
+  }
+
   .btn-group {
     & > .dropdown-menu {
       min-width: 0;
@@ -35,7 +40,7 @@
     word-break: keep-all;
 
     small {
-      opacity: .75;
+      .small;
     }
 
     div {
@@ -170,21 +175,33 @@
     &.team {
       white-space: normal;
 
-      & > .name {
-        display: inline-block;
-        margin-right: .25rem;
-      }
+      > .content {
+        display: flex;
+        flex-flow: column nowrap;
 
-      & > .sub {
-        display: inline-block;
-        white-space: nowrap;
-
-        .name {
-          margin-right: .25rem;
+        > .name {
+          order: 2;
+          white-space: nowrap;
         }
 
-        .detail {
-          font-weight: 800;
+        > .sub {
+          order: 1;
+          white-space: nowrap;
+
+          > .detail {
+            margin-left: .25rem;
+            font-weight: 800;
+          }
+        }
+
+        &.no-sub-name {
+          display: block;
+        }
+
+        &:not(.no-sub-name) {
+          > .name {
+            .small;
+          }
         }
       }
 

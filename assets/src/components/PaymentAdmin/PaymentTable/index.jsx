@@ -217,18 +217,20 @@ export default class PaymentTable extends React.Component {
                 onSubmit={(data) => { onPaymentChange(payment.paymentid, data); }}
               >
                 {(() => {
-                  const name = _.split(payment.team, '/', 1)[0];
-                  const subName = _.trimStart(payment.team, name);
+                  const name = _.trim(_.split(payment.team, '/', 1)[0]);
+                  const subName = _.trim(_.trimStart(payment.team, name), ' /');
                   return (
-                    <React.Fragment>
-                      <span className="name">{_.trim(name)}</span>
+                    <div className={cn('content', { 'no-sub-name': !subName })}>
+                      <span className="name">{name}</span>
                       <span className="sub">
-                        <small className="name">{_.trim(subName, ' /')}</small>
+                        {subName && (
+                          <span className="name">{subName}</span>
+                        )}
                         {payment.team_detail && (
-                          <small className="detail">{payment.team_detail}</small>
+                          <span className="detail">{payment.team_detail}</span>
                         )}
                       </span>
-                    </React.Fragment>
+                    </div>
                   );
                 })()}
               </EditableCell>
