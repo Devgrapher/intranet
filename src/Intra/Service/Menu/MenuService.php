@@ -59,6 +59,20 @@ class MenuService
                     new Link('비용정산', '/receipts/', new ExceptOuter(), null, 'piggy-bank'),
                     new Link('조직도', '/organization/chart', new ExceptOuter(), '_blank'),
                 ];
+                $right_menu_list = [
+                    new LinkList('관리자', [
+                        new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
+                        new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
+                        new Link('직원 목록', '/admin/user', new OnlyUserManager()),
+                        new Link('휴가 조정', '/admin/holiday', new OnlyHolidayEditable()),
+                        new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
+                        new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
+                        new Link('보도자료 관리', '/admin/press', new OnlyPressManager()),
+                        new Link('결제', '/admin/payment', new OnlyPaymentAdmin(), null, null, 'beta', 'primary'),
+                    ], 'wrench'),
+                    new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
+                    new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),
+                ];
             } else {
                 $left_menu_list = [
                     new Link('공지사항', '/posts/notice', new PublicAuth()),
@@ -76,7 +90,6 @@ class MenuService
                         new Link(SupportPolicy::getColumnTitle(SupportPolicy::TYPE_USB), '/support/' . SupportPolicy::TYPE_USB, new PublicAuth(), '_blank'),
                     ]),
                     new Link('비용정산', '/receipts/', new PublicAuth()),
-                    new Link('회의실', '/rooms/', new PublicAuth()),
                     new LinkList('업무용 서비스', [
                         new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
                         new Link('Confluence (위키)', 'https://ridicorp.atlassian.net', null, '_blank'),
@@ -87,22 +100,17 @@ class MenuService
                     new Link('리디 생활 가이드', self::RIDI_GUIDE_URL, null, '_blank'),
                     new Link('급여관리', 'http://htms.himgt.net', new ExceptTaAuth(), '_blank'),
                 ];
+                $right_menu_list = [
+                    new LinkList('관리자', [
+                        new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
+                        new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
+                        new Link('직원 목록', '/admin/user', new OnlyUserManager()),
+                        new Link('휴가 조정', '/admin/holiday', new OnlyHolidayEditable()),
+                    ], 'wrench'),
+                    new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
+                    new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),
+                ];
             }
-
-            $right_menu_list = [
-                new LinkList('관리자', [
-                    new Link('권한 설정', '/admin/policy', new OnlyPolicyRecipientEditable()),
-                    new Link('메일 수신 설정', '/admin/recipient', new OnlyPolicyRecipientEditable()),
-                    new Link('직원 목록', '/admin/user', new OnlyUserManager()),
-                    new Link('휴가 조정', '/admin/holiday', new OnlyHolidayEditable()),
-                    new Link('회의실 설정', '/admin/room', new OnlyPolicyRecipientEditable()),
-                    new Link('회의실 정기 예약', '/admin/event_group', new OnlyPolicyRecipientEditable()),
-                    new Link('보도자료 관리', '/admin/press', new OnlyPressManager()),
-                    new Link('결제', '/admin/payment', new OnlyPaymentAdmin(), null, null, 'beta', 'primary'),
-                ], 'wrench'),
-                new Link('내정보', '/users/me', new PublicAuth(), null, 'user'),
-                new Link('로그아웃', '/usersession/logout', new PublicAuth(), null, 'log-out'),
-            ];
         }
 
         return [
