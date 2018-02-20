@@ -142,28 +142,21 @@ class PaymentsController implements ControllerProviderInterface
             $payment_service = new UserPaymentService(UserSession::getSelfDto());
             $row = $payment_service->getRowService($paymentid);
 
-            if ($key == 'is_manager_accepted') {
-                $result = $row->acceptManager();
-            } elseif ($key == 'is_co_accepted') {
-                $result = $row->acceptCO();
-            } else {
-                $result = $row->edit($key, $value);
-                if ($key == 'status' && $result == '결제 완료') {
+            switch ($key) {
+                case 'is_manager_accepted':
+                    $row->acceptManager();
+                    return Response::create('success');
+                case 'is_co_accepted':
+                    $row->acceptCO();
+                    $row->edit('status', '결제 완료');
                     UserPaymentMailService::sendMail('결제완료', $paymentid, null, $app);
-                }
-            }
-
-            if ($result === 1) {
-                return Response::create('success', Response::HTTP_OK);
-            } else {
-                if ($key == 'is_manager_accepted' || $key == 'is_co_accepted' || $result == 'error') {
-                    return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
-                } else {
-                    return Response::create($result, Response::HTTP_OK);
-                }
+                    return Response::create('success');
+                default:
+                    $result = $row->edit($key, $value);
+                    return Response::create($result);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

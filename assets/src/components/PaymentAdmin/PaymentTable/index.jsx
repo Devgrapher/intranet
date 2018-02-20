@@ -131,10 +131,17 @@ export default class PaymentTable extends React.Component {
                       return;
                     }
                   }
-                  const newData = { ...data };
-                  if (!newData.is_manager_accepted) {
-                    delete newData.is_manager_accepted;
+
+                  const newData = [];
+                  if (data.manager_uid !== payment.manager_uid) {
+                    newData.push({ manager_uid: data.manager_uid });
                   }
+                  if (data.is_manager_accepted) {
+                    if (data.manager_uid === pageData.user.uid) {
+                      newData.push({ is_manager_accepted: data.is_manager_accepted });
+                    }
+                  }
+
                   onPaymentChange(payment.paymentid, newData);
                 }}
               >
@@ -520,10 +527,7 @@ export default class PaymentTable extends React.Component {
                   if (!data.is_co_accepted || !window.confirm('승인하시겠습니까?')) {
                     return;
                   }
-                  onPaymentChange(payment.paymentid, {
-                    ...data,
-                    status: '결제 완료',
-                  });
+                  onPaymentChange(payment.paymentid, data);
                 }}
               >
                 {payment.is_co_accepted ? (

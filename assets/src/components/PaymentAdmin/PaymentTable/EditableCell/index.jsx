@@ -257,6 +257,7 @@ class EditableCell extends React.Component {
   render() {
     const {
       className,
+      data,
       inline,
       fetching,
       editable,
@@ -290,7 +291,9 @@ class EditableCell extends React.Component {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  onSubmit(_.mapValues(this.state.data, ({ value }) => value));
+                  if (!_.isEqual(this.state.data, data)) {
+                    onSubmit(_.mapValues(this.state.data, ({ value }) => value));
+                  }
                   this.closeEditor();
                 }}
               >

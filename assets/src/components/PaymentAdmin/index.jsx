@@ -1,6 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import cn from 'classnames';
+import sequence from 'promise-sequence';
 import api from '../../api/payment';
 import QuerySelector from './QuerySelector';
 import QueryButtonGroup from './QueryButtonGroup';
@@ -111,20 +112,25 @@ export default class PaymentAdmin extends React.Component {
   };
 
   handlePaymentChange = async (paymentId, data) => {
+    const dataArray = _.castArray(data);
+    const fetchPaths = _.flatten(_.map(dataArray, d => (
+      _.map(d, (value, key) => (
+        `payments[${paymentId}][${key}]`
+      ))
+    )));
+
     try {
-      this.setFetching(_.map(data, (value, key) => (
-        `payments[${paymentId}][${key}]`
-      )), true);
-      await Promise.all(_.map(data, async (value, key) => {
-        await api.update(paymentId, key, value);
-      }));
-      await this.reload(true);
+      this.setFetching(fetchPaths, true);
+      await sequence(_.map(dataArray, d => (
+        Promise.all(_.map(d, (value, key) => (
+          api.update(paymentId, key, value)
+        )))
+      )));
     } catch (err) {
-      alert('업데이트하지 못했습니다.');
+      alert((err.response && err.response.data) || err.message);
     } finally {
-      this.setFetching(_.map(data, (value, key) => (
-        `payments[${paymentId}][${key}]`
-      )), false);
+      await this.reload(true);
+      this.setFetching(fetchPaths, false);
     }
   };
 
