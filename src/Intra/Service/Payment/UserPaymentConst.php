@@ -66,6 +66,7 @@ class UserPaymentConst
             self::CATEGORY_USER_DEVICE_CANCELMENT,
             self::CATEGORY_USER_STORY_CANCELMENT,
             self::CATEGORY_WRITERS_FEE,
+            '거래처 경조사 지원금',
         ];
         if (UserPolicy::isPaymentAdmin(UserSession::getSelfDto())) {
             $const['category'][] = '기타';

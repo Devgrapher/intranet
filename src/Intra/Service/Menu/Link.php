@@ -24,8 +24,8 @@ class Link implements LinkInterface
      * @param AuthMultiplexer      $auth_checker
      * @param null                 $target
      * @param null                 $glyphicon
-     * @param String               $label
-     * @param String               $label_type
+     * @param string               $label
+     * @param string               $label_type
      */
     public function __construct($title, $url, $auth_checker = null, $target = null, $glyphicon = null, $label = null, $label_type = 'default')
     {

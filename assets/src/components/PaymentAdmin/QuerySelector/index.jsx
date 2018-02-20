@@ -180,6 +180,22 @@ export default class QuerySelector extends React.Component {
           </React.Fragment>
         ),
       },
+      {
+        name: '결제 일 별',
+        url: '/',
+        getDefaultParams: () => ({
+          type: 'payDate',
+          begin_date: moment().format('YYYY-MM-DD'),
+          end_date: moment().format('YYYY-MM-DD'),
+        }),
+        render: () => (
+          <React.Fragment>
+            {this.renderDate('begin_date', this.state.params.begin_date)}
+            <span>~</span>
+            {this.renderDate('end_date', this.state.params.end_date)}
+          </React.Fragment>
+        ),
+      },
     ];
     this.setState({ items });
     this.selectItem(items[0]);
