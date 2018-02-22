@@ -1,5 +1,10 @@
-.payment-table {
-  @import "variables";
+.component.payment-table {
+  @import (reference) '../../../../../web/static/bower_components/bootstrap/less/variables';
+  
+  @table: .table;
+  @tr: .tr;
+  @th: .th;
+  @td: .td;
 
   .small() {
     opacity: .75;
@@ -35,7 +40,7 @@
     }
   }
 
-  th, td {
+  @{th}, @{td} {
     white-space: nowrap;
     word-break: keep-all;
 
@@ -47,10 +52,10 @@
       font-size: inherit;
     }
 
-    &.request-date {}
-    &.register-name {}
+    &.request_date {}
+    &.register_name {}
     &.manager {}
-    &.account-book-registered {}
+    &.account_book_registered {}
 
     &.month {}
     &.team {}
@@ -60,33 +65,33 @@
     &.desc {}
     &.file {}
 
-    &.company-name {}
+    &.company_name {}
     &.price {}
-    &.pay-date {}
+    &.pay_date {}
 
     &.tax {}
 
     &.bank {}
-    &.bank-account {}
-    &.bank-account-owner {}
+    &.bank_account {}
+    &.bank_account_owner {}
 
     &.note {}
 
     &.status {}
   }
 
-  th {
+  @{th} {
     font-size: 1.3rem;
 
-    &.request-date {}
-    &.register-name {}
+    &.request_date {}
+    &.register_name {}
     &.manager {
       small {
         &:before { content: '('; }
         &:after { content: ')'; }
       }
     }
-    &.account-book-registered {}
+    &.account_book_registered {}
 
     &.month {}
     &.team {}
@@ -96,15 +101,15 @@
     &.desc {}
     &.file {}
 
-    &.company-name {}
+    &.company_name {}
     &.price {}
-    &.pay-date {}
+    &.pay_date {}
 
     &.tax {}
 
     &.bank {}
-    &.bank-account {}
-    &.bank-account-owner {}
+    &.bank_account {}
+    &.bank_account_owner {}
 
     &.note {}
 
@@ -116,7 +121,7 @@
     }
   }
 
-  td {
+  @{td} {
     position: relative;
 
     .glyphicon {
@@ -149,11 +154,11 @@
       border-right: 1px solid #eee;
     }
 
-    &.request-date {}
-    &.register-name {}
+    &.request_date {}
+    &.register_name {}
     &.manager {
       .name { margin: 0 .25rem; }
-      .accepted-date {
+      .accepted_date {
         opacity: .8;
         &:before { content: '('; }
         &:after { content: ')'; }
@@ -164,7 +169,7 @@
         }
       }
     }
-    &.account-book-registered {
+    &.account_book_registered {
       text-align: center;
       > .editor.popover {
         min-width: 0;
@@ -216,12 +221,12 @@
 
       .name {
         margin-right: .5rem;
-        display: inline-block;
+        display: block;
         white-space: nowrap;
       }
 
       .description {
-        display: inline-block;
+        display: block;
       }
 
       > .editor.popover > .popover-content > form .form-group {
@@ -296,7 +301,7 @@
       }
     }
 
-    &.company-name { white-space: normal; min-width: 10rem }
+    &.company_name { white-space: normal; min-width: 10rem }
     &.price {
       text-align: right;
       > .value {
@@ -308,19 +313,19 @@
         }
       }
     }
-    &.pay-date {}
+    &.pay_date {}
 
     &.tax {
       text-align: center;
-      .tax-date { margin-left: .25rem; }
+      .tax_date { margin-left: .25rem; }
     }
 
     &.bank {
       white-space: normal;
       min-width: 10rem;
     }
-    &.bank-account {}
-    &.bank-account-owner {}
+    &.bank_account {}
+    &.bank_account_owner {}
 
     &.note {
       white-space: pre-line;
@@ -331,10 +336,10 @@
 
     &.status {
       text-align: center;
-      .acceptor-name {
+      .acceptor_name {
         margin: 0 .25rem;
       }
-      .accepted-date {
+      .accepted_date {
         opacity: .8;
         &:before { content: '('; }
         &:after { content: ')'; }
@@ -345,17 +350,17 @@
     }
   }
 
-  tr {
+  @{tr} {
     &.empty {
       background: none !important;
 
-      td {
+      @{td} {
         text-align: center;
       }
     }
 
     &:hover {
-      td {
+      @{td} {
         &.file {
           .btn.upload {
             visibility: visible;

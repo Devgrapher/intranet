@@ -1586,6 +1586,10 @@ electron-to-chromium@^1.3.30:
   version "1.3.32"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.32.tgz#11d0684c0840e003c4be8928f8ac5f35dbc2b4e6"
 
+element-resize-event@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/element-resize-event/-/element-resize-event-2.0.9.tgz#2f5e1581a296eb5275210c141bc56342e218f876"
+
 elliptic@^6.0.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
@@ -3724,6 +3728,12 @@ react-select@^1.0.0-rc.10:
     classnames "^2.2.4"
     prop-types "^15.5.8"
     react-input-autosize "^2.1.2"
+
+react-sticky-table@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-sticky-table/-/react-sticky-table-1.2.0.tgz#d7417343cb44b39c7249bcb3126ca2993eacc77c"
+  dependencies:
+    element-resize-event "^2.0.9"
 
 react@^16.2.0:
   version "16.2.0"

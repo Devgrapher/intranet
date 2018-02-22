@@ -7,7 +7,8 @@ import NumberFormat from 'react-number-format';
 import DateTime from 'react-datetime';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import Input from '../../../Input';
+import { Cell } from 'react-sticky-table';
+import Input from '../../../../Input';
 import './style.less';
 
 class EditableCell extends React.Component {
@@ -26,6 +27,7 @@ class EditableCell extends React.Component {
     inline: PropTypes.bool,
     fetching: PropTypes.bool,
     editable: PropTypes.bool,
+    onBeforeSubmit: PropTypes.func,
     onSubmit: PropTypes.func,
   };
 
@@ -36,6 +38,7 @@ class EditableCell extends React.Component {
     inline: true,
     fetching: false,
     editable: true,
+    onBeforeSubmit: data => data,
     onSubmit: () => {},
   };
 
@@ -47,22 +50,18 @@ class EditableCell extends React.Component {
     };
   }
 
-  handleClickOutside() {
-    this.closeEditor();
-  }
-
-  openEditor() {
+  openEditor = () => {
     this.setState({
       editing: true,
       data: this.props.data,
     });
-  }
+  };
 
-  closeEditor() {
+  closeEditor = () => {
     this.setState({
       editing: false,
     });
-  }
+  };
 
   updateData(key, value) {
     this.setState({
@@ -75,6 +74,41 @@ class EditableCell extends React.Component {
       },
     });
   }
+
+  handleClickOutside() {
+    this.closeEditor();
+  }
+
+  handleCellDoubleClick = () => {
+    const { editable } = this.props;
+    if (!editable) {
+      return;
+    }
+    this.openEditor();
+    window.getSelection().removeAllRanges();
+  };
+
+  handleSubmit = (e) => {
+    const {
+      data,
+      onBeforeSubmit,
+      onSubmit,
+    } = this.props;
+
+    try {
+      e.preventDefault();
+      if (_.isEqual(this.state.data, data)) {
+        return;
+      }
+      const transformedData = onBeforeSubmit(_.mapValues(this.state.data, ({ value }) => value));
+      if (!transformedData) {
+        return;
+      }
+      onSubmit(transformedData);
+    } finally {
+      this.closeEditor();
+    }
+  };
 
   renderProgress(message) {
     return (
@@ -257,46 +291,33 @@ class EditableCell extends React.Component {
   render() {
     const {
       className,
-      data,
       inline,
       fetching,
       editable,
-      onSubmit,
+      children,
     } = this.props;
+    const props = _.omit(this.props, _.keys(EditableCell.propTypes));
     return (
-      <td
+      <Cell
         className={cn('editable-cell component', className, {
           editing: this.state.editing,
           fetching,
           editable,
         })}
-        onDoubleClick={() => {
-          if (!editable) {
-            return;
-          }
-          this.openEditor();
-          window.getSelection().removeAllRanges();
-        }}
+        onDoubleClick={this.handleCellDoubleClick}
+        {...props}
       >
         {fetching ? (
           this.renderProgress()
         ) : (
-          this.props.children
+          children
         )}
 
         {this.state.editing && (
           <div className={cn('editor popover bottom', { inline })}>
             <div className="arrow" />
             <div className="popover-content">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!_.isEqual(this.state.data, data)) {
-                    onSubmit(_.mapValues(this.state.data, ({ value }) => value));
-                  }
-                  this.closeEditor();
-                }}
-              >
+              <form onSubmit={this.handleSubmit}>
                 {this.renderData()}
                 <button type="submit" className="btn btn-xs btn-primary">
                   <span className="glyphicon glyphicon-ok" />
@@ -310,13 +331,13 @@ class EditableCell extends React.Component {
           <div className="toolbox">
             <button
               className="edit btn btn-xs btn-primary"
-              onClick={() => { this.openEditor(); }}
+              onClick={this.openEditor}
             >
               <span className="glyphicon glyphicon-pencil" />
             </button>
           </div>
         </div>
-      </td>
+      </Cell>
     );
   }
 }

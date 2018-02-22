@@ -1,0 +1,42 @@
+@import (reference) '../../../../../../web/static/bower_components/bootstrap/less/bootstrap';
+
+.component.editable-table {
+  @table: .table;
+  @tr: .tr;
+  @th: .th;
+  @td: .td;
+
+  &@{table} {
+    &:extend(table all);
+    &:extend(.table all);
+    margin: 0;
+  }
+
+  @{tr} {
+    &:extend(tr all);
+    &.tr-body {
+      &:nth-of-type(odd) {
+        &:extend(.table-striped > tbody > tr:nth-of-type(odd) all);
+      }
+      &:hover {
+        &:extend(.table-hover > tbody > tr:hover all);
+      }
+    }
+  }
+
+  @{th} {
+    &:extend(th all);
+    &:extend(.table > thead > tr > th all);
+    &:extend(.table > thead:first-child > tr:first-child > th all);
+    &:extend(.table-condensed > thead > tr > th all);
+    &:extend(table th all);
+    font-weight: bold;
+  }
+
+  @{td} {
+    &:extend(td all);
+    &:extend(.table > tbody > tr > td all);
+    &:extend(.table-condensed > tbody > tr > td all);
+    &:extend(table td all);
+  }
+}

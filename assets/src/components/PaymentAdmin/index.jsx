@@ -141,7 +141,7 @@ export default class PaymentAdmin extends React.Component {
       fetching,
     } = this.state;
     return (
-      <div className="payment-admin container-fluid">
+      <div className="payment-admin component container-fluid">
         <div className="page-header">
           <h1 className="title">
             결제 <small>{data && data.title}</small>
