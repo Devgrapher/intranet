@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
-import { StickyTable, Row, Cell } from 'react-sticky-table';
-import 'react-sticky-table/dist/react-sticky-table.css';
-import EditableCell from './EditableCell';
+import Table from './Table';
+import Row from './Row';
+import HeaderCell from './HeaderCell';
+import DataCell from './DataCell';
 import './style.less';
 
 export default class EditableTable extends React.Component {
@@ -33,7 +34,7 @@ export default class EditableTable extends React.Component {
     renderEmptyContent: () => {},
   };
 
-  renderHeaderCell(column) {
+  renderHeaderCell(column, columnIndex) {
     const {
       key,
       displayName,
@@ -42,17 +43,17 @@ export default class EditableTable extends React.Component {
     } = column;
     const { className, ...props } = getHeaderCellProps(column);
     return (
-      <Cell
-        key={key}
-        className={cn('th', key, className)}
+      <HeaderCell
+        key={key || columnIndex}
+        className={cn(key, className)}
         {...props}
       >
         {renderHeaderCell ? renderHeaderCell() : displayName}
-      </Cell>
+      </HeaderCell>
     );
   }
 
-  renderDataCell(row, column) {
+  renderDataCell(row, column, columnIndex) {
     const {
       key,
       getDataCellProps = () => ({}),
@@ -65,15 +66,15 @@ export default class EditableTable extends React.Component {
     } = getDataCellProps(row, column);
 
     return (
-      <EditableCell
-        key={key}
-        className={cn('td', key, className)}
+      <DataCell
+        key={key || columnIndex}
+        className={cn(key, className)}
         {...props}
       >
         {renderDataCell ? renderDataCell(row, column) : (
           row[key]
         )}
-      </EditableCell>
+      </DataCell>
     );
   }
 
@@ -86,32 +87,25 @@ export default class EditableTable extends React.Component {
       renderEmptyContent,
     } = this.props;
     return (
-      <StickyTable
-        className={cn(
-          'editable-table component',
-          'table',
-          className,
-        )}
-        stickyColumnCount={0}
-      >
-        <Row className="tr tr-head">
+      <Table className={cn('editable-table component', className)}>
+        <Row className="header">
           {_.map(columns, this.renderHeaderCell)}
         </Row>
         {!rows ? (
-          <Row className="tr tr-body empty">
-            <EditableCell className="td" colSpan={_.size(columns)} editable={false}>
+          <Row className="empty">
+            <DataCell colSpan={_.size(columns)} editable={false}>
               {renderEmptyContent()}
-            </EditableCell>
+            </DataCell>
           </Row>
         ) : (
           _.map(rows, (row, rowIndex) => (
-            <Row className="tr tr-body" key={rowIndex}>
-              {_.map(columns, column => this.renderDataCell(row, column))}
+            <Row key={rowIndex}>
+              {_.map(columns, (column, columnIndex) => this.renderDataCell(row, column, columnIndex))}
             </Row>
           ))
         )}
         {children}
-      </StickyTable>
+      </Table>
     );
   }
 }

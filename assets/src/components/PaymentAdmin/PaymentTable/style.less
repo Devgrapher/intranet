@@ -1,6 +1,5 @@
 .component.payment-table {
   @import (reference) '../../../../../web/static/bower_components/bootstrap/less/variables';
-  
   @table: .table;
   @tr: .tr;
   @th: .th;
@@ -78,6 +77,8 @@
     &.note {}
 
     &.status {}
+
+    &.remove {}
   }
 
   @{th} {
@@ -119,6 +120,8 @@
         &:after { content: ')'; }
       }
     }
+
+    &.remove { visibility: hidden; }
   }
 
   @{td} {
@@ -150,8 +153,8 @@
       line-height: inherit;
     }
 
-    &:not(:last-child) {
-      border-right: 1px solid #eee;
+    &:not(:first-child) {
+      border-left: 1px solid #eee;
     }
 
     &.request_date {}
@@ -348,6 +351,29 @@
         min-width: 0;
       }
     }
+
+    &.remove {
+      border: none;
+      background: white;
+      padding-right: 20px;
+
+      .btn.remove {
+        visibility: hidden;
+        background: none;
+        color: @brand-danger;
+        border: none;
+        padding: 0;
+
+        &:not(:hover) {
+          opacity: .5;
+        }
+
+        &:active {
+          background: none;
+          box-shadow: none;
+        }
+      }
+    }
   }
 
   @{tr} {
@@ -363,6 +389,12 @@
       @{td} {
         &.file {
           .btn.upload {
+            visibility: visible;
+          }
+        }
+
+        &.remove {
+          .btn.remove {
             visibility: visible;
           }
         }

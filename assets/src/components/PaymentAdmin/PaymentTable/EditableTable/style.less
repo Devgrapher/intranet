@@ -14,7 +14,7 @@
 
   @{tr} {
     &:extend(tr all);
-    &.tr-body {
+    &:not(.header) {
       &:nth-of-type(odd) {
         &:extend(.table-striped > tbody > tr:nth-of-type(odd) all);
       }

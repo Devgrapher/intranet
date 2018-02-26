@@ -14,6 +14,7 @@ export default class PaymentTable extends React.Component {
     onSelectFile: PropTypes.func,
     onRemoveFileButtonClick: PropTypes.func,
     onPaymentChange: PropTypes.func,
+    onPaymentRemove: PropTypes.func,
   };
 
   static defaultProps = {
@@ -22,12 +23,14 @@ export default class PaymentTable extends React.Component {
     onSelectFile: () => {},
     onRemoveFileButtonClick: () => {},
     onPaymentChange: () => {},
+    onPaymentRemove: () => {},
   };
 
   getColumns() {
     const {
       data: pageData,
       onRemoveFileButtonClick,
+      onPaymentRemove,
     } = this.props;
 
     return [
@@ -484,6 +487,31 @@ export default class PaymentTable extends React.Component {
           ) : (
             <span className="negative glyphicon glyphicon-remove" />
           )
+        ),
+      },
+      {
+        key: 'remove',
+        renderHeaderCell: () => '',
+        getDataCellProps: payment => ({
+          editable: false,
+          fetching: this.isFetching(payment.paymentid, 'remove'),
+        }),
+        renderDataCell: payment => (
+          <button
+            className="remove btn btn-danger"
+            onClick={() => {
+              if (window.confirm(`\
+정말 삭제하시겠습니까?
+
+업체명 : ${payment.company_name}
+금액 : ${formatCurrency(payment.price)}`)
+              ) {
+                onPaymentRemove(payment.paymentid);
+              }
+            }}
+          >
+            <span className="glyphicon glyphicon-remove-circle" />
+          </button>
         ),
       },
     ];

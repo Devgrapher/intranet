@@ -85,12 +85,9 @@ class UserPaymentRowInstance
     {
         $payment_dto = PaymentDtoFactory::createFromDatabaseByPk($this->payment_id);
         $this->assertDel($payment_dto);
-        $res = $this->user_payment_model->del($this->payment_id);
-        if ($res) {
-            return 1;
+        if (!$this->user_payment_model->del($this->payment_id)) {
+            throw new MsgException('삭제가 실패했습니다!');
         }
-
-        return '삭제가 실패했습니다!';
     }
 
     private function assertDel($payment_dto)
@@ -148,15 +145,12 @@ class UserPaymentRowInstance
         if (!($is_payment_admin || $is_editable)) {
             throw new MsgException("반려 권한이 없습니다.");
         }
-
-        return $this->reject('manager', $payment_dto->manager_uid);
+        $this->reject('manager', $payment_dto->manager_uid);
     }
 
     private function reject($user_type, $uid)
     {
         $payment_accept_dto = PaymentAcceptDto::importFromAddRequest($this->payment_id, $uid, $user_type);
         PaymentAcceptModel::delete($payment_accept_dto);
-
-        return 1;
     }
 }

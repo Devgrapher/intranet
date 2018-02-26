@@ -2,6 +2,7 @@
 
 namespace Intra\Controller;
 
+use Intra\Core\MsgException;
 use Intra\Model\PaymentModel;
 use Intra\Service\File\PaymentFileService;
 use Intra\Service\Payment\PaymentDto;
@@ -168,25 +169,19 @@ class PaymentsController implements ControllerProviderInterface
 
             $payment_service = new UserPaymentService(UserSession::getSelfDto());
             $row = $payment_service->getRowService($paymentid);
-            if ($key == 'is_manager_rejected') {
-                if ($row->rejectManager()) {
-                    $reason = $request->getContent();
-                    UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
 
-                    return Response::create('success', Response::HTTP_OK);
-                } else {
-                    return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
-            } else {
-                $result = $row->del();
-                if ($result == 1) {
-                    return Response::create('success', Response::HTTP_OK);
-                } else {
-                    return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
+            if ($key == 'is_manager_rejected') {
+                $row->rejectManager();
+                $reason = $request->getContent();
+                UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
+                return Response::create('success');
             }
+
+            $row->del();
+
+            return Response::create('success');
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -266,7 +261,8 @@ class PaymentsController implements ControllerProviderInterface
 
         $user_payment_model = new PaymentModel();
 
-        return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveRequestDate($requestDateStart, $requestDateEnd));
+        return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveRequestDate($requestDateStart,
+            $requestDateEnd));
     }
 
     public function downloadActiveTeam(Request $request)

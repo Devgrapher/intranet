@@ -18,6 +18,11 @@ export default {
     return result;
   },
 
+  remove: async (paymentId) => {
+    const { data: result } = await api.delete(`/paymentid/${paymentId}`);
+    return result;
+  },
+
   download: async (...args) => {
     const [path, options] = args;
     const response = await api.get(path, {

@@ -134,6 +134,19 @@ export default class PaymentAdmin extends React.Component {
     }
   };
 
+  handlePaymentRemove = async (paymentId) => {
+    const fetchPath = `payments[${paymentId}].remove`;
+    try {
+      this.setFetching(fetchPath, true);
+      await api.remove(paymentId);
+    } catch (err) {
+      alert((err.response && err.response.data) || err.message);
+    } finally {
+      await this.reload(true);
+      this.setFetching(fetchPath, false);
+    }
+  };
+
   render() {
     const {
       query,
@@ -191,6 +204,7 @@ export default class PaymentAdmin extends React.Component {
               onSelectFile={this.addAttachmentFile}
               onRemoveFileButtonClick={this.removeAttachmentFile}
               onPaymentChange={this.handlePaymentChange}
+              onPaymentRemove={this.handlePaymentRemove}
             />
           )}
         </div>
