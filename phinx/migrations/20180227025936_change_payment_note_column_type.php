@@ -8,6 +8,7 @@ class ChangePaymentNoteColumnType extends AbstractMigration
     {
         $this->table('payments')
             ->changeColumn("note", "text")
+            ->changeColumn("desc", "text")
             ->save();
     }
 }
