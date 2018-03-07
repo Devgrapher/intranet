@@ -120,16 +120,13 @@ class PaymentsController implements ControllerProviderInterface
             $target_user_dto = $user_dto_instancce->exportDto();
 
             $payment_service = new UserPaymentService($target_user_dto);
-            $insert_id = $payment_service->add($payment_dto);
-            if ($insert_id != null) {
-                UserPaymentMailService::sendMail('결제요청', $insert_id, null, $app);
+            $payment_id = $payment_service->add($payment_dto, $request->files->get('files'));
 
-                return Response::create('success', Response::HTTP_OK);
-            } else {
-                return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
+            UserPaymentMailService::sendMail('결제요청', $payment_id, null, $app);
+
+            return JsonResponse::create(['success' => true, 'paymentid' => $payment_id]);
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -358,14 +355,15 @@ class PaymentsController implements ControllerProviderInterface
                 return Response::create("invalid fileid", Response::HTTP_BAD_REQUEST);
             }
 
-            $file = $request->files->get('files')[0];
-            if (UserPaymentService::addFiles($paymentid, $file)) {
-                return JsonResponse::create('success');
-            } else {
-                return JsonResponse::create('file upload failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            foreach ($request->files->get('files') as $file) {
+                if (!UserPaymentService::addFiles($paymentid, $file)) {
+                    throw new MsgException('file upload failed');
+                }
             }
+
+            return JsonResponse::create('success');
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

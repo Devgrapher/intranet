@@ -91,9 +91,9 @@ export default class EditableTable extends React.Component {
         <Row className="header">
           {_.map(columns, this.renderHeaderCell)}
         </Row>
-        {!rows ? (
+        {_.isEmpty(rows) ? (
           <Row className="empty">
-            <DataCell colSpan={_.size(columns)} editable={false}>
+            <DataCell editable={false}>
               {renderEmptyContent()}
             </DataCell>
           </Row>

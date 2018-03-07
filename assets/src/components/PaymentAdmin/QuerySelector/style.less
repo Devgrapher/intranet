@@ -1,4 +1,10 @@
 .query-selector {
+  .query-selector__container {
+    > *:not(:first-child) {
+      margin-left: .25rem;
+    }
+  }
+
   .btn-group {
     & > .dropdown-menu {
       min-width: 0;
@@ -31,14 +37,5 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-  }
-
-  .query-selector__query-type {
-    margin: 0;
-    padding: 0 .25rem;
-
-    & > * {
-      margin: 0 .25rem;
-    }
   }
 }

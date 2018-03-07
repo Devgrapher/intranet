@@ -134,10 +134,10 @@ class PaymentDto extends BaseDto
         $return->uid = $uid;
         if (!$is_admin) {
             if (isset($return->status)) {
-                unset($return->status);
+                $return->status = null;
             }
             if (isset($return->paytype)) {
-                unset($return->paytype);
+                $return->paytype = null;
             }
         }
 
@@ -148,7 +148,7 @@ class PaymentDto extends BaseDto
         $return->price = empty($return->price) ? 0 : $return->price;
         $return->tax_date = $return->tax_date === '' ? null : $return->tax_date;
         if (isset($return->status) && strlen($return->status) == 0) {
-            unset($return->status);
+            $return->status = null;
         }
         if (empty($return->manager_uid)) {
             throw new MsgException('승인자가 누락되었습니다. 다시 입력해주세요');
@@ -163,7 +163,7 @@ class PaymentDto extends BaseDto
             throw new MsgException('분류가 누락되었습니다. 다시 입력해주세요');
         }
         if (strlen($return->paytype) == 0) {
-            unset($return->paytype);
+            $return->paytype = null;
         }
         if (!strtotime($return->month . '-1')) {
             throw new MsgException('귀속월을 다시 입력해주세요');

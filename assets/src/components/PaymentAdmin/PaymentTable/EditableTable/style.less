@@ -22,6 +22,12 @@
         &:extend(.table-hover > tbody > tr:hover all);
       }
     }
+    &.empty {
+      @{td} {
+        position: absolute;
+        width: 100%;
+      }
+    }
   }
 
   @{th} {

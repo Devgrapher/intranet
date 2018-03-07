@@ -2,10 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import cn from 'classnames';
 import sequence from 'promise-sequence';
+import { Modal, CloseButton, Button, ProgressBar } from 'react-bootstrap';
 import api from '../../api/payment';
 import QuerySelector from './QuerySelector';
 import QueryButtonGroup from './QueryButtonGroup';
 import PaymentTable from './PaymentTable';
+import PaymentForm from './PaymentForm';
 import { parseNumber } from '../../utils';
 import './style.less';
 
@@ -19,7 +21,9 @@ export default class PaymentAdmin extends React.Component {
       fetching: {
         all: false,
         payments: {},
+        newPayment: false,
       },
+      showNewPayment: false,
     };
   }
 
@@ -48,15 +52,15 @@ export default class PaymentAdmin extends React.Component {
     }
   };
 
-  addAttachmentFile = async (files, paymentId) => {
+  addAttachmentFiles = async (files, paymentId) => {
     try {
-      this.setFetching(`payments[${paymentId}].file`, true);
-      await api.addAttachmentFile(files[0], paymentId);
+      this.setFetching(`payments[${paymentId}].files`, true);
+      await api.addAttachmentFiles(files, paymentId);
       await this.reload(true);
     } catch (err) {
       alert('파일을 업로드하지 못했습니다.');
     } finally {
-      this.setFetching(`payments[${paymentId}].file`, false);
+      this.setFetching(`payments[${paymentId}].files`, false);
     }
   };
 
@@ -100,6 +104,10 @@ export default class PaymentAdmin extends React.Component {
   reload = async (omitSetFetching = false) => (
     this.request(this.state.loadedQuery, omitSetFetching)
   );
+
+  showNewPayment = () => this.setState({ showNewPayment: true });
+
+  hideNewPayment = () => this.setState({ showNewPayment: false });
 
   handleQueryChange = async (path, params) => {
     const query = { path, params };
@@ -147,6 +155,65 @@ export default class PaymentAdmin extends React.Component {
     }
   };
 
+  handleNewPaymentSubmit = async ({ uid, files, ...data }) => {
+    const fetchPath = 'newPayment';
+    try {
+      this.setFetching(fetchPath, true);
+      await api.add(uid, data, files);
+      this.hideNewPayment();
+    } catch (err) {
+      alert((err.response && err.response.data) || err.message);
+    } finally {
+      await this.reload(true);
+      this.setFetching(fetchPath, false);
+    }
+  };
+
+  renderNewPaymentModal() {
+    const {
+      data,
+      fetching,
+    } = this.state;
+    return (
+      <Modal
+        className="new-payment"
+        show={this.state.showNewPayment}
+        backdrop="static"
+        onHide={this.hideNewPayment}
+      >
+        <Modal.Header>
+          {!fetching.newPayment && <CloseButton onClick={this.hideNewPayment} />}
+          <Modal.Title>새 결제</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <PaymentForm
+            ref={(c) => { this.newPaymentForm = c; }}
+            user={data && data.user}
+            users={data && data.allCurrentUsers}
+            teams={data && data.const.team}
+            teamDetails={data && data.const.team_detail}
+            products={data && data.const.product}
+            categories={data && data.const.category}
+            fetching={fetching.newPayment}
+            onSubmit={this.handleNewPaymentSubmit}
+          />
+        </Modal.Body>
+
+        <Modal.Footer>
+          {fetching.newPayment ? (
+            <ProgressBar active now={100} label="저장중.." />
+          ) : (
+            <React.Fragment>
+              <Button onClick={this.hideNewPayment}>닫기</Button>
+              <Button bsStyle="primary" onClick={() => this.newPaymentForm.submit()}>추가</Button>
+            </React.Fragment>
+          )}
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   render() {
     const {
       query,
@@ -160,26 +227,25 @@ export default class PaymentAdmin extends React.Component {
             결제 <small>{data && data.title}</small>
           </h1>
 
-          <div className="query-selector-container">
-            <QuerySelector
-              teams={data ? data.const.team : []}
-              categories={data ? data.const.category : []}
-
-              todayQueuedCost={data ? data.todayQueuedCost : 0}
-              todayQueuedCount={data ? data.todayQueuedCount : 0}
-              todayConfirmedQueuedCost={data ? data.todayConfirmedQueuedCost : 0}
-              todayConfirmedQueuedCount={data ? data.todayConfirmedQueuedCount : 0}
-              todayUnconfirmedQueuedCost={data ? data.todayUnconfirmedQueuedCost : 0}
-              todayUnconfirmedQueuedCount={data ? data.todayUnconfirmedQueuedCount : 0}
-
-              onQueryChange={this.handleQueryChange}
-            />
-            <QueryButtonGroup
-              className={cn({ disabled: !query || fetching.all })}
-              onQueryButtonClick={() => this.request(query)}
-              onDownloadButtonClick={() => this.download(query, false)}
-              onDownloadBankTransferOnlyButtonClick={() => this.download(query, true)}
-            />
+          <div className="toolbar">
+            <div className="query-selector-container">
+              <QuerySelector
+                data={data}
+                onQueryChange={this.handleQueryChange}
+              />
+              <QueryButtonGroup
+                className={cn({ disabled: !query || fetching.all })}
+                onQueryButtonClick={() => this.request(query)}
+                onDownloadButtonClick={() => this.download(query, false)}
+                onDownloadBankTransferOnlyButtonClick={() => this.download(query, true)}
+              />
+            </div>
+            <button
+              className="add-payment btn btn-sm btn-success"
+              onClick={this.showNewPayment}
+            >
+              <span className="glyphicon glyphicon-plus" /> 추가
+            </button>
           </div>
         </div>
 
@@ -201,13 +267,15 @@ export default class PaymentAdmin extends React.Component {
             <PaymentTable
               data={data}
               fetching={fetching}
-              onSelectFile={this.addAttachmentFile}
+              onSelectFile={this.addAttachmentFiles}
               onRemoveFileButtonClick={this.removeAttachmentFile}
               onPaymentChange={this.handlePaymentChange}
               onPaymentRemove={this.handlePaymentRemove}
             />
           )}
         </div>
+
+        {this.renderNewPaymentModal()}
       </div>
     );
   }

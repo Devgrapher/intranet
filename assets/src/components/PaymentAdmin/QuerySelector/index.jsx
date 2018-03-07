@@ -3,30 +3,44 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 import moment from 'moment';
-import DateTime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
+import FormElement from '../FormElement';
 import { formatCurrency } from '../../../utils';
 import './style.less';
 
 export default class QuerySelector extends React.Component {
   static propTypes = {
     className: PropTypes.string,
-
-    teams: PropTypes.arrayOf(PropTypes.string).isRequired,
-    categories: PropTypes.arrayOf(PropTypes.string).isRequired,
-
-    todayQueuedCost: PropTypes.number.isRequired,
-    todayQueuedCount: PropTypes.number.isRequired,
-    todayConfirmedQueuedCost: PropTypes.number.isRequired,
-    todayConfirmedQueuedCount: PropTypes.number.isRequired,
-    todayUnconfirmedQueuedCost: PropTypes.number.isRequired,
-    todayUnconfirmedQueuedCount: PropTypes.number.isRequired,
+    data: PropTypes.shape({
+      const: PropTypes.shape({
+        team: PropTypes.arrayOf(PropTypes.string),
+        category: PropTypes.arrayOf(PropTypes.string),
+      }),
+      todayQueuedCost: PropTypes.number,
+      todayQueuedCount: PropTypes.number,
+      todayConfirmedQueuedCost: PropTypes.number,
+      todayConfirmedQueuedCount: PropTypes.number,
+      todayUnconfirmedQueuedCost: PropTypes.number,
+      todayUnconfirmedQueuedCount: PropTypes.number,
+    }),
 
     onQueryChange: PropTypes.func,
   };
 
   static defaultProps = {
     className: undefined,
+    data: {
+      const: {
+        team: [],
+        category: [],
+      },
+      todayQueuedCost: 0,
+      todayQueuedCount: 0,
+      todayConfirmedQueuedCost: 0,
+      todayConfirmedQueuedCount: 0,
+      todayUnconfirmedQueuedCost: 0,
+      todayUnconfirmedQueuedCount: 0,
+    },
 
     onQueryChange: () => {},
   };
@@ -56,10 +70,10 @@ export default class QuerySelector extends React.Component {
             todayConfirmedQueuedCount,
             todayUnconfirmedQueuedCost,
             todayUnconfirmedQueuedCount,
-          } = this.props;
+          } = this.props.data;
           return (
             <select
-              className="form-control input-sm"
+              className="form-control"
               name="type"
               value={this.state.params.type}
               onChange={e => this.setParams({ type: e.target.value })}
@@ -129,16 +143,16 @@ export default class QuerySelector extends React.Component {
         url: '/',
         getDefaultParams: () => ({
           type: 'team',
-          team: this.props.teams[0],
+          team: this.props.data.const.team[0],
         }),
         render: () => (
           <select
-            className="form-control input-sm"
+            className="form-control"
             name="team"
             value={this.state.params.team}
             onChange={e => this.setParams({ type: 'team', team: e.target.value })}
           >
-            {_.map(this.props.teams, (team, key) => (
+            {_.map(this.props.data.const.team, (team, key) => (
               <option key={key} value={team}>{team}</option>
             ))}
           </select>
@@ -149,16 +163,16 @@ export default class QuerySelector extends React.Component {
         url: '/',
         getDefaultParams: () => ({
           type: 'category',
-          category: this.props.categories[0],
+          category: this.props.data.const.category[0],
         }),
         render: () => (
           <select
-            className="form-control input-sm"
+            className="form-control"
             name="category"
             value={this.state.params.category}
             onChange={e => this.setParams({ type: 'category', category: e.target.value })}
           >
-            {_.map(this.props.categories, (category, key) => (
+            {_.map(this.props.data.const.category, (category, key) => (
               <option key={key} value={category}>{category}</option>
             ))}
           </select>
@@ -217,41 +231,22 @@ export default class QuerySelector extends React.Component {
 
   renderMonth(name = 'month', value = new Date()) {
     return (
-      <DateTime
-        viewMode="months"
-        dateFormat="YYYY-MM"
+      <FormElement
+        type={FormElement.Types.MONTH}
+        name={name}
         value={value}
-        onChange={(v) => {
-          const m = moment(v, 'YYYY-MM', true);
-          this.setParams(_.set(
-            { ...this.state.params },
-            name,
-            m.isValid() ? m.format('YYYY-MM') : v,
-          ));
-        }}
-        inputProps={{ className: 'form-control input-sm', name }}
-        renderMonth={(props, month) => <td {...props}>{month + 1}</td>}
+        onChange={v => this.setParams(_.set({ ...this.state.params }, name, v))}
       />
     );
   }
 
   renderDate(name = 'date', value = new Date()) {
     return (
-      <DateTime
-        viewMode="days"
-        dateFormat="YYYY-MM-DD"
-        timeFormat={false}
+      <FormElement
+        type={FormElement.Types.DATE}
+        name={name}
         value={value}
-        onChange={(v) => {
-          const m = moment(v, 'YYYY-MM-DD', true);
-          this.setParams(_.set(
-            { ...this.state.params },
-            name,
-            m.isValid() ? m.format('YYYY-MM-DD') : v,
-          ));
-        }}
-        inputProps={{ className: 'form-control input-sm', name }}
-        renderMonth={(props, month) => <td {...props}>{month + 1}</td>}
+        onChange={v => this.setParams(_.set({ ...this.state.params }, name, v))}
       />
     );
   }
@@ -287,7 +282,7 @@ export default class QuerySelector extends React.Component {
             </ul>
           </div>
 
-          <div className="query-selector__query-type">
+          <div className="query-selector__query-type form-group-sm">
             {selectedItem.render()}
           </div>
         </div>

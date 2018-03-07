@@ -3,12 +3,9 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 import clickOutside from 'react-click-outside';
-import NumberFormat from 'react-number-format';
-import DateTime from 'react-datetime';
-import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { Cell } from 'react-sticky-table';
-import Input from '../../../../Input';
+import FormElement from '../../../FormElement';
 import './style.less';
 
 class EditableCell extends React.Component {
@@ -134,8 +131,6 @@ class EditableCell extends React.Component {
         type,
         value,
         placeholder,
-        options,
-        precision,
         label,
         isVisible,
       } = v;
@@ -146,140 +141,29 @@ class EditableCell extends React.Component {
       return (
         <div key={key} className={cn('form-group form-group-sm', key)}>
           {(() => {
+            const props = {
+              id,
+              name: key,
+              onChange: newValue => this.updateData(key, newValue),
+              ..._.omit(v, ['label', 'isVisible']),
+            };
             switch (type) {
-              case 'checkbox':
-                return (
-                  <label htmlFor={id}>
-                    <input
-                      id={id}
-                      type="checkbox"
-                      name={key}
-                      checked={value}
-                      onChange={(e) => {
-                        this.updateData(key, e.target.checked);
-                      }}
-                    />
-                    {label}
-                  </label>
-                );
-              case 'currency':
-                return (
-                  <Input
-                    id={id}
-                    className="form-control currency"
-                    name={key}
-                    focusOnMount
-                    placeholder={placeholder || '0'}
-
-                    inputComponent={NumberFormat}
-                    thousandSeparator=","
-                    decimalScale={precision}
-                    fixedDecimalScale
-                    value={value}
-                    onValueChange={(values) => {
-                      const { floatValue } = values;
-                      this.updateData(key, !Number.isNaN(floatValue) ? floatValue : undefined);
-                    }}
-                  />
-                );
-              case 'select':
-                return (
-                  <Select
-                    id={id}
-                    name={key}
-                    value={value}
-                    options={options}
-                    placeholder={placeholder}
-                    onChange={(selectedOption) => {
-                      this.updateData(key, selectedOption ? selectedOption.value : '');
-                    }}
-                  />
-                );
-              case 'textarea':
-                return (
-                  <Input
-                    className="form-control"
-                    id={id}
-                    name={key}
-                    value={value}
-                    placeholder={placeholder}
-                    focusOnMount
-                    inputComponent="textarea"
-                    maxLength="255"
-                    onChange={(e) => {
-                      this.updateData(key, e.target.value || '');
-                    }}
-                  />
-                );
-              case 'date':
+              case FormElement.Types.DATE:
+              case FormElement.Types.MONTH:
                 return (
                   <React.Fragment>
-                    <Input
-                      className="form-control"
-                      id={id}
+                    <FormElement
                       value={value}
                       placeholder={placeholder}
                       focusOnMount
-                      onChange={(e) => {
-                        this.updateData(key, e.target.value || '');
-                      }}
+                      onChange={newValue => this.updateData(key, newValue)}
                     />
-                    <DateTime
-                      viewMode="days"
-                      dateFormat="YYYY-MM-DD"
-                      timeFormat={false}
-                      value={value}
-                      placeholder={placeholder}
-                      input={false}
-                      inputProps={{ className: 'form-control', name: key }}
-                      renderMonth={(props, month) => <td {...props}>{month + 1}</td>}
-                      onChange={(m) => {
-                        this.updateData(key, m.format('YYYY-MM-DD'));
-                      }}
-                    />
-                  </React.Fragment>
-                );
-              case 'month':
-                return (
-                  <React.Fragment>
-                    <Input
-                      className="form-control"
-                      id={id}
-                      value={value}
-                      placeholder={placeholder}
-                      focusOnMount
-                      onChange={(e) => {
-                        this.updateData(key, e.target.value || '');
-                      }}
-                    />
-                    <DateTime
-                      viewMode="months"
-                      dateFormat="YYYY-MM"
-                      value={value}
-                      placeholder={placeholder}
-                      input={false}
-                      inputProps={{ className: 'form-control', name: key }}
-                      renderMonth={(props, month) => <td {...props}>{month + 1}</td>}
-                      onChange={(m) => {
-                        this.updateData(key, m.format('YYYY-MM'));
-                      }}
-                    />
+                    <FormElement input={false} {...props} />
                   </React.Fragment>
                 );
               default:
                 return (
-                  <Input
-                    className="form-control"
-                    id={id}
-                    type={type}
-                    name={key}
-                    value={value}
-                    placeholder={placeholder}
-                    focusOnMount
-                    onChange={(e) => {
-                      this.updateData(key, e.target.value || '');
-                    }}
-                  />
+                  <FormElement focusOnMount {...props}>{label}</FormElement>
                 );
             }
           })()}

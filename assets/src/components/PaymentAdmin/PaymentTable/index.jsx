@@ -254,10 +254,11 @@ export default class PaymentTable extends React.Component {
         }),
       },
       {
-        key: 'file',
+        key: 'files',
         displayName: '파일',
         getDataCellProps: payment => this.createDataCellProps(payment, {
           editable: false,
+          fetching: this.isFetching(payment.paymentid, 'files'),
         }),
         renderDataCell: payment => (
           <div className="btn-group btn-group-xs">
@@ -335,7 +336,7 @@ export default class PaymentTable extends React.Component {
             price: {
               value: payment.price,
               type: 'currency',
-              precision: 2,
+              decimalScale: 2,
               placeholder: '입금금액',
             },
           },
@@ -536,6 +537,7 @@ export default class PaymentTable extends React.Component {
     const { onSelectFile } = this.props;
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
+    input.setAttribute('multiple', '');
     input.addEventListener('change', (e) => { onSelectFile(e.target.files, paymentId); });
     input.click();
   }
