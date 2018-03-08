@@ -1,4 +1,6 @@
 import React from 'react';
+import createHistory from 'history/createBrowserHistory';
+import queryString from 'query-string';
 import _ from 'lodash';
 import cn from 'classnames';
 import sequence from 'promise-sequence';
@@ -11,13 +13,26 @@ import PaymentForm from './PaymentForm';
 import { parseNumber } from '../../utils';
 import './style.less';
 
+const history = createHistory({
+  basename: '/admin/payment',
+});
+
+const locationToQuery = ({ pathname, search }) => ({
+  path: pathname,
+  params: queryString.parse(search),
+});
+
+const queryToPath = ({ path, params }) => `${path}?${queryString.stringify(params)}`;
+
+const getCurrentQuery = () => locationToQuery(history.location);
+
 export default class PaymentAdmin extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       data: undefined,
-      query: undefined,
-      loadedQuery: undefined,
+      query: getCurrentQuery(),
       fetching: {
         all: false,
         payments: {},
@@ -25,6 +40,16 @@ export default class PaymentAdmin extends React.Component {
       },
       showNewPayment: false,
     };
+
+    this.unlistenHistory = history.listen(async (location) => {
+      const query = locationToQuery(location);
+      this.setState({ query });
+      await this.request(query);
+    });
+  }
+
+  componentWillUnmount() {
+    this.unlistenHistory();
   }
 
   setFetching(path, value) {
@@ -85,13 +110,13 @@ export default class PaymentAdmin extends React.Component {
     }
     try {
       const { path, params } = query;
-      const data = await api.get(path, { params });
 
+      const data = await api.get(path, { params });
       data.todayQueuedCost = parseNumber(data.todayQueuedCost);
       data.todayConfirmedQueuedCost = parseNumber(data.todayConfirmedQueuedCost);
       data.todayUnconfirmedQueuedCost = parseNumber(data.todayUnconfirmedQueuedCost);
 
-      this.setState({ data, loadedQuery: query });
+      this.setState({ data });
     } catch (err) {
       alert('정보를 불러오지 못했습니다.');
     } finally {
@@ -102,21 +127,28 @@ export default class PaymentAdmin extends React.Component {
   };
 
   reload = async (omitSetFetching = false) => (
-    this.request(this.state.loadedQuery, omitSetFetching)
+    this.request(getCurrentQuery(), omitSetFetching)
   );
 
   showNewPayment = () => this.setState({ showNewPayment: true });
 
   hideNewPayment = () => this.setState({ showNewPayment: false });
 
-  handleQueryChange = async (path, params) => {
-    const query = { path, params };
-    this.setState({
-      query,
-    });
+  handleQueryChange = async (query) => {
+    this.setState({ query });
     if (!this.state.data) {
-      await this.request(query);
+      history.replace(queryToPath(query));
     }
+  };
+
+  handleQueryButtonClick = async () => {
+    const { query } = this.state;
+    const path = queryToPath(query);
+    if (_.isEqual(query, getCurrentQuery())) {
+      history.replace(path);
+      return;
+    }
+    history.push(path);
   };
 
   handlePaymentChange = async (paymentId, data) => {
@@ -224,18 +256,19 @@ export default class PaymentAdmin extends React.Component {
       <div className="payment-admin component container-fluid">
         <div className="page-header">
           <h1 className="title">
-            결제 <small>{data && data.title}</small>
+            결제 <small>{!fetching.all && data && data.title}</small>
           </h1>
 
           <div className="toolbar">
             <div className="query-selector-container">
               <QuerySelector
                 data={data}
+                query={query}
                 onQueryChange={this.handleQueryChange}
               />
               <QueryButtonGroup
                 className={cn({ disabled: !query || fetching.all })}
-                onQueryButtonClick={() => this.request(query)}
+                onQueryButtonClick={this.handleQueryButtonClick}
                 onDownloadButtonClick={() => this.download(query, false)}
                 onDownloadBankTransferOnlyButtonClick={() => this.download(query, true)}
               />
