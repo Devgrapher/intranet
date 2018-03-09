@@ -10,8 +10,8 @@ import './style.less';
 
 export default class EditableTable extends React.Component {
   static propTypes = {
-    className: PropTypes.string,
     children: PropTypes.node,
+    className: PropTypes.string,
     columns: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string,
       displayName: PropTypes.string,
@@ -22,17 +22,38 @@ export default class EditableTable extends React.Component {
       renderDataCell: PropTypes.func,
     })).isRequired,
     rows: PropTypes.arrayOf(PropTypes.object),
+    filterString: PropTypes.string,
 
     renderEmptyContent: PropTypes.func,
   };
 
   static defaultProps = {
+    children: undefined,
     className: undefined,
     rows: undefined,
-    children: undefined,
+    filterString: undefined,
 
     renderEmptyContent: () => {},
   };
+
+  filterRows(rows) {
+    const { filterString } = this.props;
+    const keywords = _.filter(_.split(_.toLower(filterString), ' '), _.identity);
+
+    if (!_.size(keywords)) {
+      return rows;
+    }
+
+    return _.filter(rows, row => (
+      _.some(row, (value) => {
+        if (!(_.isString(value) || _.isFinite(value))) {
+          return false;
+        }
+        const stringValue = _.toLower(value);
+        return _.every(keywords, keyword => _.includes(stringValue, keyword));
+      })
+    ));
+  }
 
   renderHeaderCell(column, columnIndex) {
     const {
@@ -86,19 +107,20 @@ export default class EditableTable extends React.Component {
       rows,
       renderEmptyContent,
     } = this.props;
+    const filteredRows = this.filterRows(rows);
     return (
       <Table className={cn('editable-table component', className)}>
         <Row className="header">
           {_.map(columns, this.renderHeaderCell)}
         </Row>
-        {_.isEmpty(rows) ? (
+        {_.isEmpty(filteredRows) ? (
           <Row className="empty">
             <DataCell editable={false}>
               {renderEmptyContent()}
             </DataCell>
           </Row>
         ) : (
-          _.map(rows, (row, rowIndex) => (
+          _.map(filteredRows, (row, rowIndex) => (
             <Row key={rowIndex}>
               {_.map(columns, (column, columnIndex) => this.renderDataCell(row, column, columnIndex))}
             </Row>

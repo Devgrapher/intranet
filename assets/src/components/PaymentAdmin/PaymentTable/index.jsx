@@ -11,6 +11,7 @@ export default class PaymentTable extends React.Component {
   static propTypes = {
     data: PropTypes.objectOf(PropTypes.any),
     fetching: PropTypes.objectOf(PropTypes.any),
+    filterString: PropTypes.string,
     onSelectFile: PropTypes.func,
     onRemoveFileButtonClick: PropTypes.func,
     onPaymentChange: PropTypes.func,
@@ -20,6 +21,7 @@ export default class PaymentTable extends React.Component {
   static defaultProps = {
     data: {},
     fetching: {},
+    filterString: undefined,
     onSelectFile: () => {},
     onRemoveFileButtonClick: () => {},
     onPaymentChange: () => {},
@@ -543,14 +545,13 @@ export default class PaymentTable extends React.Component {
   }
 
   render() {
-    const {
-      data: pageData,
-    } = this.props;
+    const { data: { payments }, filterString } = this.props;
     return (
       <EditableTable
         className="payment-table component"
         columns={this.getColumns()}
-        rows={pageData.payments}
+        rows={payments}
+        filterString={filterString}
         renderEmptyContent={() => '내역이 없습니다.'}
       />
     );

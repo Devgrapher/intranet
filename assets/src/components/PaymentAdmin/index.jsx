@@ -4,12 +4,13 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import cn from 'classnames';
 import sequence from 'promise-sequence';
-import { Modal, CloseButton, Button, ProgressBar } from 'react-bootstrap';
+import { Button, CloseButton, Glyphicon, Modal, ProgressBar } from 'react-bootstrap';
 import api from '../../api/payment';
 import QuerySelector from './QuerySelector';
 import QueryButtonGroup from './QueryButtonGroup';
 import PaymentTable from './PaymentTable';
 import PaymentForm from './PaymentForm';
+import FilterInput from './FilterInput';
 import { parseNumber } from '../../utils';
 import './style.less';
 
@@ -38,6 +39,7 @@ export default class PaymentAdmin extends React.Component {
         payments: {},
         newPayment: false,
       },
+      filterString: undefined,
       showNewPayment: false,
     };
 
@@ -201,6 +203,37 @@ export default class PaymentAdmin extends React.Component {
     }
   };
 
+  renderToolbar() {
+    const {
+      query,
+      data,
+      fetching,
+    } = this.state;
+    return (
+      <div className="toolbar">
+        <div className="query-selector-container">
+          <QuerySelector
+            data={data}
+            query={query}
+            onQueryChange={this.handleQueryChange}
+          />
+          <QueryButtonGroup
+            className={cn({ disabled: !query || fetching.all })}
+            onQueryButtonClick={this.handleQueryButtonClick}
+            onDownloadButtonClick={() => this.download(query, false)}
+            onDownloadBankTransferOnlyButtonClick={() => this.download(query, true)}
+          />
+        </div>
+
+        <Button bsSize="small" bsStyle="success" onClick={this.showNewPayment}>
+          <Glyphicon glyph="plus" /> 추가
+        </Button>
+
+        <FilterInput onChange={filterString => this.setState({ filterString })} />
+      </div>
+    );
+  }
+
   renderNewPaymentModal() {
     const {
       data,
@@ -248,9 +281,9 @@ export default class PaymentAdmin extends React.Component {
 
   render() {
     const {
-      query,
       data,
       fetching,
+      filterString,
     } = this.state;
     return (
       <div className="payment-admin component container-fluid">
@@ -258,48 +291,17 @@ export default class PaymentAdmin extends React.Component {
           <h1 className="title">
             결제 <small>{!fetching.all && data && data.title}</small>
           </h1>
-
-          <div className="toolbar">
-            <div className="query-selector-container">
-              <QuerySelector
-                data={data}
-                query={query}
-                onQueryChange={this.handleQueryChange}
-              />
-              <QueryButtonGroup
-                className={cn({ disabled: !query || fetching.all })}
-                onQueryButtonClick={this.handleQueryButtonClick}
-                onDownloadButtonClick={() => this.download(query, false)}
-                onDownloadBankTransferOnlyButtonClick={() => this.download(query, true)}
-              />
-            </div>
-            <button
-              className="add-payment btn btn-sm btn-success"
-              onClick={this.showNewPayment}
-            >
-              <span className="glyphicon glyphicon-plus" /> 추가
-            </button>
-          </div>
+          {this.renderToolbar()}
         </div>
 
         <div className="payment-table-container">
           {fetching.all ? (
-            <div className="progress">
-              <div
-                className="progress-bar progress-bar-striped active"
-                role="progressbar"
-                aria-valuenow="100"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                style={{ width: '100%' }}
-              >
-                로딩중..
-              </div>
-            </div>
+            <ProgressBar active now={100} label="로딩중.." />
           ) : (
             <PaymentTable
               data={data}
               fetching={fetching}
+              filterString={filterString}
               onSelectFile={this.addAttachmentFiles}
               onRemoveFileButtonClick={this.removeAttachmentFile}
               onPaymentChange={this.handlePaymentChange}

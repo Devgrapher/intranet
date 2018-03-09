@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 import moment from 'moment';
-import 'react-datetime/css/react-datetime.css';
 import FormElement from '../FormElement';
 import { formatCurrency } from '../../../utils';
 import './style.less';

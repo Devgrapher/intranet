@@ -6,6 +6,7 @@ import moment from 'moment/moment';
 import { FormControl, Checkbox } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import DateTime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import Input from '../../Input';
