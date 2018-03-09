@@ -39,6 +39,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'request_date',
         displayName: '요청일',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           editable: false,
         }),
@@ -47,12 +48,15 @@ export default class PaymentTable extends React.Component {
       {
         key: 'register_name',
         displayName: '요청자',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           editable: false,
         }),
       },
       {
-        key: 'manager',
+        key: 'is_manager_accepted',
+        className: 'manager',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             manager_uid: {
@@ -116,8 +120,10 @@ export default class PaymentTable extends React.Component {
         ),
       },
       {
-        key: 'account_book_registered',
+        key: 'is_account_book_registered',
         displayName: '장부',
+        className: 'account_book_registered',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             is_account_book_registered: {
@@ -141,6 +147,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'month',
         displayName: '귀속월',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             month: {
@@ -154,6 +161,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'team',
         displayName: '귀속부서',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             team: {
@@ -199,6 +207,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'product',
         displayName: '프로덕트',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             product: {
@@ -216,6 +225,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'category',
         displayName: '분류',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             category: {
@@ -244,6 +254,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'desc',
         displayName: '상세내역',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             desc: {
@@ -258,6 +269,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'files',
         displayName: '파일',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           editable: false,
           fetching: this.isFetching(payment.paymentid, 'files'),
@@ -321,6 +333,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'company_name',
         displayName: '업체명',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             company_name: {
@@ -333,6 +346,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'price',
         displayName: '입금금액',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             price: {
@@ -360,6 +374,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'pay_date',
         displayName: '결제예정일',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             pay_date: {
@@ -374,6 +389,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'tax',
         displayName: '세금계산서',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             tax: {
@@ -409,6 +425,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'bank',
         displayName: '입금은행',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             bank: {
@@ -421,6 +438,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'bank_account',
         displayName: '입금계좌번호',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             bank_account: {
@@ -433,6 +451,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'bank_account_owner',
         displayName: '예금주',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             bank_account_owner: {
@@ -445,6 +464,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'note',
         displayName: '비고',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           data: {
             note: {
@@ -459,6 +479,7 @@ export default class PaymentTable extends React.Component {
       {
         key: 'status',
         displayName: '결제자',
+        sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
           editable: !payment.is_co_accepted,
           data: {

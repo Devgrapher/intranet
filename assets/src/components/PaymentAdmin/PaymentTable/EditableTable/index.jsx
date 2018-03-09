@@ -15,6 +15,7 @@ export default class EditableTable extends React.Component {
     columns: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string,
       displayName: PropTypes.string,
+      sortable: PropTypes.bool,
 
       getHeaderCellProps: PropTypes.func,
       getDataCellProps: PropTypes.func,
@@ -36,6 +37,29 @@ export default class EditableTable extends React.Component {
     renderEmptyContent: () => {},
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      sortOptions: {
+        key: undefined,
+        order: undefined,
+      },
+    };
+  }
+
+  switchSortOptions(key) {
+    const { sortOptions } = this.state;
+    if (key !== sortOptions.key) {
+      this.setState({ sortOptions: { key, order: 'asc' } });
+      return;
+    }
+    if (sortOptions.order === 'asc') {
+      this.setState({ sortOptions: { key, order: 'desc' } });
+      return;
+    }
+    this.setState({ sortOptions: {} });
+  }
+
   filterRows(rows) {
     const { filterString } = this.props;
     const keywords = _.filter(_.split(_.toLower(filterString), ' '), _.identity);
@@ -55,21 +79,41 @@ export default class EditableTable extends React.Component {
     ));
   }
 
+  sortRows(rows) {
+    const { sortOptions: { key, order } } = this.state;
+    if (!key) {
+      return rows;
+    }
+    return _.orderBy(rows, [key], [order]);
+  }
+
   renderHeaderCell(column, columnIndex) {
+    const { sortOptions } = this.state;
     const {
       key,
       displayName,
+      sortable,
+      className: columnClassName,
       getHeaderCellProps = () => ({}),
       renderHeaderCell,
     } = column;
-    const { className, ...props } = getHeaderCellProps(column);
+    const { className: headerCellClassName, ...props } = getHeaderCellProps(column);
     return (
       <HeaderCell
         key={key || columnIndex}
-        className={cn(key, className)}
+        className={cn(key, columnClassName, headerCellClassName, {
+          sortable,
+          [`sort-order-${sortOptions.order}`]: key === sortOptions.key,
+        })}
+        onClick={() => sortable && this.switchSortOptions(key)}
         {...props}
       >
         {renderHeaderCell ? renderHeaderCell() : displayName}
+        {sortable && key === sortOptions.key && (
+          <span className="sort-order">
+            {sortOptions.order === 'asc' ? '▲' : '▼'}
+          </span>
+        )}
       </HeaderCell>
     );
   }
@@ -77,19 +121,20 @@ export default class EditableTable extends React.Component {
   renderDataCell(row, column, columnIndex) {
     const {
       key,
+      className: columnClassName,
       getDataCellProps = () => ({}),
       renderDataCell,
     } = column;
 
     const {
-      className,
+      className: dataCellClassName,
       ...props
     } = getDataCellProps(row, column);
 
     return (
       <DataCell
         key={key || columnIndex}
-        className={cn(key, className)}
+        className={cn(key, columnClassName, dataCellClassName)}
         {...props}
       >
         {renderDataCell ? renderDataCell(row, column) : (
@@ -104,23 +149,23 @@ export default class EditableTable extends React.Component {
       className,
       children,
       columns,
-      rows,
+      rows: inputRows,
       renderEmptyContent,
     } = this.props;
-    const filteredRows = this.filterRows(rows);
+    const rows = this.sortRows(this.filterRows(inputRows));
     return (
       <Table className={cn('editable-table component', className)}>
         <Row className="header">
-          {_.map(columns, this.renderHeaderCell)}
+          {_.map(columns, (column, columnIndex) => this.renderHeaderCell(column, columnIndex))}
         </Row>
-        {_.isEmpty(filteredRows) ? (
+        {_.isEmpty(rows) ? (
           <Row className="empty">
             <DataCell editable={false}>
               {renderEmptyContent()}
             </DataCell>
           </Row>
         ) : (
-          _.map(filteredRows, (row, rowIndex) => (
+          _.map(rows, (row, rowIndex) => (
             <Row key={rowIndex}>
               {_.map(columns, (column, columnIndex) => this.renderDataCell(row, column, columnIndex))}
             </Row>

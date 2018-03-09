@@ -37,6 +37,26 @@
     &:extend(.table-condensed > thead > tr > th all);
     &:extend(table th all);
     font-weight: bold;
+
+    &.sortable {
+      cursor: pointer;
+      .sort-order {
+        margin-left: .25rem;
+        font-size: 1rem;
+      }
+      &:not(.sort-order-asc):not(.sort-order-desc) {
+        &:after {
+          content: '▲';
+          margin-left: .25rem;
+          font-size: 1rem;
+          visibility: hidden;
+        }
+        &:hover:after {
+          opacity: .25;
+          visibility: visible;
+        }
+      }
+    }
   }
 
   @{td} {
