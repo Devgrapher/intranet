@@ -281,20 +281,27 @@ class UserPaymentService
 
     /**
      * @param PaymentDto $payment_dto
+     * @param UploadedFile[] $files
      *
      * @return int
      * @throws \Exception
      */
-    public function add(PaymentDto $payment_dto)
+    public function add(PaymentDto $payment_dto, array $files = null)
     {
         $insert_id = null;
-        PaymentModel::create()->transactional(function ($db) use ($payment_dto, &$insert_id) {
+        PaymentModel::create()->transactional(function ($db) use ($payment_dto, &$insert_id, $files) {
             $payment_model = PaymentModel::create($db);
             $insert_id = $payment_model->add($payment_dto->exportDatabaseInsert());
             if (!$insert_id) {
                 throw new \Exception('자료추가 실패했습니다');
             }
             $payment_model->updateUuid($insert_id);
+
+            foreach ($files ?? [] as $file) {
+                if (!UserPaymentService::addFiles($insert_id, $file)) {
+                    throw new \Exception('파일을 업로드하지 못했습니다.');
+                }
+            }
         });
 
         return $insert_id;

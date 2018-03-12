@@ -2,6 +2,7 @@
 
 namespace Intra\Controller;
 
+use Intra\Core\MsgException;
 use Intra\Model\PaymentModel;
 use Intra\Service\File\PaymentFileService;
 use Intra\Service\Payment\PaymentDto;
@@ -119,16 +120,13 @@ class PaymentsController implements ControllerProviderInterface
             $target_user_dto = $user_dto_instancce->exportDto();
 
             $payment_service = new UserPaymentService($target_user_dto);
-            $insert_id = $payment_service->add($payment_dto);
-            if ($insert_id != null) {
-                UserPaymentMailService::sendMail('결제요청', $insert_id, null, $app);
+            $payment_id = $payment_service->add($payment_dto, $request->files->get('files'));
 
-                return Response::create('success', Response::HTTP_OK);
-            } else {
-                return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
+            UserPaymentMailService::sendMail('결제요청', $payment_id, null, $app);
+
+            return JsonResponse::create(['success' => true, 'paymentid' => $payment_id]);
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -142,28 +140,21 @@ class PaymentsController implements ControllerProviderInterface
             $payment_service = new UserPaymentService(UserSession::getSelfDto());
             $row = $payment_service->getRowService($paymentid);
 
-            if ($key == 'is_manager_accepted') {
-                $result = $row->acceptManager();
-            } elseif ($key == 'is_co_accepted') {
-                $result = $row->acceptCO();
-            } else {
-                $result = $row->edit($key, $value);
-                if ($key == 'status' && $result == '결제 완료') {
+            switch ($key) {
+                case 'is_manager_accepted':
+                    $row->acceptManager();
+                    return Response::create('success');
+                case 'is_co_accepted':
+                    $row->acceptCO();
+                    $row->edit('status', '결제 완료');
                     UserPaymentMailService::sendMail('결제완료', $paymentid, null, $app);
-                }
-            }
-
-            if ($result === 1) {
-                return Response::create('success', Response::HTTP_OK);
-            } else {
-                if ($key == 'is_manager_accepted' || $key == 'is_co_accepted' || $result == 'error') {
-                    return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
-                } else {
-                    return Response::create($result, Response::HTTP_OK);
-                }
+                    return Response::create('success');
+                default:
+                    $result = $row->edit($key, $value);
+                    return Response::create($result);
             }
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -175,25 +166,19 @@ class PaymentsController implements ControllerProviderInterface
 
             $payment_service = new UserPaymentService(UserSession::getSelfDto());
             $row = $payment_service->getRowService($paymentid);
-            if ($key == 'is_manager_rejected') {
-                if ($row->rejectManager()) {
-                    $reason = $request->getContent();
-                    UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
 
-                    return Response::create('success', Response::HTTP_OK);
-                } else {
-                    return Response::create('fail', Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
-            } else {
-                $result = $row->del();
-                if ($result == 1) {
-                    return Response::create('success', Response::HTTP_OK);
-                } else {
-                    return Response::create($result, Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
+            if ($key == 'is_manager_rejected') {
+                $row->rejectManager();
+                $reason = $request->getContent();
+                UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
+                return Response::create('success');
             }
+
+            $row->del();
+
+            return Response::create('success');
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -273,7 +258,8 @@ class PaymentsController implements ControllerProviderInterface
 
         $user_payment_model = new PaymentModel();
 
-        return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveRequestDate($requestDateStart, $requestDateEnd));
+        return $this->getCsvResponse($user_payment_model->getAllPaymentsByActiveRequestDate($requestDateStart,
+            $requestDateEnd));
     }
 
     public function downloadActiveTeam(Request $request)
@@ -369,14 +355,15 @@ class PaymentsController implements ControllerProviderInterface
                 return Response::create("invalid fileid", Response::HTTP_BAD_REQUEST);
             }
 
-            $file = $request->files->get('files')[0];
-            if (UserPaymentService::addFiles($paymentid, $file)) {
-                return JsonResponse::create('success');
-            } else {
-                return JsonResponse::create('file upload failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            foreach ($request->files->get('files') as $file) {
+                if (!UserPaymentService::addFiles($paymentid, $file)) {
+                    throw new MsgException('file upload failed');
+                }
             }
+
+            return JsonResponse::create('success');
         } catch (\Exception $e) {
-            return Response::create($e->getMessage(), Response::HTTP_OK);
+            return Response::create($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

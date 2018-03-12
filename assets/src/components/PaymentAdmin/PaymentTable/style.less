@@ -1,5 +1,9 @@
-.payment-table {
-  @import "variables";
+.component.payment-table {
+  @import (reference) '../../../../../web/static/bower_components/bootstrap/less/variables';
+  @table: .table;
+  @tr: .tr;
+  @th: .th;
+  @td: .td;
 
   .small() {
     opacity: .75;
@@ -9,33 +13,10 @@
   .btn-group {
     & > .dropdown-menu {
       min-width: 0;
-
-      & > li {
-        & > * {
-          display: block;
-          padding: 3px 20px;
-          clear: both;
-          font-weight: 400;
-          line-height: 1.42857143;
-          color: #333;
-          white-space: nowrap;
-          border: none;
-          width: 100%;
-          text-align: left;
-          background: none;
-        }
-
-        &:focus,
-        &:hover {
-          color: #262626;
-          text-decoration: none;
-          background-color: #f5f5f5;
-        }
-      }
     }
   }
 
-  th, td {
+  @{th}, @{td} {
     white-space: nowrap;
     word-break: keep-all;
 
@@ -47,10 +28,10 @@
       font-size: inherit;
     }
 
-    &.request-date {}
-    &.register-name {}
+    &.request_date {}
+    &.register_name {}
     &.manager {}
-    &.account-book-registered {}
+    &.account_book_registered {}
 
     &.month {}
     &.team {}
@@ -58,35 +39,37 @@
     &.product {}
     &.category {}
     &.desc {}
-    &.file {}
+    &.files {}
 
-    &.company-name {}
+    &.company_name {}
     &.price {}
-    &.pay-date {}
+    &.pay_date {}
 
     &.tax {}
 
     &.bank {}
-    &.bank-account {}
-    &.bank-account-owner {}
+    &.bank_account {}
+    &.bank_account_owner {}
 
     &.note {}
 
     &.status {}
+
+    &.buttons {}
   }
 
-  th {
+  @{th} {
     font-size: 1.3rem;
 
-    &.request-date {}
-    &.register-name {}
+    &.request_date {}
+    &.register_name {}
     &.manager {
       small {
         &:before { content: '('; }
         &:after { content: ')'; }
       }
     }
-    &.account-book-registered {}
+    &.account_book_registered {}
 
     &.month {}
     &.team {}
@@ -94,17 +77,17 @@
     &.product {}
     &.category {}
     &.desc {}
-    &.file {}
+    &.files {}
 
-    &.company-name {}
+    &.company_name {}
     &.price {}
-    &.pay-date {}
+    &.pay_date {}
 
     &.tax {}
 
     &.bank {}
-    &.bank-account {}
-    &.bank-account-owner {}
+    &.bank_account {}
+    &.bank_account_owner {}
 
     &.note {}
 
@@ -114,9 +97,11 @@
         &:after { content: ')'; }
       }
     }
+
+    &.buttons {}
   }
 
-  td {
+  @{td} {
     position: relative;
 
     .glyphicon {
@@ -145,15 +130,15 @@
       line-height: inherit;
     }
 
-    &:not(:last-child) {
-      border-right: 1px solid #eee;
+    &:not(:first-child) {
+      border-left: 1px solid #eee;
     }
 
-    &.request-date {}
-    &.register-name {}
+    &.request_date {}
+    &.register_name {}
     &.manager {
       .name { margin: 0 .25rem; }
-      .accepted-date {
+      .accepted_date {
         opacity: .8;
         &:before { content: '('; }
         &:after { content: ')'; }
@@ -164,7 +149,7 @@
         }
       }
     }
-    &.account-book-registered {
+    &.account_book_registered {
       text-align: center;
       > .editor.popover {
         min-width: 0;
@@ -216,12 +201,12 @@
 
       .name {
         margin-right: .5rem;
-        display: inline-block;
+        display: block;
         white-space: nowrap;
       }
 
       .description {
-        display: inline-block;
+        display: block;
       }
 
       > .editor.popover > .popover-content > form .form-group {
@@ -234,7 +219,7 @@
       min-width: 20rem;
       font-size: 1rem;
     }
-    &.file {
+    &.files {
       input[type='file'] {
         display: none;
       }
@@ -268,6 +253,27 @@
       }
 
       .dropdown-menu > li {
+        & > * {
+          display: block;
+          padding: 3px 20px;
+          clear: both;
+          font-weight: 400;
+          line-height: 1.42857143;
+          color: #333;
+          white-space: nowrap;
+          border: none;
+          width: 100%;
+          text-align: left;
+          background: none;
+        }
+
+        &:focus,
+        &:hover {
+          color: #262626;
+          text-decoration: none;
+          background-color: #f5f5f5;
+        }
+
         &.file {
           display: flex;
           flex-flow: row nowrap;
@@ -296,7 +302,7 @@
       }
     }
 
-    &.company-name { white-space: normal; min-width: 10rem }
+    &.company_name { white-space: normal; min-width: 10rem }
     &.price {
       text-align: right;
       > .value {
@@ -308,19 +314,19 @@
         }
       }
     }
-    &.pay-date {}
+    &.pay_date {}
 
     &.tax {
       text-align: center;
-      .tax-date { margin-left: .25rem; }
+      .tax_date { margin-left: .25rem; }
     }
 
     &.bank {
       white-space: normal;
       min-width: 10rem;
     }
-    &.bank-account {}
-    &.bank-account-owner {}
+    &.bank_account {}
+    &.bank_account_owner {}
 
     &.note {
       white-space: pre-line;
@@ -331,10 +337,10 @@
 
     &.status {
       text-align: center;
-      .acceptor-name {
+      .acceptor_name {
         margin: 0 .25rem;
       }
-      .accepted-date {
+      .accepted_date {
         opacity: .8;
         &:before { content: '('; }
         &:after { content: ')'; }
@@ -343,21 +349,68 @@
         min-width: 0;
       }
     }
+
+    &.buttons {
+      padding-right: 20px;
+
+      > .dropdown {
+        visibility: hidden;
+        opacity: .5;
+
+        &:not(:hover):not(.open) {
+          > .btn {
+            border-color: transparent;
+            background: none;
+          }
+        }
+
+        &:hover,
+        &.open {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        li {
+          .glyphicon {
+            font-size: 1rem;
+          }
+
+          &.accept .glyphicon {
+            color: @brand-success;
+          }
+
+          &.reject .glyphicon {
+            color: @brand-warning;
+          }
+
+          &.remove .glyphicon {
+            color: @brand-danger;
+          }
+        }
+      }
+    }
   }
 
-  tr {
+  @{tr} {
     &.empty {
       background: none !important;
 
-      td {
+      @{td} {
         text-align: center;
+        border: none;
       }
     }
 
     &:hover {
-      td {
-        &.file {
+      @{td} {
+        &.files {
           .btn.upload {
+            visibility: visible;
+          }
+        }
+
+        &.buttons {
+          > .dropdown {
             visibility: visible;
           }
         }

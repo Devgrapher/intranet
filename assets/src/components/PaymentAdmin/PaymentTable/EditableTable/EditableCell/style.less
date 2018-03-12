@@ -1,5 +1,5 @@
 .component.editable-cell {
-  @import "../variables";
+  @import (reference) '../../../../../../../web/static/bower_components/bootstrap/less/variables';
 
   > .editor {
     top: 100%;
@@ -38,21 +38,9 @@
               white-space: nowrap;
             }
 
-            input {
-              &[type='checkbox'] {
-                margin: 0 .25rem 0 0;
-              }
-
-              &[type='number'],
-              &.currency {
-                text-align: right;
-              }
-            }
-
             textarea {
               min-width: 25rem;
               min-height: 10rem;
-              resize: vertical;
             }
           }
         }
@@ -95,7 +83,7 @@
   }
 
   > .toolbox-container {
-    @border-color: @gray-light;
+    @border-color: lighten(@gray-light, 25%);
     @border-width: 2px;
     @border-radius: 3px;
     position: absolute;
@@ -133,7 +121,7 @@
 
   &.editing {
     > .toolbox-container {
-      border-color: @brand-primary;
+      border-color: lighten(@brand-primary, 10%);
     }
   }
 
