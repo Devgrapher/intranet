@@ -6,8 +6,8 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(lastword $(MAKEFILE_LIST)) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build: ## Build web-front.
-	cd assets && yarn install && yarn run build
 	cd assets && bower install --allow-root
+	cd assets && yarn install && yarn run build
 
 composer: ## Install composer packages without dev tools.
 	composer install --no-dev --optimize-autoloader
