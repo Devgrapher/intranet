@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 import moment from 'moment';
+import { DropdownButton, Glyphicon, MenuItem } from 'react-bootstrap';
 import { formatCurrency, formatDate } from '../../../utils';
 import EditableTable from './EditableTable';
+import RejectPaymentModal from './RejectPaymentModal';
 import './style.less';
 
 export default class PaymentTable extends React.Component {
@@ -15,6 +17,7 @@ export default class PaymentTable extends React.Component {
     onSelectFile: PropTypes.func,
     onRemoveFileButtonClick: PropTypes.func,
     onPaymentChange: PropTypes.func,
+    onPaymentReject: PropTypes.func,
     onPaymentRemove: PropTypes.func,
   };
 
@@ -25,13 +28,27 @@ export default class PaymentTable extends React.Component {
     onSelectFile: () => {},
     onRemoveFileButtonClick: () => {},
     onPaymentChange: () => {},
+    onPaymentReject: () => {},
     onPaymentRemove: () => {},
   };
+
+  static defaultState = {
+    rejectPaymentModal: {
+      show: false,
+      paymentId: undefined,
+    },
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = PaymentTable.defaultState;
+  }
 
   getColumns() {
     const {
       data: pageData,
       onRemoveFileButtonClick,
+      onPaymentChange,
       onPaymentRemove,
     } = this.props;
 
@@ -137,10 +154,8 @@ export default class PaymentTable extends React.Component {
           }),
         }),
         renderDataCell: payment => (
-          payment.is_account_book_registered === 'Y' ? (
+          payment.is_account_book_registered === 'Y' && (
             <span className="positive glyphicon glyphicon-ok" />
-          ) : (
-            <span className="negative glyphicon glyphicon-remove" />
           )
         ),
       },
@@ -410,15 +425,13 @@ export default class PaymentTable extends React.Component {
           }),
         }),
         renderDataCell: payment => (
-          payment.tax === 'Y' ? (
+          payment.tax === 'Y' && (
             <span className="label label-success">
               <span className="positive glyphicon glyphicon-ok" />
               <span className="tax_date">
                 {payment.tax_date}
               </span>
             </span>
-          ) : (
-            <span className="negative glyphicon glyphicon-remove" />
           )
         ),
       },
@@ -481,20 +494,7 @@ export default class PaymentTable extends React.Component {
         displayName: '결제자',
         sortable: true,
         getDataCellProps: payment => this.createDataCellProps(payment, {
-          editable: !payment.is_co_accepted,
-          data: {
-            is_co_accepted: {
-              value: !!payment.is_co_accepted,
-              type: 'checkbox',
-              label: '결제 완료',
-            },
-          },
-          onBeforeSubmit: (data) => {
-            if (!data.is_co_accepted || !window.confirm('승인하시겠습니까?')) {
-              return false;
-            }
-            return data;
-          },
+          editable: false,
         }),
         renderHeaderCell: () => (
           <React.Fragment>
@@ -502,40 +502,72 @@ export default class PaymentTable extends React.Component {
           </React.Fragment>
         ),
         renderDataCell: payment => (
-          payment.is_co_accepted ? (
+          payment.is_co_accepted && (
             <span className="label label-success">
               <span className="positive glyphicon glyphicon-ok" />
               <span className="acceptor_name">{payment.co_accpeter_name}</span>
               <span className="accepted_date">{formatDate(payment.co_accept.created_datetime)}</span>
             </span>
-          ) : (
-            <span className="negative glyphicon glyphicon-remove" />
           )
         ),
       },
       {
-        key: 'remove',
-        renderHeaderCell: () => '',
+        key: 'buttons',
+        renderHeaderCell: () => {},
         getDataCellProps: payment => ({
           editable: false,
-          fetching: this.isFetching(payment.paymentid, 'remove'),
+          fetching: this.isFetching(payment.paymentid, [
+            'is_co_accepted',
+            'is_manager_accepted',
+            'reject',
+            'remove',
+          ]),
         }),
         renderDataCell: payment => (
-          <button
-            className="remove btn btn-danger"
-            onClick={() => {
-              if (window.confirm(`\
+          <DropdownButton
+            id={`dropdown[${payment.paymentid}]`}
+            title={<Glyphicon glyph="option-vertical" />}
+            bsSize="xsmall"
+            noCaret
+            pullRight
+          >
+            {payment.is_manager_accepted && !payment.is_co_accepted && (
+              <React.Fragment>
+                <MenuItem
+                  className="accept"
+                  onSelect={() => {
+                    if (window.confirm('승인하시겠습니까?')) {
+                      onPaymentChange(payment.paymentid, { is_co_accepted: true });
+                    }
+                  }}
+                >
+                  <Glyphicon glyph="ok" /> 결제 완료
+                </MenuItem>
+
+                <MenuItem
+                  className="reject"
+                  onSelect={() => this.showRejectPaymentModal(payment.paymentid)}
+                >
+                  <Glyphicon glyph="ban-circle" /> 반려
+                </MenuItem>
+              </React.Fragment>
+            )}
+            <MenuItem
+              className="remove"
+              onSelect={() => {
+                if (window.confirm(`\
 정말 삭제하시겠습니까?
 
 업체명 : ${payment.company_name}
 금액 : ${formatCurrency(payment.price)}`)
-              ) {
-                onPaymentRemove(payment.paymentid);
-              }
-            }}
-          >
-            <span className="glyphicon glyphicon-remove-circle" />
-          </button>
+                ) {
+                  onPaymentRemove(payment.paymentid);
+                }
+              }}
+            >
+              <Glyphicon glyph="remove" /> 삭제
+            </MenuItem>
+          </DropdownButton>
         ),
       },
     ];
@@ -565,16 +597,50 @@ export default class PaymentTable extends React.Component {
     input.click();
   }
 
+  showRejectPaymentModal = paymentId => this.setState({
+    rejectPaymentModal: {
+      show: true,
+      paymentId,
+    },
+  });
+
+  hideRejectPaymentModal = () => this.setState({
+    rejectPaymentModal: PaymentTable.defaultState.rejectPaymentModal,
+  });
+
+  renderRejectPaymentModal() {
+    const {
+      rejectPaymentModal: {
+        show,
+        paymentId,
+      },
+    } = this.state;
+    return (
+      <RejectPaymentModal
+        show={show}
+        onClose={this.hideRejectPaymentModal}
+        onSubmit={(reason) => {
+          const { onPaymentReject } = this.props;
+          onPaymentReject(paymentId, reason);
+          this.hideRejectPaymentModal();
+        }}
+      />
+    );
+  }
+
   render() {
     const { data: { payments }, filterString } = this.props;
     return (
-      <EditableTable
-        className="payment-table component"
-        columns={this.getColumns()}
-        rows={payments}
-        filterString={filterString}
-        renderEmptyContent={() => '내역이 없습니다.'}
-      />
+      <React.Fragment>
+        <EditableTable
+          className="payment-table component"
+          columns={this.getColumns()}
+          rows={payments}
+          filterString={filterString}
+          renderEmptyContent={() => '내역이 없습니다.'}
+        />
+        {this.renderRejectPaymentModal()}
+      </React.Fragment>
     );
   }
 }

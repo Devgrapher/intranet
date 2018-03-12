@@ -176,6 +176,22 @@ export default class PaymentAdmin extends React.Component {
     }
   };
 
+  handlePaymentReject = async (paymentId, reason) => {
+    const fetchPaths = [
+      `payments[${paymentId}].reject`,
+      `payments[${paymentId}].is_manager_accepted`,
+    ];
+    try {
+      this.setFetching(fetchPaths, true);
+      await api.reject(paymentId, reason);
+    } catch (err) {
+      alert((err.response && err.response.data) || err.message);
+    } finally {
+      await this.reload(true);
+      this.setFetching(fetchPaths, false);
+    }
+  };
+
   handlePaymentRemove = async (paymentId) => {
     const fetchPath = `payments[${paymentId}].remove`;
     try {
@@ -305,6 +321,7 @@ export default class PaymentAdmin extends React.Component {
               onSelectFile={this.addAttachmentFiles}
               onRemoveFileButtonClick={this.removeAttachmentFile}
               onPaymentChange={this.handlePaymentChange}
+              onPaymentReject={this.handlePaymentReject}
               onPaymentRemove={this.handlePaymentRemove}
             />
           )}

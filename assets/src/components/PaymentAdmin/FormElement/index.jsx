@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cn from 'classnames';
 import moment from 'moment/moment';
+import 'moment/locale/ko';
 import { FormControl, Checkbox } from 'react-bootstrap';
 import NumberFormat from 'react-number-format';
 import DateTime from 'react-datetime';
@@ -169,7 +170,6 @@ export default class FormElement extends React.Component {
               disabled,
             }}
             renderInput={BootstrapInput}
-            renderMonth={(monthProps, month) => <td {...monthProps}>{month + 1}</td>}
             onChange={(v) => {
               const m = moment(v, 'YYYY-MM-DD', true);
               onChange(m.isValid() ? m.format('YYYY-MM-DD') : v);
@@ -193,7 +193,6 @@ export default class FormElement extends React.Component {
               disabled,
             }}
             renderInput={BootstrapInput}
-            renderMonth={(monthProps, month) => <td {...monthProps}>{month + 1}</td>}
             onChange={(v) => {
               const m = moment(v, 'YYYY-MM', true);
               onChange(m.isValid() ? m.format('YYYY-MM') : v);

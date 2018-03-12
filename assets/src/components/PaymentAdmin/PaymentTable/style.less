@@ -13,29 +13,6 @@
   .btn-group {
     & > .dropdown-menu {
       min-width: 0;
-
-      & > li {
-        & > * {
-          display: block;
-          padding: 3px 20px;
-          clear: both;
-          font-weight: 400;
-          line-height: 1.42857143;
-          color: #333;
-          white-space: nowrap;
-          border: none;
-          width: 100%;
-          text-align: left;
-          background: none;
-        }
-
-        &:focus,
-        &:hover {
-          color: #262626;
-          text-decoration: none;
-          background-color: #f5f5f5;
-        }
-      }
     }
   }
 
@@ -78,7 +55,7 @@
 
     &.status {}
 
-    &.remove {}
+    &.buttons {}
   }
 
   @{th} {
@@ -121,7 +98,7 @@
       }
     }
 
-    &.remove { visibility: hidden; }
+    &.buttons {}
   }
 
   @{td} {
@@ -276,6 +253,27 @@
       }
 
       .dropdown-menu > li {
+        & > * {
+          display: block;
+          padding: 3px 20px;
+          clear: both;
+          font-weight: 400;
+          line-height: 1.42857143;
+          color: #333;
+          white-space: nowrap;
+          border: none;
+          width: 100%;
+          text-align: left;
+          background: none;
+        }
+
+        &:focus,
+        &:hover {
+          color: #262626;
+          text-decoration: none;
+          background-color: #f5f5f5;
+        }
+
         &.file {
           display: flex;
           flex-flow: row nowrap;
@@ -352,25 +350,42 @@
       }
     }
 
-    &.remove {
-      border: none;
-      background: white;
+    &.buttons {
       padding-right: 20px;
 
-      .btn.remove {
+      > .dropdown {
         visibility: hidden;
-        background: none;
-        color: @brand-danger;
-        border: none;
-        padding: 0;
+        opacity: .5;
 
-        &:not(:hover) {
-          opacity: .5;
+        &:not(:hover):not(.open) {
+          > .btn {
+            border-color: transparent;
+            background: none;
+          }
         }
 
-        &:active {
-          background: none;
-          box-shadow: none;
+        &:hover,
+        &.open {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        li {
+          .glyphicon {
+            font-size: 1rem;
+          }
+
+          &.accept .glyphicon {
+            color: @brand-success;
+          }
+
+          &.reject .glyphicon {
+            color: @brand-warning;
+          }
+
+          &.remove .glyphicon {
+            color: @brand-danger;
+          }
         }
       }
     }
@@ -382,6 +397,7 @@
 
       @{td} {
         text-align: center;
+        border: none;
       }
     }
 
@@ -393,8 +409,8 @@
           }
         }
 
-        &.remove {
-          .btn.remove {
+        &.buttons {
+          > .dropdown {
             visibility: visible;
           }
         }

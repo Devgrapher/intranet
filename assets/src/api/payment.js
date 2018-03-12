@@ -32,6 +32,13 @@ export default {
     return result;
   },
 
+  reject: async (paymentId, reason) => {
+    const { data: result } = await api.delete(`/paymentid/${paymentId}?key=is_manager_rejected`, {
+      data: reason,
+    });
+    return result;
+  },
+
   download: async (...args) => {
     const [path, options] = args;
     const response = await api.get(path, {
