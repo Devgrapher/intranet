@@ -134,7 +134,9 @@ class UserHoliday
 
         if ($holiday_dto->cost > 0 && !in_array($holiday_dto->type, $this->COST_ZERO_DAY_VARIABLE_TYPE)) {
             $remain_cost = $this->user_holiday_policy->getRemainCost($holiday_dto->yearly);
-            if ($remain_cost < $holiday_dto->cost) {
+            $year = date('Y', strtotime($holiday_dto->date));
+            $mod_cost = $this->user_holiday_policy->getModCost($year);
+            if ($remain_cost + $mod_cost < $holiday_dto->cost) {
                 throw new \Exception("남아있는 연차가 없습니다. 무급휴가만 사용가능합니다.");
             }
         }
@@ -171,6 +173,15 @@ class UserHoliday
 
         if ($holiday_dto->type == 'PWT' && $this->isDuplicatePWT($holiday_dto->date)) {
             throw new \Exception("이미 이번달에는 PWT를 사용하셨습니다");
+        }
+
+        if ($holiday_dto->type == '무급휴가' || $holiday_dto->type == '무급오전반차' || $holiday_dto->type == '무급오후반차') {
+            $remain_cost = $this->user_holiday_policy->getRemainCost($holiday_dto->yearly);
+            $year = date('Y', strtotime($holiday_dto->date));
+            $mod_cost = $this->user_holiday_policy->getModCost($year);
+            if ($remain_cost + $mod_cost > 0) {
+                throw new \Exception("무급휴가는 잔여 연차가 전부 소진되어야 사용할 수 있습니다.");
+            }
         }
 
         if (!preg_match('/\d{3}-?\d{3,4}-?\d{4}/', $holiday_dto->phone_emergency)) {

@@ -160,6 +160,28 @@ export default class PaymentTable extends React.Component {
         ),
       },
       {
+        key: 'status',
+        displayName: '결제자',
+        sortable: true,
+        getDataCellProps: payment => this.createDataCellProps(payment, {
+          editable: false,
+        }),
+        renderHeaderCell: () => (
+          <React.Fragment>
+            결제자 <small>확인일자</small>
+          </React.Fragment>
+        ),
+        renderDataCell: payment => (
+          payment.is_co_accepted && (
+            <span className="label label-success">
+              <span className="positive glyphicon glyphicon-ok" />
+              <span className="acceptor_name">{payment.co_accpeter_name}</span>
+              <span className="accepted_date">{formatDate(payment.co_accept.created_datetime)}</span>
+            </span>
+          )
+        ),
+      },
+      {
         key: 'month',
         displayName: '귀속월',
         sortable: true,
@@ -488,28 +510,6 @@ export default class PaymentTable extends React.Component {
           },
           inline: false,
         }),
-      },
-      {
-        key: 'status',
-        displayName: '결제자',
-        sortable: true,
-        getDataCellProps: payment => this.createDataCellProps(payment, {
-          editable: false,
-        }),
-        renderHeaderCell: () => (
-          <React.Fragment>
-            결제자 <small>확인일자</small>
-          </React.Fragment>
-        ),
-        renderDataCell: payment => (
-          payment.is_co_accepted && (
-            <span className="label label-success">
-              <span className="positive glyphicon glyphicon-ok" />
-              <span className="acceptor_name">{payment.co_accpeter_name}</span>
-              <span className="accepted_date">{formatDate(payment.co_accept.created_datetime)}</span>
-            </span>
-          )
-        ),
       },
       {
         key: 'buttons',
