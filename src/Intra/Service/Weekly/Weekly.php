@@ -26,7 +26,10 @@ class Weekly
     public static function upload($uploaded_file)
     {
         $file_path = $uploaded_file->getRealPath();
-        self::dumpToHtml($file_path, $file_path);
+
+        if (!in_array($uploaded_file->getClientMimeType(), ['text/html', 'application/xhtml+xml'])) {
+            self::dumpToHtml($file_path, $file_path);
+        }
 
         $self = UserSession::getSelfDto();
         $now = new DateTime();
