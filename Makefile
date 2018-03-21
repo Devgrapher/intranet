@@ -36,4 +36,4 @@ run-docker: ## Run web app with Docker.
 sample-db:
 	docker run --name mariadb -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=1 -d mariadb:latest
 	sleep 10s # Wait DB loading...
-	bin/init_sample_db.sh
+	bin/setup.sh
