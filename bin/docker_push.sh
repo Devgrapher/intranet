@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
+set -e
 
-DOCKER_TAG=${TRAVIS_TAG:-latest}
-COMMIT=${TRAVIS_COMMIT::8}
+DOCKER_TAG=${DOCKER_TAG:-latest}
+DEFAULT_TAG=$(git rev-parse --short HEAD) # commit hash
 
-docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS}
-docker build -t ${DOCKER_REPO}:${COMMIT} .
+docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
 
-echo "Pushing ${DOCKER_REPO}"
-docker tag ${DOCKER_REPO}:${COMMIT} ${DOCKER_REPO}:${DOCKER_TAG}
-docker push ${DOCKER_REPO}
-echo "Pushed ${DOCKER_REPO}"
+echo "Bulilding ridibooks/intranet..."
+docker build -t ridibooks/intranet:${DEFAULT_TAG} .
+echo "Builded ridibooks/intranet"
+
+echo "Pushing ridibooks/intranet..."
+docker tag ridibooks/intranet:${DEFAULT_TAG} ridibooks/intranet:${DOCKER_TAG}
+docker push ridibooks/intranet
+echo "Pushed ridibooks/intranet"
