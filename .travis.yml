@@ -27,16 +27,6 @@ jobs:
       - bin/setup.sh
       - bin/test.sh
 
-  # push (dev)
-  - stage: push
-    if: type = push AND branch = master
-    services:
-      - docker
-    env:
-      - DOCKER_TAG=${TRAVIS_BRANCH}
-    script:
-      - bin/docker_push.sh
-
   # push (prod)
   - stage: push
     if: tag =~ ^v\d+\.\d+(\.\d+)?$ # ex) v1.0.0 or v2.0.0
@@ -46,16 +36,6 @@ jobs:
       - DOCKER_TAG=${TRAVIS_TAG}
     script:
       - bin/docker_push.sh
-
-  # deploy (dev)
-  - stage: deploy
-    if: type = push AND branch = master
-    env:
-      - CI_TRIGGER_ENV=dev
-      - CI_TRIGGER_TARGET=intranet-restart
-      - CI_TRIGGER_TAG=${TRAVIS_BRANCH}
-    script:
-      - bin/deploy.sh
 
   # deploy (prod)
   - stage: deploy
