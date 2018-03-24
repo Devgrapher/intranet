@@ -31,6 +31,6 @@
     "smalot-bootstrap-datetimepicker": "^2.4.4"
   },
   "resolutions": {
-    "jspdf": "1.1.239 || 1.3.2"
+    "jspdf": "^1.1.0 || ^1.3.0"
   }
 }
