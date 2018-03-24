@@ -18,6 +18,7 @@ use Intra\Service\User\UserSession;
 class MenuService
 {
     const RIDI_GUIDE_URL = 'https://ridicorp.atlassian.net/wiki/spaces/bws/pages';
+    const RIDI_WEELY_URL = 'https://ridicorp.atlassian.net/wiki/spaces/bws/pages/499581069/05.';
 
     public static function getMenuLinkList(): array
     {
@@ -29,7 +30,7 @@ class MenuService
                 $left_menu_list = [
                     new Link('직원찾기', '/users/', new ExceptStudioD()),
                     new Link('RIDI PUBLIC', self::RIDI_GUIDE_URL, null, '_blank'),
-                    new Link('전사 주간 업무 요약', '/weekly/', new ExceptOuter(), '_blank'),
+                    new Link('전사 주간 업무 요약', self::RIDI_WEELY_URL, new ExceptOuter(), '_blank'),
                     new Link('회의실', '/rooms/', new ExceptTaAuth(), null, 'time'),
                     new LinkList('업무용 서비스', [
                         new Link('아사나 (업무협업)', 'https://app.asana.com', null, '_blank'),
