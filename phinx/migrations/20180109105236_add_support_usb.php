@@ -45,16 +45,16 @@ class AddSupportUsb extends AbstractMigration
             ->addColumn('is_completed', 'integer', [
                 'limit' => MysqlAdapter::INT_TINY,
                 'default' => false,
-                'comment' => '인사팀 승인여부'
+                'comment' => 'BWS팀 승인여부'
             ])
             ->addColumn('completed_uid', 'integer', [
                 'signed' => false,
                 'default' => 0,
-                'comment' => '인사팀 승인 user id'
+                'comment' => 'BWS팀 승인 user id'
             ])
             ->addColumn('completed_datetime', 'datetime', [
                 'default' => '0000-00-00 00:00:00',
-                'comment' => '인사팀 승인 시각'
+                'comment' => 'BWS팀 승인 시각'
             ])
             ->addColumn('usb_start_date', 'datetime', [
                 'comment' => 'USB 사용 시작일'

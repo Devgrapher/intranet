@@ -24,11 +24,11 @@ class CreateSupportGiftcardPurchase extends AbstractMigration
             ->addColumn('is_deposited', 'string', ['limit' => 1,
                 'comment' => '입금여부'])
             ->addColumn('is_approved_by_hr', 'integer', ['limit' => MysqlAdapter::INT_TINY,
-                'comment' => '인사팀 승인여부'])
+                'comment' => 'BWS팀 승인여부'])
             ->addColumn('approved_by_hr_uid', 'integer', ['signed' => false,
-                'comment' => '인사팀 승인 user id'])
+                'comment' => 'BWS팀 승인 user id'])
             ->addColumn('approved_by_hr_datetime', 'datetime', [
-                'comment' => '인사팀 승인 시각'])
+                'comment' => 'BWS팀 승인 시각'])
             ->addColumn('giftcard_category', 'string', ['limit' => 32,
                 'comment' => '기프트카드 종류'])
             ->addColumn('req_count', 'integer', ['signed' => false,

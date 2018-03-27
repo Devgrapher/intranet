@@ -22,11 +22,11 @@ class AddSupportVpn extends AbstractMigration
             ->addColumn('accepted_datetime', 'datetime', [
                 'comment' => '승인 시각'])
             ->addColumn('is_completed', 'integer', ['limit' => MysqlAdapter::INT_TINY,
-                'comment' => '인사팀 승인여부'])
+                'comment' => 'BWS팀 승인여부'])
             ->addColumn('completed_uid', 'integer', ['signed' => false,
-                'comment' => '인사팀 승인 user id'])
+                'comment' => 'BWS팀 승인 user id'])
             ->addColumn('completed_datetime', 'datetime', [
-                'comment' => '인사팀 승인 시각'])
+                'comment' => 'BWS팀 승인 시각'])
             ->addColumn('vpn_usage_type', 'string', ['limit' => 32,
                 'comment' => 'VPN 사용 기간 종류'])
             ->addColumn('vpn_start_date', 'datetime', [

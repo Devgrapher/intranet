@@ -68,7 +68,7 @@ class RoomSchedule extends React.Component {
               </ul>
             </div>
             <p>
-              * 관련 문의는 인사팀에 해주시기 바랍니다.
+              * 관련 문의는 BWS팀에 해주시기 바랍니다.
             </p>
           </Modal.Body>
 
