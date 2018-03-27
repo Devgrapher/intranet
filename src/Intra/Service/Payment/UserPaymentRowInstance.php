@@ -44,6 +44,7 @@ class UserPaymentRowInstance
                     $payment_accept_dto = PaymentAcceptDto::importFromDatabaseDict($payment_accept_dict);
                     PaymentAcceptModel::delete($payment_accept_dto);
                 }
+
                 return UserJoinService::getNameByUidSafe($updated_value);
             default:
                 return $updated_value;

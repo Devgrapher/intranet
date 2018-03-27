@@ -143,14 +143,17 @@ class PaymentsController implements ControllerProviderInterface
             switch ($key) {
                 case 'is_manager_accepted':
                     $row->acceptManager();
+
                     return Response::create('success');
                 case 'is_co_accepted':
                     $row->acceptCO();
                     $row->edit('status', '결제 완료');
                     UserPaymentMailService::sendMail('결제완료', $paymentid, null, $app);
+
                     return Response::create('success');
                 default:
                     $result = $row->edit($key, $value);
+
                     return Response::create($result);
             }
         } catch (\Exception $e) {
@@ -171,6 +174,7 @@ class PaymentsController implements ControllerProviderInterface
                 $row->rejectManager();
                 $reason = $request->getContent();
                 UserPaymentMailService::sendMail('결제반려', $paymentid, $reason, $app);
+
                 return Response::create('success');
             }
 
