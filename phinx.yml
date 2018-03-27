@@ -1,6 +1,6 @@
 paths:
-    migrations: %%PHINX_CONFIG_DIR%%/phinx/migrations
-    seeds: %%PHINX_CONFIG_DIR%%/phinx/seeds
+    migrations: '%%PHINX_CONFIG_DIR%%/phinx/migrations'
+    seeds: '%%PHINX_CONFIG_DIR%%/phinx/seeds'
 
 environments:
     default_migration_table: phinxlog
@@ -11,14 +11,15 @@ environments:
         name: intranet
         user: root
         pass: ""
+        port: 3306
         charset: utf8
-    prod:
+    phinx_env:
         adapter: mysql
         host: %%PHINX_DBHOST%%
-        port: %%PHINX_DBPORT%%
         name: %%PHINX_DBNAME%%
         user: %%PHINX_DBUSER%%
         pass: %%PHINX_DBPASS%%
+        port: 3306
         charset: utf8
 
 version_order: creation
