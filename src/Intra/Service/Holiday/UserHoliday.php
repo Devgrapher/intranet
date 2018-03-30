@@ -184,6 +184,11 @@ class UserHoliday
             }
         }
 
+        if (in_array($holiday_dto->type, ['대체휴가', '대체오전반차', '대체오후반차'])
+            && strncmp($holiday_dto->memo, '기타', 2) !== 0) {
+            throw new \Exception("대체휴가는 비고란의 기타에 사유를 기록해주세요.");
+        }
+
         if (!preg_match('/\d{3}-?\d{3,4}-?\d{4}/', $holiday_dto->phone_emergency)) {
             throw new \Exception("비상시 연락처를 다시 입력해주세요");
         }

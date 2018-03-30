@@ -22,7 +22,11 @@
     $('#js_memo').on('change', function () {
       var memo_str = $(this).val();
       if (memo_str.substr(0, 2) == '기타') {
-        var memo = prompt('간략하게 사유를 입력해주세요~');
+        if ($('#js_type').val() == '대체휴가') {
+           var memo = prompt('대체휴가를 지급받은 날짜/업무내용을 간략하게 기재해주세요.');
+        } else {
+           var memo = prompt('간략하게 사유를 입력해주세요.');
+        }
         if (!memo) {
           $(this).val('개인용무');
           return;
